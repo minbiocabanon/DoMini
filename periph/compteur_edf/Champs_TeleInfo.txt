@@ -1,0 +1,11 @@
+ADCO 020928707664 J			-> Adresse du compteur 		- Fixe
+OPTARIF HC.. <				-> option tarifaire			- Fixe
+ISOUSC 45 ?					-> intensité souscrite		- fixe, peut varier si changement abonnement (et compteur)
+HCHC 003607503 ^			-> consommation en HC		- variable
+HCHP 003510909 .			-> consommation en HP		- variable
+PTEC HC.. S					-> Période tarifaire en cours	- variable : HP ou HC
+IINST 013 [					-> Intensité instantannée	- variable
+IMAX 040 C					-> Intensité maximale		- variable
+PAPP 02700 *				-> puissance apparente		- variable
+HHPHC A ,					-> horaire HP/HC			- variable : A, C, D, E, Y
+MOTDETAT 000000 B			-> mot d'état				- ? 

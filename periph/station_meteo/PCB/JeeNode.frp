@@ -1,0 +1,71 @@
+.HEA
+.TIM 06/06/2013 21:27:39
+.APP "eeschema (2013-05-31 BZR 4019)-stable"
+
+.ADD_COM     P6     "CONN_2"
+.ADD_COM     U1     "MCP1702-33"
+.ADD_COM     C2     "100nF"
+.ADD_COM     C5     "10uF"
+.ADD_COM     C4     "100nF"
+.ADD_COM     R1     "10K"
+.ADD_COM     P1     "PORT1"
+.ADD_COM     P2     "PORT2"
+.ADD_COM     P3     "PORT3"
+.ADD_COM     P4     "PORT4"
+.ADD_COM     P9     "PSIX"
+.ADD_COM     P10     "SPI/ISP"
+.ADD_COM     U2     "LD3985G30R"
+.ADD_COM     SHT111     "SHT11"
+.ADD_COM     C1     "100nF"
+
+
+.ADD_TER   P9   8     "/RESET"
+.TER       R1   2
+            P10   5
+
+.ADD_TER   SHT111   VDD     "VCC"
+.TER       C1   1
+            P2   4
+            P4   4
+            C4   1
+            C5   1
+            U1   3
+            P3   4
+            P1   4
+            R1   1
+            P10   2
+            P9   1
+
+.ADD_TER   P1   1     "+BATT"
+.TER       P2   1
+            P4   1
+            P6   1
+            P3   1
+            C2   1
+            U1   2
+            P9   4
+
+.ADD_TER   P3   3     "DGND"
+.TER       P4   3
+            P6   2
+            U1   1
+            C2   2
+            C5   2
+            C4   2
+            P9   3
+            P10   6
+            P1   3
+            P2   3
+
+.ADD_TER   C1   2     "GND"
+.TER       SHT111   GND
+
+.ADD_TER   SHT111   DATA     "/SCL"
+.TER       P9   5
+
+.ADD_TER   P3   6     "/INT1"
+.TER       P4   6
+            P2   6
+            P1   6
+
+.END
