@@ -1,0 +1,164 @@
+// Sketch pour le Jeenlink qui se comporte en mode transparent
+// Les messages série doivent commencer par $ et se terminer par LF pour etre transmis par radio
+
+#include <JeeLib.h>
+
+#define version "JeeLink Serial to RF12 transparent mode 2013-02-21"
+#define LED_PIN 9
+
+// Mode radio
+// Values 2 and 3 can cause the millisecond time to lose a few interrupts. 
+// Value 3 can only be used if the ATmega fuses have been set for fast startup, i.e. 258 CK - the default Arduino fuse settings are not suitable for full power down.
+#define MODE_RADIO_NORMAL 0
+#define MODE_RADIO_IDLE 1
+#define MODE_RADIO_STANDBY 2
+#define MODE_RADIO_PWR_DOWN 3
+
+
+// Etats de la SM de reception serie
+// Etat initial sans objectif 
+#define SM_SERIAL_NIL 0
+// attente du debut de message
+#define SM_SERIAL_WAIT_DEB 1
+// traitement du corps du message
+#define SM_SERIAL_MSG 2
+
+unsigned int serial_state = SM_SERIAL_NIL;
+
+String str_payload = "";
+boolean bMsg_serie_recu = false;
+
+char buffer_recept_rf12[66]="";
+
+void setup() {
+	Serial.begin(57600);
+	Serial.println(version);
+	
+	
+	//initialisation de la sortie qui pilote la led
+	pinMode(LED_PIN, OUTPUT);
+	//on eteind la led
+	digitalWrite(LED_PIN, 1);	
+	
+	//initialisation du module radio RF12
+	rf12_initialize(31, RF12_868MHZ, 33);
+	// Reconfig du baudrate : 1200 bauds
+	rf12_control(0xC6A3);
+	Serial.print("\nInit Radio : \n 1200 bauds\n");
+	
+	// initialisation de la SM série
+	serial_state = SM_SERIAL_WAIT_DEB;
+}
+
+void loop() {
+
+	if (Serial.available() > 0){
+		char charin = Serial.read();
+		
+		// en fonction de l'etat de la state machine on avise
+		switch(serial_state) {
+			// on est dans le neant
+			case SM_SERIAL_NIL:
+				// on ne fait rien
+				break;
+			case SM_SERIAL_WAIT_DEB:
+				// on a trouve det du msg = "$"
+				if(charin == '$') {
+					// on prepare le buffer
+					str_payload = ""; 
+					// on sauve ce char
+					str_payload += charin;
+					// on change d'etat pour passer au corps du message
+					serial_state = SM_SERIAL_MSG;
+					//on allume la led
+					digitalWrite(LED_PIN, 0);
+					// On trace pour debug
+					// Serial.print("debut detecte");
+					// Serial.print(charin,HEX);
+					// Serial.print(" - (ascii) :");
+					// Serial.print(charin,BYTE);
+					// Serial.print("\r\n");
+				} else{
+					// Serial.print(" caractere jete (hex):");
+					// Serial.print(charin,HEX);
+					// Serial.print(" - (ascii) :");
+					// Serial.print(charin,BYTE);
+					// Serial.print("\r\n");
+				}
+				break;
+			case SM_SERIAL_MSG:
+				// on sauve ce char
+				str_payload += charin;
+				// on a atteint la fin du msg = LF (ou \n)
+				if(charin == 0X0A || charin == 0X0D) {
+					// on change d'etat, message suivant
+					// discutable, a preciser depend du traitement du message
+					serial_state = SM_SERIAL_WAIT_DEB;
+					// on leve un flag pour indiquer que le msg est complet
+					bMsg_serie_recu = true;
+					//on allume la led
+					digitalWrite(LED_PIN, 1);
+					// trace pour debug
+					// Serial.print("fin detectee \n\r");
+					// Serial.print(charin,HEX);
+					// Serial.print(" - (ascii) :");
+					// Serial.print(charin,BYTE);
+					// Serial.print("\r\n");
+				}
+				break;
+		}
+	}
+		
+	if (bMsg_serie_recu == true){
+		// taille limitee à 64 octets par la lib RF12
+		char payload[64];
+		str_payload.toCharArray(payload, sizeof(payload));
+		int nPayloadSize = str_payload.length();
+		// DEBUG
+		// Serial.print("\n Msg a emettre \n");
+		// for(byte i=0; i < nPayloadSize; i++)
+			// Serial.print(payload[i]);
+		// Serial.println();
+		//tant que porteuse pas libre
+		while (!rf12_canSend())
+			//on interroge le module
+			rf12_recvDone();
+		
+		// envoi du message vers la radio
+		//rf12_sendStart(0, payload, sizeof (payload));
+		rf12_sendStart(0, payload, nPayloadSize);
+		
+		// DEBUG
+		// Serial.print("\r\n Msg emis");
+		
+		//attente de la fin d'émission radio
+		rf12_sendWait(MODE_RADIO_IDLE);
+		
+		// on reset le flag
+		bMsg_serie_recu = false;
+	}
+	delay(20);
+
+	if (rf12_recvDone() && rf12_crc == 0){
+		//on allume la led
+		digitalWrite(LED_PIN, 0);
+		
+		//on copie le buffer reçu dans un buffer de travail
+		memcpy(buffer_recept_rf12, (void*) rf12_data, rf12_len);
+		// terminateur de chaine
+		// à tester ???
+		buffer_recept_rf12[rf12_len]=0;
+		
+		//si le message reçu demande un ACK
+		if(RF12_WANTS_ACK){
+			//Alors on renvoi un message vide avec le header ACK
+			rf12_sendStart(RF12_ACK_REPLY, 0, 0);
+			//Serial.println("\n ACK envoyé");
+		}	
+
+		Serial.print(buffer_recept_rf12);
+		//on eteind la led
+		digitalWrite(LED_PIN, 1);
+	}		
+	delay(20);
+}

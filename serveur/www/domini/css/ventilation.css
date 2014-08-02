@@ -1,0 +1,344 @@
+.cadre_vert_arrondi{
+	padding:2px;
+	border:2px solid #00ff00;
+	border-radius:10px;
+	-moz-border-radius:10px;
+}
+.cadre_gris_arrondi{
+	padding:2px;
+	border:2px solid #888888;
+	border-radius:10px;
+	-moz-border-radius:10px;
+}
+.cadre_bleu_arrondi{
+	padding:2px;
+	border:2px solid #0000FF;
+	border-radius:10px;
+	-moz-border-radius:10px;
+}
+
+.tempvmc {
+		color: black ; 
+		font-size: 1em
+}
+
+
+#frame_ventilation {
+	position: relative; 
+	top:0px; 
+	left:130px; 
+	height:238px; 
+	width:458px; 
+	z-index:1;
+}
+
+#image_ventilation {
+	position:absolute;
+	top:0px;
+	left:0px;
+	height:238px;
+	width:800px;
+}
+#image_bypass {
+	position:absolute;
+	top:159px;
+	left:400px;
+}
+#image_bypass_vmc {
+	position:absolute;
+	top:116px;
+	left:572px;
+	height:156px; 
+	
+}
+
+#temp_ext {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: black; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:140px; 
+	left:50px;
+}
+#temp_garage	 {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: black; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:80px; 
+	left:240px;
+}
+#text_temp_garage{
+	position:absolute;
+	font-size : 0.7em;
+	height:40px; 
+	width:130px; 
+	z-index:2; 
+	color: black; 
+	text-align:center;
+	vertical-align:center;
+	top:55px; 
+	left:225px;
+}
+#temp_int {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: black; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:250px; 
+	left:600px;
+}
+#text_temp_int {
+	position:absolute;
+	font-size : 0.7em;
+	height:40px; 
+	width:130px; 
+	z-index:2; 
+	color: black; 
+	text-align:center;
+	vertical-align:center;
+	top:225px; 
+	left:585px;
+}
+#temp_pc{
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: black; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:320px; 
+	left:380px;
+}
+#temp_air_ext {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: forestgreen; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:200px; 
+	left:430px;
+}
+
+#temp_air_extrait {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: sandybrown; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:10px; 
+	left:415px;
+}
+
+#temp_air_neuf {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: red; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:110px; 
+	left:760px;
+}
+#temp_air_neuf_bypass {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: red; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:160px; 
+	left:760px;
+}
+
+#temp_air_repris {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: orange; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:160px; 
+	left:760px;
+}
+
+#temp_air_repris_bypass {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: orange; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:110px; 
+	left:760px;
+}
+
+#temp_air_bouche {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: red; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:50px; 
+	left:760px;
+}
+#temp_air_bouche_bypass {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: red; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:230px; 
+	left:760px;
+}
+
+#text_temp_air_bouche {
+	position:absolute;
+	font-size : 0.7em;
+	height:40px; 
+	width:130px; 
+	z-index:2; 
+	color: red; 
+	text-align:center;
+	vertical-align:center;
+	top:28px; 
+	left:745px;
+}
+#text_temp_air_bouche_bypass {
+	position:absolute;
+	font-size : 0.7em;
+	height:40px; 
+	width:130px; 
+	z-index:2; 
+	color: red; 
+	text-align:center;
+	vertical-align:center;
+	top:210px; 
+	left:745px;
+}
+#temp_comble {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: grey; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:20px; 
+	left:600px;
+}
+#text_temp_comble {
+	position:absolute;
+	font-size : 0.7em;
+	height:40px; 
+	width:130px; 
+	z-index:2; 
+	color: grey; 
+	text-align:center;
+	vertical-align:center;
+	top:0px; 
+	left:590px;
+}
+#rendement_vmcdf {
+	position:absolute; 
+	height:40px; 
+	width:100px; 
+	z-index:2; 
+	color: blue; 
+	background: #EEEEEE;
+	border: 2px solid #444444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;  /*rayon de courbur des angles du bouton */
+	text-align:center;
+	vertical-align:center;
+	top:70px; 
+	left:600px;
+}

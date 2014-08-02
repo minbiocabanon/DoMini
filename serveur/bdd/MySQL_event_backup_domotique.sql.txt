@@ -1,0 +1,8 @@
+# Requete utilisée pour la sauvegarde automatique de la base toutes les nuits à 1h du mat:
+# CREATE EVENT backup_domotique ON SCHEDULE EVERY 1 DAY STARTS CURRENT_DATE + INTERVAL 1 DAY + INTERVAL 1 HOUR DO BACKUP TABLE domotique TO 'backup_domotique/'
+
+# !!!!! -> A modifier par la suite : sauvargade sur SD CARD!
+
+# Pour consulter les events en cours : SHOW EVENTS
+
+# Plus d'infos : http://atranchant.developpez.com/mysql/evenement/#L620

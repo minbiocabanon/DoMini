@@ -1,0 +1,11 @@
+.log-content {
+    white-space: pre;
+    /* Le CSS qui fait comme un <pre> */
+}
+.log-warning {
+    /* Le CSS d'un warning */
+    color: red;
+}
+.log-info {
+    color: green;
+}

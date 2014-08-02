@@ -1,0 +1,1 @@
+ position du bypass : 0<br> Text : 9.490000, Hext = 84.625000 <br> Tpc : 13.080000, Hpc = 79.654999 <br> lin_pc : 23, col_pc = 2 <br> pc = matrice[23][2]<br> text = matrice[19][2]<br>enthalp_pc = 31.85<br>enthalp_text = 23.36<br><br> puissance pc = 678.02 W <br> puissance pc simple= 305.15 W 
