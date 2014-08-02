@@ -1,0 +1,23 @@
+0,15,30,45 * * * * /root/domini/systeme/gestion_bypass.sh   #Etabli la consigne pour le bypass et ecrit dans la BDD
+@yearly /root/domini/systeme/planning.sh    #Creation du planning pour l'annee
+@weekly /root/domini/systeme/crontab_export.sh   #export de la crontab
+@weekly /root/domini/bdd/export_struct_bdd.sh    #sauvegarde de la structure des bases de donnees
+@weekly /root/domini/systeme/dpkg_export.sh      #Tache a executer de facon hebdomadaire
+0,5,10,15,20,25,30,35,40,45,50,55 * * 1-5,10-12 * /root/bin/regul_temp    #logiciel qui calcule la consigne pour le poele
+@daily /root/domini/bdd/mysql_backup.sh       #backup de la base de données domotique
+14,29,44,59 6-23 * * * /root/domini/systeme/gestion_vr.sh  #Determine l'etat des volets roulant
+1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59 * * * * /root/domini/systeme/envoi_msg_radio.sh      #Lit la table des messages radio et les envois (si le message date de moins de 30 sec.)
+@daily /root/bin/tribdd_quot #Tri quotidien de la base de donnees (J-5)
+@daily /root/bin/tribdd_edf #Tri dans la table téléinfo : ne garde que HC/HP du début/fin de jour
+@daily /root/bin/del_old_data #Suppression des vieilles données des tables
+0,10,20,30,40,50 * * * * cp /var/log/user.log /var/www/domini/log/user.log #Copie du user.log pour consultation depuis l'interface web domotique
+0 * * * * /etc/webmin/bandwidth/rotate.pl
+0,15,30,45 * * * * /var/www/domini/script/graph_15m.sh     #Mise à jour des graphs rafraichis toutes les 15 minutes
+@hourly /var/www/domini/script/graph_1h.sh      #Execution des pages php pour générer graphes toutes les 1h
+5 0,6,12,18 * * * /var/www/domini/script/graph_6h.sh     #Execution des pages php pour générer graphes toutes les 6h
+@daily /var/www/domini/script/graph_1j.sh  #Tache a lancer une fois par jour -> mise à jour graph et fichier CSV
+* 1 * * 0 /var/www/domini/script/graph_1w.sh     #Execution des pages php pour générer graphes toutes les semaines
+15 1 1 * * /var/www/domini/script/graph_1mo.sh     #creation des graphes tous les mois
+0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58 * * * * /var/www/domini/script/graph_2m.sh  #Charge les données actuelles dans une table tampon pour accélerer l'affichage
+5,25,45 7-19 * * * /var/www/domini/script/ftp.sh            #Creation d'une image du site et upload sur un site distant
+1,11,21,31,41,51 * * * * /var/www/domini/script/webcam_10m.sh #Captures des images des cameras

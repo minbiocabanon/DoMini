@@ -1,0 +1,53 @@
+﻿			<div class="navbar navbar-inverse navbar-fixed-top">
+			  <div class="navbar-inner">
+				<div class="container">
+				  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				  </a>
+				  <a class="brand" href="index.php">DoMini</a>
+				  <div class="nav-collapse collapse">
+					<ul class="nav">
+						<li class="dropdown">
+						  <a data-toggle="dropdown" class="dropdown-toggle" href="#" onClick="return false;">Graphiques <b class="caret"></b></a>
+						  <ul class="dropdown-menu">
+							<li><a href="temperature_all.php" >Températures</a></li>
+							<li><a href="chauffage_log.php">Chauffage</a></li>
+							<li><a href="teleinfo_live.php">Electricité</a></li>
+							<li><a href="pyrano.php">Soleil</a></li>
+							<li><a href="voletroulant_log.php">Volets roulants</a></li>
+							<li><a href="ventilation_flux.php">Ventilation</a></li>
+							<li><a href="pellet_conso.php">Pellets</a></li>
+							<!--<li><a href="#" onClick="return false;">Eau</a></li> -->
+							<li><a href="tension_pile.php">Piles</a></li>
+						  </ul>
+						</li>
+						<li class="dropdown">
+						  <a data-toggle="dropdown" class="dropdown-toggle" href="#" onClick="return false;">Gestion <b class="caret"></b></a>
+						  <ul class="dropdown-menu">
+							<li><a href="planning.php">Planning</a></li>
+							<li><a href="chauffage_sync.php">Chauffage</a></li>
+							<li><a href="#" onClick="return false;">Eclairage</a></li>
+							<li><a href="ventilation_bypassvmc_cmd.php">Ventilation</a></li>
+							<li><a href="pellet.php">Pellets</a></li>
+							<li><a href="admin.php">Admin</a></li>
+						  </ul>
+						</li>
+						<li class="dropdown">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#" onClick="return false;">Alarme <b class="caret"></b></a>
+						  <ul class="dropdown-menu">
+							<li><a href="camera.php">Camera</a></li>
+							<li><a href="#" onClick="return false;">Presence</a></li>
+						  </ul>
+						</li>
+
+						<li><a href="meteo.php">Météo</a></li>
+					</ul>
+					<p class="navbar-text pull-right">
+						<?PHP echo "$data_date[0]";?>
+					</p>
+				  </div>
+				</div>
+			  </div>
+			</div>
