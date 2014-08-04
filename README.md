@@ -81,10 +81,11 @@ utiliser mysql en ligne de commande
  
 ## INTERFACE WEB
 
-faire un lien symbolique de /home/julien/src/SHEEVA_SERVER/www/domini	vers www/domini
+faire un lien symbolique de 
+
+~/serveur/www/domini	vers /var/www/domini
+
 ajouter le multihost dans lighttp.conf
-
-
 		 ### Ajout virtual host Webcam ###
 		$SERVER["socket"] == ":82" {
 		 server.document-root = "/var/www/webcam/"
@@ -92,11 +93,11 @@ ajouter le multihost dans lighttp.conf
 		 }
 
 		 
-#### SYSTEM
-importer Crontab:
+## SYSTEME
+## Crontab:
 	
-	Create the backup:
-	crontab -l > /some/shared/location/crontab.bak
-
-	Import it from the new user:
+	Importer les taches CRON listées dans ce fichier :
+	~/serveur/systeme/crontab.txt
+	
+	Commande à éxécuter :
 	crontab crontab.txt
