@@ -3,10 +3,13 @@ Domini
 
 Mon projet domotique / My Home automation project
 
+((BROUILLON))
+======
+
 #Intro
 
 
-![Domini architecture](/docs/Synoptique_DoMini.jpg)
+![Domini architecture](/docs/Synoptique_DoMini.png)
 
 
 #Pré-requis
@@ -70,30 +73,41 @@ pour faciliter l'accès aux fichiers depuis le réseau, mettre / en accès (atte
 
 ## BASE DE DONNEES
 
-L'importation de gros fichiers n'est pas possible via phpmyadmin
+Fichier contenant la structure de la base :
 
-utiliser mysql en ligne de commande
- mysql --user=root --password=mysql domotique < /home/julien/src/SHEEVA_SERVER/bdd/backup_domotique/backup-domotique.sql
+	~/serveur/bdd/struct_domotique.sql
+	
+Fichier contenant l'exportation de toutes les données (non disponible sur le dépot git car du domaine privé)
+L'importation de gros fichiers n'est pas possible via phpmyadmin, il faut utiliser mysql en ligne de commande:
+
+ 	mysql --user=root --password=mysql domotique < 	 /~serveur/bdd/backup_domotique/backup-domotique.sql
  
  
 ## INTERFACE WEB
 
-faire un lien symbolique de /home/julien/src/SHEEVA_SERVER/www/domini	vers www/domini
+faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini
+
+	ln -s ~/serveur/www/domini /var/www/domini
+
+**ATTENTION** : il ne faut pas avoir créé /var/www/domini avant de créé le lien symbolique
+
+
 ajouter le multihost dans lighttp.conf
 
-
-		 ### Ajout virtual host Webcam ###
-		$SERVER["socket"] == ":82" {
-		 server.document-root = "/var/www/webcam/"
-		 server.errorlog = "/var/log/lighttpd/webcam/error.log"
-		 }
+	 ### Ajout virtual host Webcam ###
+	$SERVER["socket"] == ":82" {
+	 server.document-root = "/var/www/webcam/"
+	 server.errorlog = "/var/log/lighttpd/webcam/error.log"
+	 }
 
 		 
-#### SYSTEM
-importer Crontab:
+## SYSTEME
+### Crontab:
 	
-	Create the backup:
-	crontab -l > /some/shared/location/crontab.bak
+Importer les taches CRON listées dans ce fichier :
 
-	Import it from the new user:
+	~/serveur/systeme/crontab.txt
+	
+Commande à éxécuter :
+
 	crontab crontab.txt
