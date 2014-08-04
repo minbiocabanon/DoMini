@@ -6,7 +6,7 @@ Mon projet domotique / My Home automation project
 #Intro
 
 
-![Domini architecture](/docs/Synoptique_DoMini.jpg)
+![Domini architecture](/docs/Synoptique_DoMini.png)
 
 
 #Pré-requis
