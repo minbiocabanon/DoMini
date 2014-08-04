@@ -65,11 +65,7 @@ Pour le développement, mise au point ou confort, j'utilise également :
 
 
 
-#Installation
-
-## SAMBA
-pour faciliter l'accès aux fichiers depuis le réseau, mettre / en accès (attention si l'accès est en root!!!)
-
+#Notes pour l'installation ou la migration vers un nouveau PC
 
 ## BASE DE DONNEES
 
@@ -111,3 +107,6 @@ Importer les taches CRON listées dans ce fichier :
 Commande à éxécuter :
 
 	crontab crontab.txt
+
+## Logiciel
+Recompiler tous les logiciels directement sur la cible avec 'Make'
