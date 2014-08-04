@@ -1,8 +1,8 @@
 #ifndef H_PASSWD
 #define H_PASSWD
    char *user = "USER";
-    char *password = "MOTDEPASSE"; 
-    char *database = "BASE";
-    char *server = "SERVER";
+    char *password = "PSWD"; 
+    char *database = "DB";
+	char *server = "SERVER";
     char query [400];
 #endif

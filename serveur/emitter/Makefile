@@ -1,5 +1,5 @@
 PROG=emitter
 $(PROG):$(PROG).c passwd.h
 	gcc -lmysqlclient -lz -DWITHMYSQL -D_DEBUG_ -o $(PROG) $(PROG).c
-	cp $(PROG) /root/bin
-	cp $(PROG) /var/www/bin
+	cp $(PROG) ~/bin
+	cp $(PROG) /var/www/domini/bin

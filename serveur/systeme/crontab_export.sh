@@ -1,6 +1,6 @@
 #!/bin/bash
 #Sauvegarde de la crontab
-cd /media/dd_usb/SHEEVA_SERVER/systeme/
+cd ~/serveur/systeme/
 rm crontab*.txt
 crontab -l > crontab_root.txt
 crontab -u www-data -l > crontab_www-data.txt

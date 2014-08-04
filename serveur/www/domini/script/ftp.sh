@@ -1,10 +1,10 @@
 #!/bin/sh
 #include pour les login et mot de passe du FTP. (ce fichier n'est pas sur le dépot SVN pour la confidentialité)
-installpath=/media/dd_usb/SHEEVA_SERVER/www/domini/script/
+installpath=~/src/SHEEVA_SERVER/www/domini/script/
 . $installpath/myvar.sh
 
 # on se  place dans le répertoire de telechargement
-cd /media/dd_usb/cache_wget/192.168.0.102/
+cd /tmp/cache_wget/192.168.0.102/
 
 # on crée le répertoire ou sont stocké les fichers CSV
 echo copie des fichiers csv ...
@@ -26,18 +26,18 @@ cp /var/www/domini/*.php .
 # cp -r -n /var/www/domini/webcam/* ./webcam/
 
 #suppression des pages "cas particuliers"
-rm /media/dd_usb/cache_wget/192.168.0.102/index.php 
-rm /media/dd_usb/cache_wget/192.168.0.102/teleinfo_edf.php
-rm /media/dd_usb/cache_wget/192.168.0.102/voletroulant.php
-rm /media/dd_usb/cache_wget/192.168.0.102/pellet.php
-rm /media/dd_usb/cache_wget/192.168.0.102/chauffage_config.php
-rm /media/dd_usb/cache_wget/192.168.0.102/conf_externe.php
-rm /media/dd_usb/cache_wget/192.168.0.102/ventilation_flux.php
-rm /media/dd_usb/cache_wget/192.168.0.102/webcam.php
-rm /media/dd_usb/cache_wget/192.168.0.102/map_tondeuse.php
-rm /media/dd_usb/cache_wget/192.168.0.102/planning.php
-rm /media/dd_usb/cache_wget/192.168.0.102/reseau.php
-rm /media/dd_usb/cache_wget/192.168.0.102/restemperature_stat.php
+rm /tmp/cache_wget/192.168.0.102/index.php 
+rm /tmp/cache_wget/192.168.0.102/teleinfo_edf.php
+rm /tmp/cache_wget/192.168.0.102/voletroulant.php
+rm /tmp/cache_wget/192.168.0.102/pellet.php
+rm /tmp/cache_wget/192.168.0.102/chauffage_config.php
+rm /tmp/cache_wget/192.168.0.102/conf_externe.php
+rm /tmp/cache_wget/192.168.0.102/ventilation_flux.php
+rm /tmp/cache_wget/192.168.0.102/webcam.php
+rm /tmp/cache_wget/192.168.0.102/map_tondeuse.php
+rm /tmp/cache_wget/192.168.0.102/planning.php
+rm /tmp/cache_wget/192.168.0.102/reseau.php
+rm /tmp/cache_wget/192.168.0.102/restemperature_stat.php
 
 #on charge les pages "cas particuliers
 #wget -r http://192.168.0.102:80
@@ -54,15 +54,15 @@ wget http://0.0.0.0:80/planning.php
 wget http://0.0.0.0:80/temperature_stat.php
 
 #On supprimer l'image du sejour (vie privee!!!)
-rm /media/dd_usb/cache_wget/192.168.0.102/webcam/sejour.jpg
+rm /tmp/cache_wget/192.168.0.102/webcam/sejour.jpg
 
 # upload des fichiers sur le site distant
 echo upload du site ...
-lftp ftp://$LOGIN:$PASSWORD@ftpperso.free.fr -e "mirror -R /media/dd_usb/cache_wget/192.168.0.102/ /static_domini  ; quit"
+lftp ftp://$LOGIN:$PASSWORD@ftpperso.free.fr -e "mirror -R /tmp/cache_wget/192.168.0.102/ /static_domini  ; quit"
 
 #suppression des fichiers temporaires
 echo supression des fichiers temporaires ...
-rm /media/dd_usb/cache_wget/192.168.0.102/*
-rm -r /media/dd_usb/cache_wget/192.168.0.102/csv
-rm -r /media/dd_usb/cache_wget/192.168.0.102/css
-rm -r /media/dd_usb/cache_wget/192.168.0.102/webcam
+rm /tmp/cache_wget/192.168.0.102/*
+rm -r /tmp/cache_wget/192.168.0.102/csv
+rm -r /tmp/cache_wget/192.168.0.102/css
+rm -r /tmp/cache_wget/192.168.0.102/webcam
