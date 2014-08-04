@@ -96,8 +96,8 @@ ajouter le multihost dans lighttp.conf
 ## SYSTEME
 ## Crontab:
 	
-	Importer les taches CRON listées dans ce fichier :
+Importer les taches CRON listées dans ce fichier :
 	~/serveur/systeme/crontab.txt
 	
-	Commande à éxécuter :
+Commande à éxécuter :
 	crontab crontab.txt
