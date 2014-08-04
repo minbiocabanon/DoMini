@@ -14,7 +14,7 @@ Le serveur de la domotique est une machine Linux.
 
 Le projet ne nécessite que peu de ressources, jusqu'en aout 2014 il tournait sur un **Sheevaplug** :
 
-- *Linux DEBIAN*
+- *Linux DEBIAN 6 Lenny*
 - *ARM v5 1.2GHz*
 - *RAM 512 Mo*
 - *Flash 512 Mo* 
