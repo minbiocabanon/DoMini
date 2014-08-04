@@ -30,7 +30,7 @@ Voici les caractéristiques du PC (à titre d'information, cela n'indique pas le
 - *Linux DEBIAN 7*
 - *PC x86 : Intel P4*
 - *RAM : 2Go*
-- *Disque dur : 2 x 80 GO ( montés en RAID1)*
+- *Disque dur : 2 x 80 Go ( montés en RAID1)*
 - *1 port USB*
 - *Wifi b/g/n*
 - *Reseau Ethernet 10/100Mbps (optionnel une fois le wifi installé)*
