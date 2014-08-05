@@ -70,3 +70,5 @@ Ce répertoire contient les scripts et fichier relatifs au système :
 
 
 ##www
+Ce répertoire contient toute l'interface graphique (web) de la domotique.
+Un lien symbolique sera fait sur ce répertoire depuis /var/www/ .
