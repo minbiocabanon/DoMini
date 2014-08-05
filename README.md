@@ -76,7 +76,7 @@ Fichier contenant la structure de la base :
 Fichier contenant l'exportation de toutes les données (non disponible sur le dépot git car du domaine privé)
 L'importation de gros fichiers n'est pas possible via phpmyadmin, il faut utiliser mysql en ligne de commande:
 
- 	mysql --user=root --password=mysql domotique < 	 /~serveur/bdd/backup_domotique/backup-domotique.sql
+ 	mysql --user=root --password=mysql domotique < 	 ~/serveur/bdd/backup_domotique/backup-domotique.sql
  
  
 ## INTERFACE WEB
