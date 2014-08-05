@@ -85,7 +85,7 @@ faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini
 
 	ln -s ~/serveur/www/domini /var/www/domini
 
-**ATTENTION** : il ne faut pas avoir créé /var/www/domini avant de créé le lien symbolique
+**ATTENTION** : il ne faut pas avoir créé /var/www/domini avant de créér le lien symbolique
 
 
 ajouter le multihost dans lighttp.conf
