@@ -52,6 +52,7 @@ Dans les grandes lignes voici ce qui est essentiel pour le projet :
 - Base de données : MySQL
 - PHP
 - GD (lib graphique pour HTML)
+- serveur FTP : vsftp (pour récupération images des cameras IP)
 - GCC (pour compiler les applications faites en C)
 *Il existe certainement des dépendances ...*
 
