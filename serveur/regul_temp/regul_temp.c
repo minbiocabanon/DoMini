@@ -5,6 +5,7 @@
 //!\brief   Programme qui réalise la fonction thermostat (centralisé) du poêle
 //----------------------------------------------------------------------
 
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>

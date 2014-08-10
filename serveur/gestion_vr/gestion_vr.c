@@ -4,6 +4,7 @@
 //!\author		Minbiocabanon
 //!\brief		Programme qui décide de la position des VR... non mais!
 //----------------------------------------------------------------------
+
  
 #include <sys/types.h>
 #include <sys/stat.h>

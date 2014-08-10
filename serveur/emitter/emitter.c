@@ -5,7 +5,6 @@
 //!\brief       Simple C program that connects to MySQL Database server
 //----------------------------------------------------------------------
 
-
 // 
 #include <sys/types.h>
 #include <sys/stat.h>
