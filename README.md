@@ -69,6 +69,7 @@ Pour le développement, mise au point ou confort, j'utilise également :
 #Notes pour l'installation ou la migration vers un nouveau PC
 
 ## BASE DE DONNEES
+la base de données tourne avec MySQL.
 
 Fichier contenant la structure de la base :
 
@@ -97,7 +98,15 @@ ajouter le multihost dans lighttp.conf
 	 server.errorlog = "/var/log/lighttpd/webcam/error.log"
 	 }
 
-		 
+### BOOTSTRAP
+le framework [bootstrap](http://getbootstrap.com/) est utilisé pour la création des pages web.
+Cela permet d'avoir une IHM 'responsive', c'est à dire qui s'adapte en fonction du support (PC, smartphone, tablette...).
+Il existe pleins de plugins pour bootstrap afin de compléter l'ergonomie de l'interface web : boutons, slider, calendrier, curseurs ...
+
+### HIGHSTOCK
+J'ai utilisé [Highstock](http://www.highcharts.com/) pour générer les graphiques. basé sur du javascript, les graphiques sont bien faits et personnalisables à volonté.
+
+
 ## SYSTEME
 ### Crontab:
 	
