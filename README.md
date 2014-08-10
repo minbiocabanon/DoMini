@@ -119,7 +119,7 @@ Il existe pleins de plugins pour bootstrap afin de compléter l'ergonomie de l'i
 ### HIGHSTOCK
 J'ai utilisé [Highstock](http://www.highcharts.com/) pour générer les graphiques. basé sur du javascript, les graphiques sont bien faits et personnalisables à volonté.
 
-### Captures d'écan / Screenshots
+### Captures d'écran / Screenshots
 ![Domini Ecran accueil](docs/img/screenshot/web_accueil.png)
 
 ![Domini Temperatures](docs/img/screenshot/web_temperature.png)
