@@ -4,16 +4,20 @@ Domini
 Mon projet domotique / My Home automation project
 
 ((BROUILLON))
-======
+
+#Demo
+A l'adresse suivante, une version 'demo' de l'interface web de ma domotique est visible.
+http://minbiocabanon.free.fr/static_domini/
+*Attention : les actions (boutons) et certaines pages renverront des erreurs car il n'y a pas de base de données qui tourne pour la démo. Il s'agit uniquement d'une 'photo instantanée' de mes données et interface que je mets à jour régulièrement.*
+
+
 
 #Intro
-
-
+Architecture de l'installation :
 ![Domini architecture](/docs/Synoptique_DoMini.png)
 
 
 #Pré-requis
-
 ##Plateforme
 Le serveur de la domotique est une machine Linux. 
 
@@ -41,7 +45,6 @@ Voici les caractéristiques du PC (à titre d'information, cela n'indique pas le
 - *Reseau Ethernet 10/100Mbps (optionnel une fois le wifi installé)*
 
 #Paquets et logiciels
-
 La liste des paquets installés sur ma machine est disponible sur le dépôt :
 
 	~/serveur/systeme/dpkg.txt
@@ -82,13 +85,11 @@ L'importation de gros fichiers n'est pas possible via phpmyadmin, il faut utilis
  
  
 ## INTERFACE WEB
-
-faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini
+Faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini
 
 	ln -s ~/serveur/www/domini /var/www/domini
 
 **ATTENTION** : il ne faut pas avoir créé /var/www/domini avant de créér le lien symbolique
-
 
 ajouter le multihost dans lighttp.conf
 
@@ -109,7 +110,6 @@ J'ai utilisé [Highstock](http://www.highcharts.com/) pour générer les graphiq
 
 ## SYSTEME
 ### Crontab:
-	
 Importer les taches CRON listées dans ce fichier :
 
 	~/serveur/systeme/crontab.txt
