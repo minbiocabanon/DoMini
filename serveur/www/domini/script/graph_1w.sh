@@ -8,7 +8,7 @@ wget 0.0.0.0:80/php/highstock/csv_teleinfo_an.php
 wget 0.0.0.0:80/php/highstock/csv_pellet_conso.php
 
 #suppression des fichiers temporaire crees
-rm /var/www/domini/php/highstock/csv_teleinfo_an.php.*
-rm /var/www/domini/php/highstock/csv_pellet_conso.php.*
+rm -f /var/www/domini/php/highstock/csv_teleinfo_an.php.*
+rm -f /var/www/domini/php/highstock/csv_pellet_conso.php.*
 
 

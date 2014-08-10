@@ -4,6 +4,6 @@ cd /var/www/domini/php/
 wget 0.0.0.0:80/php/instant_data.php
 
 #suppression des fichiers temporaire crees
-rm /var/www/domini/php/instant_data.php.*
+rm -f /var/www/domini/php/instant_data.php.*
 
 

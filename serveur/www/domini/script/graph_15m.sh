@@ -3,7 +3,7 @@ cd /var/www/domini/php/
 # calcul de la puissance du puits canadien
 # suppression fichier temporaire
 wget 0.0.0.0:80/php/puissance_pc_calc.php
-rm /var/www/domini/php/puissance_pc_calc.php.*
+rm -f /var/www/domini/php/puissance_pc_calc.php.*
 
 #lancement des page PHP qui vont generer les graphs
 cd /var/www/domini/php/highstock/
@@ -27,12 +27,12 @@ wget 0.0.0.0:80/php/highstock/csv_teleinfo_live.php
 
 
 #suppression des fichiers temporaire crees
-rm /var/www/domini/php/highstock/csv_temp_ext.php.*
-rm /var/www/domini/php/highstock/csv_temp_int.php.*
-rm /var/www/domini/php/highstock/csv_temp_pc.php.*
-rm /var/www/domini/php/highstock/csv_temp_air_neuf.php.*
-rm /var/www/domini/php/highstock/csv_temp_comble.php.*
-rm /var/www/domini/php/highstock/csv_temp_vmc_ext.php.*
-rm /var/www/domini/php/highstock/csv_teleinfo_live.php.*
+rm -f /var/www/domini/php/highstock/csv_temp_ext.php.*
+rm -f /var/www/domini/php/highstock/csv_temp_int.php.*
+rm -f /var/www/domini/php/highstock/csv_temp_pc.php.*
+rm -f /var/www/domini/php/highstock/csv_temp_air_neuf.php.*
+rm -f /var/www/domini/php/highstock/csv_temp_comble.php.*
+rm -f /var/www/domini/php/highstock/csv_temp_vmc_ext.php.*
+rm -f /var/www/domini/php/highstock/csv_teleinfo_live.php.*
 
 

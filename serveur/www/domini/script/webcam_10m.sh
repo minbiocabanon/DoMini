@@ -12,6 +12,6 @@ wget -O ./sejour_full.jpg http://user:user@192.168.0.115:8080/photoaf.jpg
 # on redimensionne l'image 
 wget http://0.0.0.0:80/webcam/redim.php
 # suppression des fichiers tampons
-rm /var/www/domini/webcam/*.php.*
+rm -f /var/www/domini/webcam/*.php.*
 
 

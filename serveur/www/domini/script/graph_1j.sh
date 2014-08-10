@@ -14,7 +14,7 @@ wget 0.0.0.0:80/php/highstock/csv_pellet.php
 wget 0.0.0.0:80/php/highstock/csv_pyrano_mensuel.php
 
 #suppression des fichiers temporaire crees
-rm /var/www/domini/php/highstock/csv_teleinfo_jour_LIGHT.php.* 
-rm /var/www/domini/php/highstock/csv_pellet.php.* 
-rm /var/www/domini/php/highstock/csv_pyrano_mensuel.php.*
+rm -f /var/www/domini/php/highstock/csv_teleinfo_jour_LIGHT.php.* 
+rm -f /var/www/domini/php/highstock/csv_pellet.php.* 
+rm -f /var/www/domini/php/highstock/csv_pyrano_mensuel.php.*
 

@@ -14,8 +14,8 @@ wget 0.0.0.0:80/php/highstock/csv_pyrano.php
 wget 0.0.0.0:80/php/highstock/csv_temp_vmc.php
 
 #suppression des fichiers temporaire crees
-rm /var/www/domini/php/highstock/csv_chauffage_log.php.*
-rm /var/www/domini/php/highstock/csv_consigne_pc.php.*
-rm /var/www/domini/php/highstock/csv_voletroulant_log.php.*
-rm /var/www/domini/php/highstock/csv_pyrano.php.*
-rm /var/www/domini/php/highstock/csv_temp_vmc.php.*
+rm -f /var/www/domini/php/highstock/csv_chauffage_log.php.*
+rm -f /var/www/domini/php/highstock/csv_consigne_pc.php.*
+rm -f /var/www/domini/php/highstock/csv_voletroulant_log.php.*
+rm -f /var/www/domini/php/highstock/csv_pyrano.php.*
+rm -f /var/www/domini/php/highstock/csv_temp_vmc.php.*
