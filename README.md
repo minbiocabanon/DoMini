@@ -83,7 +83,7 @@ L'importation de gros fichiers n'est pas possible via phpmyadmin, il faut utilis
 
  	mysql --user=root --password=mysql domotique < 	 ~/serveur/bdd/backup_domotique/backup-domotique.sql
  
- ## SYSTEME
+## SYSTEME
 ### Crontab:
 Importer les taches CRON listées dans ce fichier :
 
@@ -122,8 +122,11 @@ J'ai utilisé [Highstock](http://www.highcharts.com/) pour générer les graphiq
 ### Captures d'écan / Screenshots
 ![Domini Ecran accueil](docs/img/screenshot/web_accueil.png)
 
+![Domini Temperatures](docs/img/screenshot/web_temperature.png)
+
 ![Domini Consommation electrique live](docs/img/screenshot/web_elec_live.png)
 
 ![Domini Consommation electrique mensuelle](docs/img/screenshot/web_elec_mois.png)
 
 ![Domini Ensoleillement mensuel](docs/img/screenshot/web_soleil_mois.png)
+
