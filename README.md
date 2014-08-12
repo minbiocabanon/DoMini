@@ -112,7 +112,7 @@ Commande à éxécuter :
 ## Logiciel
  - Modifier le fichier suivant pour y renseigner les identifiants de connexion à la base de données ainsi que le nom de la table:
 
-	~/serveur/include/passwd.h
+	~/serveur/include/passwd.h (nommé passwd.h_ qu'il faut renommer)
 	
  - Recompiler tous les logiciels directement sur la cible avec la commande 'make'
  
