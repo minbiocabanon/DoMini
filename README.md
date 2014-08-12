@@ -84,6 +84,22 @@ L'importation de gros fichiers n'est pas possible via phpmyadmin, il faut utilis
  	mysql --user=root --password=mysql domotique < 	 ~/serveur/bdd/backup_domotique/backup-domotique.sql
  
 ## SYSTEME
+### rc.local
+Afin de garantir le fonctionnement de la domotique en cas de redémarrage intempestif du serveur (si pas d'onduleur ou à la reprise du courant lorsque l'onduleur est sec), il convient d'appeler le petit logiciel 'receiver' au démarrage.
+Pour cela, il faut modifier le fichier rc.local en ajoutant ces quelques lignes à la fin du fichier (avant exit 0) :
+
+	éditer le fichier (avec nano ou vi):
+	nano /etc/rc.local
+
+puis ajouter **avant exit 0**:
+
+	#setting baudrate
+	stty -F /dev/ttyUSB0 57600&
+	echo "running receiver"
+	/home/julien/bin/receiver /dev/ttyUSB0&
+	echo "exiting from rc.local"
+
+
 ### Crontab:
 Importer les taches CRON listées dans ce fichier :
 
