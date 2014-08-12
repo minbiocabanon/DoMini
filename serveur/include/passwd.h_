@@ -1,0 +1,8 @@
+#ifndef H_PASSWD
+#define H_PASSWD
+   char *user = "user";				// user of Mysql
+    char *password = "mypassword"; 		// password for user
+    char *database = "domotique";	// database name
+	char *server = "localhost";		// IP adresse or localhost
+    char query [400];
+#endif
