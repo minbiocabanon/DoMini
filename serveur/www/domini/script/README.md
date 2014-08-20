@@ -1,2 +1,2 @@
 **ATTENTION**
-Pour les scripts situÈs dans /var/www/domini/script/ , veillez ‡ ce que ce soit l'utilisation www-data:www-date qui ÈxÈcute les t‚ches CRON
+Pour les scripts situ√©s dans /var/www/domini/script/ , veillez √† ce que ce soit l'utilisation www-data:www-data qui √©x√©cute les t√¢ches CRON

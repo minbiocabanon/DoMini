@@ -46,6 +46,8 @@ Le logiciel 'emitter' enverra ce message.
 Ce répertoire contient le sketche (.ino) à programmer dans le jeelink.
 Le jeelink transmet les messages au jeenodes et gère les ACK (si on l'application demande un ACK)
 
+##include
+ce répertoire contient le fichier **passwd.h** , fichier include nécessaire aux applications en langage C car il contient les identifiants pour la connexion à la base de données ainsi que le nom de la base.
 
 ##planning
 Ce répertoire contient les tableurs dans lesquels je créée un CSV qui sera le planning annuel.

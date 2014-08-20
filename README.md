@@ -110,7 +110,11 @@ Commande à éxécuter :
 	crontab crontab.txt
 
 ## Logiciel
-Recompiler tous les logiciels directement sur la cible avec 'Make'
+ - Modifier le fichier suivant pour y renseigner les identifiants de connexion à la base de données ainsi que le nom de la table:
+
+	~/serveur/include/passwd.h (nommé passwd.h_ qu'il faut renommer)
+	
+ - Recompiler tous les logiciels directement sur la cible avec la commande 'make'
  
 ## INTERFACE WEB
 Faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini
