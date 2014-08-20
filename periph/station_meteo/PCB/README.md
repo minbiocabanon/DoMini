@@ -1,3 +1,5 @@
 Détails dans le wiki :
 
-[/Domini/wiki/Periphs](/Domini/wiki/Periphs)
+[https://github.com/RideZeBigOne/Domini/wiki/Periphs](https://github.com/RideZeBigOne/Domini/wiki/Periphs)
+
+
