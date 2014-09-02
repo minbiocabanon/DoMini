@@ -3,6 +3,6 @@
 ~/bin/gestion_vr
 
 #execution du script qui  traite la bdd et émet le(s) message(s) radio
-~/domini/systeme/envoi_msg_radio.sh
+./envoi_msg_radio.sh
 
 
