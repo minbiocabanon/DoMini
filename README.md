@@ -9,7 +9,7 @@ Mon projet domotique / My Home automation project
 
 - trouver un moyen de ne pas mettre en dur les chemins dans les scripts de crontab ou certains scripts
 - possibilité de mettre le chemin d'install du projet dans une variable puis d'utiliser cette variable dans les scripts pour travailler en relatif ?
-- 
+
 
 #Demo
 A l'adresse suivante, une version 'demo' de l'interface web de ma domotique est visible.
