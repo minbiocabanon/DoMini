@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "JeeNode shield - Sensors & GPIO"
-Date "1 nov 2013"
+Date "3 sep 2014"
 Rev "V1"
 Comp "Minbiocabanon"
 Comment1 "Orignal by JeeLabs"
@@ -1103,4 +1103,20 @@ F 3 "~" H 950 7050 60  0000 C CNN
 	1    950  7050
 	1    0    0    -1  
 $EndComp
+Wire Notes Line
+	9650 3150 9650 2900
+Wire Notes Line
+	9650 2900 10150 2900
+Wire Notes Line
+	10150 2900 10150 3150
+Wire Notes Line
+	9800 2800 9800 3000
+Wire Notes Line
+	9800 2800 9950 2900
+Wire Notes Line
+	9950 2900 9800 3000
+Wire Notes Line
+	9950 2800 9950 3000
+Text Notes 9750 2700 0    60   ~ 0
+BPW34
 $EndSCHEMATC
