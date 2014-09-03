@@ -129,6 +129,9 @@ Faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini
 
 **ATTENTION** : il ne faut pas avoir créé /var/www/domini avant de créér le lien symbolique
 
+**ATTENTION** : certaines pages PHP lancent des executables (copiés dans www/domini/bin lors de la compilation). L'executable 'emitter' accède au port série /dev/ttyUSB0 pour transmettre les ordres au Jeelink. Il est possible que l'utilisateur www-data n'est pas la permission pour accéder au port série.
+TODO -> permettre à www-data d'accéder au port série
+
 ajouter le multihost dans lighttp.conf
 
 	 ### Ajout virtual host Webcam ###
