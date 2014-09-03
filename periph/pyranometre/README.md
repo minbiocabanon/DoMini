@@ -2,7 +2,7 @@
 
 Ce répertoire n'a servi que pour le test de la mise en oeuvre du pyranomètre
 
-  ~/periph/station_meteo
+    ~/periph/station_meteo
 
 quelques explications sur mon blog : http://minbiocabanon.free.fr/index.php?tag/pyranometre et celui de bricolsec : http://bricolsec.canalblog.com/archives/2010/08/08/18770334.html
 
