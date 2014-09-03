@@ -1,6 +1,7 @@
 ------ POUR TEST SEULEMENT -------
 
-Ce répertoire n'a servi que pour le test de la mise en oeuvre du pyranomètre
+Ce répertoire n'a servi que pour le test de la mise en oeuvre du pyranomètre.
+Pour le montage fonctionnel, voir le shield arduino de la station météo qui intègre le montage utilisé final pour le pyranomètre :
 
     ~/periph/station_meteo
 
@@ -17,6 +18,7 @@ A voir s'il faut l'amplifier car en Juin le soleil cognera plus dur qu'en Févri
 - Le deuxième montage (avec AOP) :
 Trop sensible, il sature rapidement, je vais regarder à calmer un peu la sensibilité.
 
+*Dans le montage final : j'ai inversé la diode et la résistance (dont la valeur est de 31 Ohms) afin d'avoir une réponse dont la variation est du même sens que le flux solaire : plus le flux solaire est intense, plus la diode conduit, plus la tension monte sur AI4.*
 
 #sketches arduino
 - lecture des deux valeurs analogiques
