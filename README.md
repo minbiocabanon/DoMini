@@ -5,6 +5,12 @@ Mon projet domotique / My Home automation project
 
 ((BROUILLON))
 
+#ToDo
+
+- trouver un moyen de ne pas mettre en dur les chemins dans les scripts de crontab ou certains scripts
+- possibilité de mettre le chemin d'install du projet dans une variable puis d'utiliser cette variable dans les scripts pour travailler en relatif ?
+
+
 #Demo
 A l'adresse suivante, une version 'demo' de l'interface web de ma domotique est visible.
 http://minbiocabanon.free.fr/static_domini/
@@ -84,6 +90,22 @@ L'importation de gros fichiers n'est pas possible via phpmyadmin, il faut utilis
  	mysql --user=root --password=mysql domotique < 	 ~/serveur/bdd/backup_domotique/backup-domotique.sql
  
 ## SYSTEME
+### rc.local
+Afin de garantir le fonctionnement de la domotique en cas de redémarrage intempestif du serveur (si pas d'onduleur ou à la reprise du courant lorsque l'onduleur est sec), il convient d'appeler le petit logiciel 'receiver' au démarrage.
+Pour cela, il faut modifier le fichier rc.local en ajoutant ces quelques lignes à la fin du fichier (avant exit 0) :
+
+	éditer le fichier (avec nano ou vi):
+	nano /etc/rc.local
+
+puis ajouter **avant exit 0**:
+
+	#setting baudrate
+	stty -F /dev/ttyUSB0 57600&
+	echo "running receiver"
+	/home/julien/bin/receiver /dev/ttyUSB0&
+	echo "exiting from rc.local"
+
+
 ### Crontab:
 Importer les taches CRON listées dans ce fichier :
 
@@ -94,7 +116,11 @@ Commande à éxécuter :
 	crontab crontab.txt
 
 ## Logiciel
-Recompiler tous les logiciels directement sur la cible avec 'Make'
+ - Modifier le fichier suivant pour y renseigner les identifiants de connexion à la base de données ainsi que le nom de la table:
+
+	~/serveur/include/passwd.h (nommé passwd.h_ qu'il faut renommer)
+	
+ - Recompiler tous les logiciels directement sur la cible avec la commande 'make'
  
 ## INTERFACE WEB
 Faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini

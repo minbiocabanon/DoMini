@@ -1,6 +1,8 @@
+La table contient les heures de lever et coucher de soleil d√©termin√©s √† partir de ce site : http://ptaff.ca/soleil/ (possibilit√© d'obtenir les infos au format CSV)
+
 Importer la table ephemerides :
 
 	mysql --user=root --password=mysql domotique < 	 /~serveur/bdd/backup_domotique/ephemerides.sql
 	
-**ATTENTION** Les ephemerides ont ÈtÈ calculÈes pour une maison en rÈgion toulousaine, si votre situation gÈographique est diffÈrente, il faut modifier la table.
-*(nota : ajouter lien ou mÈthode de calcul)*
+**ATTENTION** Les ephemerides ont √©t√© calcul√©es pour une maison en r√©gion toulousaine, si votre situation g√©ographique est diff√©rente, il faut modifier la table.
+*(nota : ajouter lien ou m√©thode de calcul)*
