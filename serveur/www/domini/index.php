@@ -243,7 +243,7 @@
 					  <table class="table table-bordered table-striped table-condensed">
 						<thead>
 						  <tr>
-							<th colspan="4">Chauffage</th>
+							<th colspan="5">Chauffage</th>
 						  </tr>
 						</thead>
 						<tbody>
@@ -266,13 +266,14 @@
 										<!--<button id="formulaire_chauffe" class="btn" type="button">Appliquer</button> -->
 									</div>
 								</th>
-								<th width=20%>
+								<th colspan="2" width=20%>
 									<input class="btn btn-primary btn-small" id="formulaire_chauffe" type="button" value="Appliquer"/>
 								</th>
 							</tr>	
 						  <tr>
 							<td class="tdhead">Poele</td>
 							<td class="tdhead">Consigne</td>
+							<td class="tdhead">Granulés</td>
 							<td class="tdhead">H. démarrage</td>
 							<td class="tdhead">H. fin</td>
 						  </tr>
@@ -282,6 +283,9 @@
 							</td>
 							<td>
 								<?PHP echo $temp_consigne;	?>									
+							</td>
+							<td>
+							-
 							</td>
 							<td>
 								<?PHP echo $h_demarr;	?>
