@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Domini
 ======
 
@@ -161,3 +162,9 @@ J'ai utilisé [Highstock](http://www.highcharts.com/) pour générer les graphiq
 
 ![Domini Ensoleillement mensuel](docs/img/screenshot/web_soleil_mois.png)
 
+=======
+DoMini
+======
+
+Mon projet domotique DIY / My DIY Home automation project
+>>>>>>> de1650cc154d1f5f883a516ed699f6ae525699ea
