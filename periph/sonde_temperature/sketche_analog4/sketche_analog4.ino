@@ -11,6 +11,7 @@
 #include <avr/io.h>
 #include <avr/wdt.h>
 #include <JeeLib.h>
+#include <PortsSHT11.h>
 #include <math.h>
 
 #ifndef cbi
@@ -20,7 +21,7 @@
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
-#define version "JeeNode VMCDF+Bypass"
+#define version "JeeNode bouche insuflation"
 char stNum[] = "AN4";
 
 #define NBMINUTEVEILLE	5
@@ -35,17 +36,12 @@ char stNum[] = "AN4";
 #define MODE_RADIO_PWR_DOWN 3
 #define RADIO_SLEEP 0
 #define RADIO_WAKEUP -1
-
-//Constante pour la conversion tension -> °C
-#define RTALON	20000.00
-#define UALIM	3.3
-#define R25		22000.00
-#define B		3740
-#define Q		(UALIM / 1024) // 3.25 / 2^10
+//Declation des variables pour les GPIO
+#define CMD_VDD  7              // Commande du transistor pour avoir VDD = VCC (alim pyranomètre + pont diviseur alim) PD7 - Pin13 - Digital 7
+//variable pour mesure ADC
+#define Q 3.3/1024
 
 volatile boolean f_wdt=1;
-
-
 
 //prototype fonctions
 void setup(void);
@@ -55,24 +51,17 @@ void SendRadioData(void);
 
 //variable capteurs SHT11
 float h, t, d;
-//variables pour la lecture du CAN interne
-#define T_AIR_NEUF  	3		// Port4 AIO  - ANALOG 3 Selection de l'entree analog de mesure de la température air neuf	 
-int byTemp_air_vicie;
-int byTemp_air_neuf;
+long temp;
+int humid;
+int dewpt;
 
 //flag
 boolean bTimeToSendRadioMsg = false;
-boolean bTimeToClignoteLed = false;
-
-unsigned long TicksMsgRad = 0;
-unsigned long TicksLed = 0;
-
 //chaine pour l'émission RF12
 String str_payload = "";
-//chaine pour l'émission RF12
-char buffer_recept_rf12[66]="";
 
-const int LED=15; 				//Port2 AIO  - DIGITAL 15 
+//Declaration du capteur SHT11
+SHT11 hsensor (3);
 
 //----------------------------------------------------------------------
 //!\brief           Watchdog Interrupt Service / is executed when  watchdog timed out
@@ -88,33 +77,74 @@ ISR(WDT_vect){
 //---------------------------------------------------------------------- 
 void CaptureSensor(void){
 	
+	//variables pour la lecture du CAN interne
+	int SENSORPIN1 = 0;    // select the input pin ADC0 - Tension batterie	
+	int byTensionHEX1 = 0;  // variable to store the value coming from the sensor
+	
 	//variable pour les valeurs analogiques
-	double dbTensionVolt = 0, dbTemp = 0;
-	int byTensionHEX = 0;  // variable to store the value coming from the sensor
+	double dbTensionVolt;
+	
+	//variable pour boucle de filtrage
+	int byi = 0;
 	
 	// **************************************************
-	// *	Mesure de la temperature air neuf
+	// *	Mesure de la tension batterie
 	// **************************************************
+	//on active l'alim avec une mise à la masse sur la grille du PMOS
+	digitalWrite(CMD_VDD, LOW);
+	//délai de 50ms
+	delay(50);
+
 	// Lecture de la valeur du CAN interne de l'ATmega
-	byTensionHEX = analogRead(T_AIR_NEUF);
+	byTensionHEX1 = analogRead(SENSORPIN1);
+	
+	//on désactive l'alim avec une mise à la masse sur la grille du PMOS
+	digitalWrite(CMD_VDD, HIGH);
+	
 	//DEBUG
 	// Serial.print("\nVolt HEXA. : ");
 	// Serial.print(byTensionHEX,HEX);
 	// Serial.print("-> DEC. : ");
 	// Serial.print(byTensionHEX,DEC);
 	
-	dbTensionVolt = byTensionHEX * Q ;
+	dbTensionVolt = byTensionHEX1 * Q * 2 ; //x2 pour le pont diviseur
+	
 	//DEBUG
 	// Serial.print("\nVolt dbvolt. : ");
 	// Serial.print(dbTensionVolt,4);
-	
-	dbTemp = -273.15 + 1 / ( (log( (dbTensionVolt * RTALON / (UALIM - dbTensionVolt) ) / R25) )/ B + ( 1 / (273.15 + 25)));
-	
 	//conversion du float en INT x100 , x100 pour supprimer la virgule et envoyer un entier
-	byTemp_air_neuf = dbTemp * 100;	
+	int byTensionVolt = dbTensionVolt * 100;	
 	//DEBUG
-	// Serial.print("\nTemperature. : ");
-	// Serial.print(byTemp_air_neuf,DEC);
+	// Serial.print("\nVolt byvolt. : ");
+	// Serial.print(byTensionVolt,DEC);
+		
+	// **************************************************
+	// *	Lecture des données dans le capteur
+	// **************************************************
+	
+	uint8_t error = hsensor.measure(SHT11::HUMI);        
+	error |= hsensor.measure(SHT11::TEMP);
+	// Serial.print(hsensor.meas[SHT11::TEMP]);
+	// Serial.print(error, DEC);
+
+	// omit following code to avoid linking in floating point code
+	float h, t;
+	hsensor.calculate(h, t);
+	// Serial.print("\nHumid. : ");
+	// Serial.print(h);
+	// Serial.print("%\nTemp. :");
+	// Serial.print(t);
+		
+	// omit following code to avoid linking in the log() math code
+	float d = hsensor.dewpoint(h, t);
+	// Serial.print("C\nPoint de rosee :");
+	// Serial.print(d);
+	// Serial.print("C\n\n");
+	
+	//conversion du float en INT x100
+	temp = t * 100;
+	humid = h * 100;
+	dewpt = d * 100;
 }
 
 //----------------------------------------------------------------------
@@ -133,7 +163,7 @@ void SendRadioData(void){
 	// conversion du string en buffer pour la radio
 	char payload[29]="";
 	
- 	sprintf(payload,"$%s,%04d,0000,0000,0000\r\n", stNum, byTemp_air_neuf);
+	sprintf(payload,"$%s,%04ld,%04d,%04d,0000\r\n", stNum, (long)temp, humid, dewpt);
 	
 
 	// **************************************************
@@ -231,8 +261,6 @@ void setup() {
 	Serial.println();
 	Serial.println("Num. de Jeenode : ");
 	Serial.println(stNum);
-		
-	pinMode(LED, OUTPUT);
 			
 	// Choix de la référence de tension pour le CAN interne
 	//DEFAULT: the default analog reference of 3.3 volts
