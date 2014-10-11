@@ -42,7 +42,6 @@
 					</ul>
 				  </div>
 				</div>
-			
 				<div id="frame_ventilation">
 					<div id="image_ventilation">
 						<img src="img/plan_ventilation.jpg" alt="plan ventilation" ></img>
@@ -50,16 +49,13 @@
 					<div id="image_bypass">
 						<img src="img/<?php if($consigne_pc == 100){echo "bypass_pc_ext.jpg";}else{echo "bypass_pc_pc.jpg";} ?>" alt="bypass_pc"></img>	
 					</div>
-					<div id="image_bypass_vmc">
-						<?php if($bypass_VMC == 1){echo "<img src=\"img/vmcdf_bypass.jpg\" alt=\"bypass_VMC_DF\"></img> ";} ?>
-					</div>					
 					<div id="temp_ext"><?php echo $data_tempext[0];?>°C</div>
 					<div id="text_temp_garage">garage</div>
 					<div id="temp_garage"><?php echo $temp_garage;?>°C</div>
 					<div id="text_temp_int">Temp. int.</div>
 					<div id="temp_int"><?php echo $data_tempint[0];?>°C</div>
 					<div id="temp_pc"><?php echo $data_tempPC[0];?>°C</div>
-					<div <?php if($bypass_VMC == 1){echo "id=\"temp_air_neuf_bypass\"";} else {echo "id=\"temp_air_neuf\"";} ?> ><?php echo $vmc_temp_air_neuf;?>°C</div>
+					<div <?php if($bypass_VMC == 1){echo "id=\"temp_air_neuf_bypass\"";} else {echo "id=\"temp_air_neuf\"";} ?> > <?php echo $vmc_temp_air_neuf;?>°C</div>
 					<div id="temp_air_ext"><?php echo $vmc_temp_air_ext;?>°C</div>
 					<div <?php if($bypass_VMC == 1){echo "id=\"temp_air_repris_bypass\"";} else {echo "id=\"temp_air_repris\"";} ?> ><?php echo $vmc_temp_air_repris;?>°C</div>
 					<div id="temp_air_extrait" ><?php echo $vmc_temp_air_extrait;?>°C</div>
@@ -67,14 +63,15 @@
 					<div <?php if($bypass_VMC == 1){echo "id=\"temp_air_bouche_bypass\"";} else {echo "id=\"temp_air_bouche\"";} ?> ><?php echo $vmc_temp_air_bouche;?>°C</div>
 					<div id="temp_comble"><?php echo $temp_comble;?>°C</div>
 					<div id="text_temp_comble">combles</div>
-					<?PHP 
+					<?PHP
 						if($bypass_VMC == 0){
-							echo '	<div id="rendement_vmcdf"> '.$rendement.' >%</div> ';
+							echo '<div id="rendement_vmcdf">'.$rendement.'%</div>';
 						}
 					?>
+					<div id="image_vmc">
+						<?php if($bypass_VMC == 1){echo "<img src=\"img/vmcdf_bypass.jpg\" alt=\"vmc_bypass\"></img>";} ?>
+					</div>
 				</div>
-			
-         			
 			</div><!-- /container -->
 		</div><!-- /wrap -->
 	</body>

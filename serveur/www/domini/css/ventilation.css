@@ -29,7 +29,7 @@
 	left:130px; 
 	height:238px; 
 	width:458px; 
-	z-index:1;
+	z-index:-1;
 }
 
 #image_ventilation {
@@ -38,25 +38,27 @@
 	left:0px;
 	height:238px;
 	width:800px;
+	z-index:-1;
 }
 #image_bypass {
 	position:absolute;
 	top:159px;
 	left:400px;
+	z-index:3;
 }
-#image_bypass_vmc {
+#image_vmc {
 	position:absolute;
+	z-index:2;
 	top:116px;
 	left:572px;
-	height:156px; 
-	
+	height:156px;
 }
 
 #temp_ext {
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: black; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -72,7 +74,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: black; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -89,7 +91,7 @@
 	font-size : 0.7em;
 	height:40px; 
 	width:130px; 
-	z-index:2; 
+	z-index:3; 
 	color: black; 
 	text-align:center;
 	vertical-align:center;
@@ -100,7 +102,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: black; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -117,7 +119,7 @@
 	font-size : 0.7em;
 	height:40px; 
 	width:130px; 
-	z-index:2; 
+	z-index:3; 
 	color: black; 
 	text-align:center;
 	vertical-align:center;
@@ -128,7 +130,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: black; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -144,7 +146,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: forestgreen; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -161,7 +163,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: sandybrown; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -178,7 +180,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: red; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -194,7 +196,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: red; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -211,7 +213,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: orange; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -228,7 +230,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: orange; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -245,7 +247,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: red; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -261,7 +263,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: red; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -279,7 +281,7 @@
 	font-size : 0.7em;
 	height:40px; 
 	width:130px; 
-	z-index:2; 
+	z-index:3; 
 	color: red; 
 	text-align:center;
 	vertical-align:center;
@@ -291,7 +293,7 @@
 	font-size : 0.7em;
 	height:40px; 
 	width:130px; 
-	z-index:2; 
+	z-index:3; 
 	color: red; 
 	text-align:center;
 	vertical-align:center;
@@ -302,7 +304,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: grey; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
@@ -319,7 +321,7 @@
 	font-size : 0.7em;
 	height:40px; 
 	width:130px; 
-	z-index:2; 
+	z-index:3; 
 	color: grey; 
 	text-align:center;
 	vertical-align:center;
@@ -330,7 +332,7 @@
 	position:absolute; 
 	height:40px; 
 	width:100px; 
-	z-index:2; 
+	z-index:3; 
 	color: blue; 
 	background: #EEEEEE;
 	border: 2px solid #444444;
