@@ -58,6 +58,7 @@ enum TRACE{
 	C_TYPE_POELE,
 	C_POELE_MOD,
 	C_POELE_SAC,
+	C_POELE_NVG,
 	C_TYPE_TND
 	};
 
@@ -87,6 +88,7 @@ int put_into_teleinfo_database(char *table, char *entete, int HC, int HP, char *
 int put_into_analog_database(char *table, char *entete, float ana1, float ana2, float ana3, float ana4);
 int put_into_pyranometre_database(char *table, char *entete, float ana1);
 int put_into_pellet_database(char *table, char *entete, int nb_sac);
+int put_into_pelletres_database(char *table, char *entete, int niveau_res);
 int put_into_tnd_database(char *table, char *entete, long flat, long flon);
 int trt_msg_teleinfo(char *message, char *table);
 int trt_msg_analog(char *message,char *table);
@@ -131,7 +133,7 @@ unsigned long *lengths;
 // message des traces
 char aszTrace[20][20] = {"OK", "ENTETE", "HC", "HP", "TARIF", "COURANT", "COURANTMAX", "PUISSANCE",
                      "ENTETE2", "ANA1", "ANA2", "ANA3", "ANA4", "C_ENTETE_PYR", "C_ANA1_PYR", 
-					 "C_ENTETE_POELE", "C_TYPE_POELE", "C_POELE_MOD", "C_POELE_SAC"};
+					 "C_ENTETE_POELE", "C_TYPE_POELE", "C_POELE_MOD", "C_POELE_SAC", "C_POELE_NVG"};
 
 // pour la gestion de l'heure/date
 time_t t;
@@ -544,7 +546,7 @@ int put_into_pellet_database(char *table, char *entete, int nb_sac){
 	mysql_free_result(result);  
 
 	// On ajoute une ligne pour mettre à jour le stock
-	sprintf(query, "INSERT INTO pellets VALUES('',NOW(), '0', %d, %d)", nb_sac, (stock_pellet - nb_sac));
+	sprintf(query, "INSERT INTO %s VALUES('',NOW(), '0', %d, %d)", table, nb_sac, (stock_pellet - nb_sac));
 	
 	sprintf(szTrace, "receiver : requete pour les pellets -> %s", query);
 	syslog(LOG_DEBUG, szTrace);	
@@ -557,6 +559,24 @@ int put_into_pellet_database(char *table, char *entete, int nb_sac){
 	// on retourne 0 car tout est ok
 	return(0);
 }
+
+//----------------------------------------------------------------------
+//!\brief           Ajoute dans la table adéquat le niveau de granule mesuré dans le réservoir du poele
+//!\return        1 si erreur, 0 sinon
+//----------------------------------------------------------------------
+int put_into_pelletres_database(char *table, char *entete, int niveau_res){
+
+	// send SQL query 
+	sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %3d,0)", table, entete, niveau_res);
+	if (mysql_query(conn, query)) {
+		fprintf(stderr, "%s\n", mysql_error(conn));
+		return(1);
+    }
+	
+	// on retourne 0 car tout est ok
+	return(0);
+}
+
 
 //----------------------------------------------------------------------
 //!\brief           Ajoute dans la table passée en paramètre les infos GPS envoyées par le robot tondeuse.
@@ -739,7 +759,19 @@ int trt_msg_poele(char *message, char *table){
 			syslog(LOG_DEBUG, szTrace);       
 			put_into_pellet_database(table, entete, nb_sac);
 		}
-
+		//si c'est un message qu indique le niveau de granulés dans le reservoir
+		else if(!strncmp(tmpstr, "NVG",3)){
+			if((tmpstr = strtok (NULL, ",")) == NULL) { 
+				perror("strtok:");
+				compteur_de_bug++;
+				trace = C_POELE_NVG;
+				return -1;
+			}
+			int niveau_res = atoi(tmpstr); 
+			sprintf(szTrace, " receiver : msg poele NVG niveau reservoir :%d",niveau_res);
+			syslog(LOG_DEBUG, szTrace);       
+			put_into_pelletres_database("pelletres", entete, niveau_res);
+		}
 		//DEBUG
 		printf("  -> enreg. dans base de donnees\n");
 		fflush(stdout);
@@ -750,12 +782,11 @@ int trt_msg_poele(char *message, char *table){
 
 
 //----------------------------------------------------------------------
-//!\brief           Dépouille les infos du message $TND
+//!\brief           Dépouille les infos du message $TND , position du robot tondeuse
 //!\return        1 si erreur, 0 sinon
 //----------------------------------------------------------------------
 int trt_msg_tnd(char *message, char *table){
 	printf("\n  Traitement msg %s", table);
-	  
 	//***************************
 	//* Log dans la base de données
 	//***************************
