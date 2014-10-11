@@ -1,15 +1,16 @@
 //--------------------------------------------------
-//! \file     sketche_poele.ino
-//! \brief    Sketch for remote control of the Pellets Stove
-//! \brief 	Message received have this format :  $POL,x,yyy     x = 1 ou 0  , yyy = 0 à 100%
-//! \brief 	SYNCHRO : au démarrage, le poele doit être sur le menu standby (SB)
-//! \date     2011-11
-//! \author   minbiocabanon
+//! \file		sketche_poele.ino
+//! \brief		Sketch for remote control of the Pellets Stove
+//! \brief		Message received have this format :  $POL,x,yyy     x = 1 ou 0  , yyy = 0 à 100%
+//! \brief		SYNCHRO : au démarrage, le poele doit être sur le menu standby (SB)
+//! \date		2014-09
+//! \author		minbiocabanon
 //--------------------------------------------------
-
 
 #include <JeeLib.h>
 #include <MsTimer2.h>
+#include <Timer.h>
+#include <Ultrasonic.h>
 
 #define version "JeeNode Poele"
 char stNum[] = "POL";
@@ -24,7 +25,7 @@ char stNum[] = "POL";
 #define BTN_PLUS		14		//Sortie pilotant bouton "Plus"  - PC0 pin 23 - DIGITAL 14
 #define BTN_MOINS		7		//Sortie pilotant bouton "Moins"  - PD7 pin 13 - DIGITAL 7
 #define BTN_SAC 		6		// Entrée captant le bouton "SAC"  - PD6 pin 12 - DIGITAL 6
-#define BTN_SYNC 		15		// Entrée captant le bouton "SAC"  -                    - DIGITAL 16
+// #define BTN_SYNC 		15		// Entrée captant le bouton "SAC"  -                    - DIGITAL 16
 
 // ATTENTION, sur le poele cette patte est à 10V !  pour l'instant elle n'est pas reliée sur la carte
 // Son utilisation n'est pas indispensable pour l'instant ....
@@ -116,6 +117,8 @@ boolean bflag_sac_pellet = false;
 boolean bflag_mode_manuel = false;
 boolean bflag_consigne_en_attente = false;
 boolean bflag_recalage_0 = false;
+boolean bflag_mesure_niveau = false;
+boolean bflag_envoie_niveau = false;
 
 // etat du poele et consigne de chauffe
 int etat_poele; 		// 0 (OFF) ou 1 (ON)
@@ -130,11 +133,14 @@ int nblipled = 0;
 int nNbConsigneCpt = 0; // variable pour compter le nombre de consignes appliquée afin de faire un recalage à 0 au bout de NBCONSIGNE_RAZ
 
 int nb_sac_pellets = 0;	// variable pour le nombre de sacs
+int niveau_granule = 0;	// variable pour le niveau du reservoir a granules
 
 //chaine pour l'émission RF12
 char buffer_recept_rf12[66]="";
 char payload[16] = "$POL,XXX,N**";
 
+Timer t;
+Ultrasonic ultrasonic(16);	// Entrée captant l'info ultrason  AIO de P3 - DIGITAL 16
 
 //----------------------------------------------------------------------
 //!\brief           fait clignoter la led une fois
@@ -483,9 +489,9 @@ int scan_bouton(void){
 	else if (digitalRead(BTN_SAC)  == 0){
 		btn = BTN_SAC;
 	}
-	else if (digitalRead(BTN_SYNC)  == 0){
-		btn = BTN_SYNC;
-	}	
+	// else if (digitalRead(BTN_SYNC)  == 0){
+		// btn = BTN_SYNC;
+	// }	
 	// else if (digitalRead(BTN_ON_OFF)  == 0){
 		// btn = BTN_ON_OFF;
 	// }
@@ -558,14 +564,14 @@ int Trt_bouton(int bouton){
 			Serial.println("+1 sac de pellets");
 			nb_sac_pellets++;			
 			break;	
-		case BTN_SYNC: 
-			// L'utilisateur resynchronise le menu
-			Serial.println("Synchro menu ");
-			//on se remet au début du sous menu
-			pos_sousmenu = 0;
-			//on se remet au début du sous menu
-			pos_menu = 0;
-			break;				
+		// case BTN_SYNC: 
+			// // L'utilisateur resynchronise le menu
+			// Serial.println("Synchro menu ");
+			// //on se remet au début du sous menu
+			// pos_sousmenu = 0;
+			// //on se remet au début du sous menu
+			// pos_menu = 0;
+			// break;				
 	}
 	
 	//DEBUG
@@ -712,7 +718,7 @@ void tache_gestion_radio(void){
 		//char payload[]="$POL,SAC,N**";
 		
 		//on compile les donnees dans le buffer a transmettre
-		sprintf(payload,"$%s,SAC,%1d\r\n", stNum, nb_sac_pellets);
+		sprintf(payload,"!%s,SAC,%1d\r\n", stNum, nb_sac_pellets);
 		//DEBUG
 		Serial.println(payload);
 			 
@@ -726,6 +732,23 @@ void tache_gestion_radio(void){
 		
 		// on fait clignoter la led pour le debug
 		clignote_led();
+	}
+	
+	// si on doit envoyer la valeur du niveau du reservoir a granule
+	if(bflag_envoie_niveau == true){
+		//definition du message : NNN = mesure en centimetre du niveau. 000cm = reservoir plein.
+		//char payload[]="$POL,NVG,000**";
+		
+		//on compile les donnees dans le buffer a transmettre
+		sprintf(payload,"$%s,NVG,%3d\r\n", stNum, niveau_granule);
+		//DEBUG
+		Serial.println(payload);
+			 
+		//on envoi le message
+		send_data_radio();
+		
+		// on reset le flag 
+		bflag_envoie_niveau = false;
 	}
 	
 	//si l'utilisateur a modifier la puissance manuellement, il faut avertir la centrale domotique pour arrêter la régulation automatique
@@ -744,6 +767,39 @@ void tache_gestion_radio(void){
 				
 		// on reset le flag
 		bflag_mode_manuel = false;
+	}
+}
+
+//----------------------------------------------------------------------
+//!\brief           Tache de fond qui mesure le niveau du reserver a granules
+//---------------------------------------------------------------------- 
+tache_mesure_niveau_granule(){
+	// si le timer a claque
+	if( bflag_mesure_niveau == true){
+		//on realise la mesure
+		int x = i = 0;
+		// on refait la mesure tant qu'elle est incoherente ou si on fait plus de 10 mesure
+		while( x < 0 || x >= 150 || i > 10){
+			ultrasonic.MeasureInCentimeters();
+			x = ultrasonic.RangeInCentimeters;
+			i++;
+		}
+		if(i < 10){
+			// on prepare le flag pour envoyer la mesure par radio
+			bflag_envoie_niveau = true;
+			niveau_granule = x;
+			// on affiche du debug
+			Serial.print("Niveau granule : mesure ultrason (cm) = ");
+			Serial.println(niveau_granule);
+		}
+		else{
+			// on affiche du debug
+			Serial.print("Niveau granule : Erreur sur la mesure ");
+			//sinon on force a false
+			bflag_envoie_niveau = false;
+		}
+		// on reset le flag 
+		bflag_mesure_niveau = false;	
 	}
 }
 
@@ -820,6 +876,15 @@ void TimerMinute(void) {
 	// on leve le flag pour lancer le traitement de l'appui sur le bouton
 	bflag_trt_btn = true;
 }
+
+//----------------------------------------------------------------------
+//!\brief           Interruption lorsque le timer 10 minutes pour la mesure de niveau expire
+//----------------------------------------------------------------------
+NiveauGranules(){
+	// On n'envoies le niveau que si le poele est ON, en principe si le poele est OFF, le niveau ne bouge pas !
+	if(etat_poele == POELE_ON)
+		bflag_mesure_niveau = true;
+}
  
 //----------------------------------------------------------------------
 //!\brief           INITIALISATION
@@ -841,7 +906,7 @@ void setup (void) {
 	pinMode(BTN_MOINS, INPUT);
 	pinMode(BTN_ON_OFF, INPUT);
 	pinMode(BTN_SAC, INPUT);
-	pinMode(BTN_SYNC, INPUT);
+	// pinMode(BTN_SYNC, INPUT);
 	
 
 	// ------- Broches en sortie -------  
@@ -855,6 +920,8 @@ void setup (void) {
 	
 	//on configure le timer, mais on ne le lance pas !
 	MsTimer2::set(15000, TimerMinute); // 15s period
+	// on arme le timer de 10 minutes pour la mesure de niveau du réservoir à granulés
+	t.every(600000, NiveauGranules);	// 10 minutes (attention, ne pas ecrire 1000 * 60 * 10 -> ne fonctionne pas !
 	
 	//initialisation du module radio RF12
 	rf12_initialize(1, RF12_868MHZ, 33);
@@ -876,7 +943,11 @@ void loop(){
 	
 	tache_gestion_radio();
 	
+	tache_mesure_niveau_granule();
+	
 	status();
 	
 	delay(10);
+	
+	t.update();
 }
