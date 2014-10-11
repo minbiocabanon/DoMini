@@ -95,9 +95,11 @@ int menu_goto(int index_menu);
 int set_puissance(int puissance);
 int appui_bouton(int bouton);
 void TimerMinute(void);
+void NiveauGranules(void);
 int scan_bouton(void);
 int Trt_bouton(int bouton);
 void tache_gestion_IHM(void);
+void tache_mesure_niveau_granule(void);
 void tache_gestion_radio(void);
 void tache_gestion_puissance(void);
 void it_bouton(void);
@@ -773,16 +775,23 @@ void tache_gestion_radio(void){
 //----------------------------------------------------------------------
 //!\brief           Tache de fond qui mesure le niveau du reserver a granules
 //---------------------------------------------------------------------- 
-tache_mesure_niveau_granule(){
+void tache_mesure_niveau_granule(){
 	// si le timer a claque
 	if( bflag_mesure_niveau == true){
 		//on realise la mesure
-		int x = i = 0;
+		unsigned int x = -1;
+		unsigned int i = 0;
+		//on fait une premiere mesure
+		ultrasonic.MeasureInCentimeters();
+		x = ultrasonic.RangeInCentimeters;
 		// on refait la mesure tant qu'elle est incoherente ou si on fait plus de 10 mesure
-		while( x < 0 || x >= 150 || i > 10){
+		while( !(x > 0 && x <= 150) && i < 10){
 			ultrasonic.MeasureInCentimeters();
 			x = ultrasonic.RangeInCentimeters;
 			i++;
+			Serial.print("(while)Niveau granule : mesure ultrason (cm) = ");
+			Serial.println(x);
+			delay(100);
 		}
 		if(i < 10){
 			// on prepare le flag pour envoyer la mesure par radio
@@ -880,7 +889,7 @@ void TimerMinute(void) {
 //----------------------------------------------------------------------
 //!\brief           Interruption lorsque le timer 10 minutes pour la mesure de niveau expire
 //----------------------------------------------------------------------
-NiveauGranules(){
+void NiveauGranules(){
 	// On n'envoies le niveau que si le poele est ON, en principe si le poele est OFF, le niveau ne bouge pas !
 	if(etat_poele == POELE_ON)
 		bflag_mesure_niveau = true;
@@ -930,6 +939,7 @@ void setup (void) {
 	Serial.print("\nInit Radio : \n 1200 bauds\n");
 		
 	Serial.println("\nFin SETUP");
+	
 }
 
 //----------------------------------------------------------------------
