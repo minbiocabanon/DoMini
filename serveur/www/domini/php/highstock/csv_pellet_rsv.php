@@ -1,6 +1,6 @@
 <?php // content="text/plain; charset=utf-8"
 	include("../../infos/config.inc.php"); // on inclu le fichier de config
-	$filename = "../../csv/pellet.csv";
+	$filename = "../../csv/pellet_rsv.csv";
 
 	//on prépare l'entete du fichier CSV
 	$fp = fopen($filename, "w");
