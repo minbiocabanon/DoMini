@@ -1,7 +1,7 @@
 //--------------------------------------------------
 //! \file     receiver.c
 //! \brief    Simple C program that connects to MySQL Database server
-//! \date     27-01-2010
+//! \date     05-11-2014
 //! \author   minbiocabanon
 //--------------------------------------------------
 
@@ -770,7 +770,7 @@ int trt_msg_poele(char *message, char *table){
 			int niveau_res = atoi(tmpstr); 
 			sprintf(szTrace, " receiver : msg poele NVG niveau reservoir :%d",niveau_res);
 			syslog(LOG_DEBUG, szTrace);       
-			put_into_pelletres_database("pelletres", entete, niveau_res);
+			put_into_pelletres_database("pellets_rsv", entete, niveau_res);
 		}
 		//DEBUG
 		printf("  -> enreg. dans base de donnees\n");
