@@ -8,7 +8,6 @@
 //--------------------------------------------------
 
 #include <JeeLib.h>
-#include <MsTimer2.h>
 #include <Timer.h>
 #include <Ultrasonic.h>
 
@@ -107,6 +106,7 @@ static byte waitForAck(void);
 int send_data_radio(void);
 void clignote_led(void);
 void recalage_zero(void);
+void CheckTimer(void);
 
 //Objets
 //MilliTimer sendTimer;
@@ -143,6 +143,15 @@ char payload[16] = "$POL,XXX,N**";
 
 Timer t;
 Ultrasonic ultrasonic(16);	// Entrée captant l'info ultrason  AIO de P3 - DIGITAL 16
+
+//----------------------------------------------------------------------
+//!\brief           Test du timer , écrit du debug sur la console
+//!\return        -
+//----------------------------------------------------------------------
+
+void CheckTimer(void){
+	Serial.println("... Tic Tac Tic Tac ...  ");
+}
 
 //----------------------------------------------------------------------
 //!\brief           fait clignoter la led une fois
@@ -660,7 +669,7 @@ void tache_gestion_IHM(void){
 		Serial.println("tache_gestion_IHM");
 	
 		//on lance le timer de 15 sec
-		MsTimer2::start();
+		t.after(15000, TimerMinute);
 
 		//pour anti rebond, on inhibe les IT
 		detachInterrupt(1);
@@ -825,13 +834,13 @@ void tache_gestion_puissance(void){
 			//on execute la consigne du message recu
 			Trt_consigne(consigne_poele);
 			//on met le poele dans l'état non defini pour la prochaine boucle
-			etat_poele = POELE_NOSTATE;
+			// etat_poele = POELE_NOSTATE;
 		}
 		else if (etat_poele == POELE_OFF){
 			// on éteind le poele
 			standby_poele();
 			//on met le poele dans l'état non defini
-			etat_poele = POELE_NOSTATE;
+			// etat_poele = POELE_NOSTATE;
 			//on remet le flag de recalage à 0 pour qu'au prochaine allumage du poele, on repasse à 0% pour se recaler
 			bflag_recalage_0 = false;
 		}
@@ -862,18 +871,15 @@ void status(void){
 //!\brief           Timer d'une minute
 //----------------------------------------------------------------------
 void TimerMinute(void) {
-	// on indique que la minute est passée depuis le dernier appui sur un bouton -> reset du flag
+	// on indique que le temps est passé depuis le dernier appui sur un bouton -> reset du flag
 	bflag_ManipManuelle = false;
-	Serial.println("\n MINUTE ECOULEE! ");
+	Serial.println("\n Timeout appui bouton! ");
 	
 	// cas particulier : on regarde si l'utilisateur a mis des sacs de granulés dans le réservoir
 	if(nb_sac_pellets > 0){
 		//on lève le flag pour envoyer un message radio vers le sheevaplug
 		bflag_sac_pellet = true;
 	}
-		
-	//on arrête le timer
-	MsTimer2::stop();
 }
 
 //----------------------------------------------------------------------
@@ -927,10 +933,11 @@ void setup (void) {
 	//on gère une patte comme interruption hardware -> INT1 = PD3 , Pin IRQ
 	attachInterrupt(1, it_bouton, FALLING);
 	
-	//on configure le timer, mais on ne le lance pas !
-	MsTimer2::set(15000, TimerMinute); // 15s period
 	// on arme le timer de 10 minutes pour la mesure de niveau du réservoir à granulés
 	t.every(600000, NiveauGranules);	// 10 minutes (attention, ne pas ecrire 1000 * 60 * 10 -> ne fonctionne pas !
+	
+	//test pour vérifier que le timer tourne
+	t.every(60000, CheckTimer);	// 10 minutes (attention, ne pas ecrire 1000 * 60 * 10 -> ne fonctionne pas !
 	
 	//initialisation du module radio RF12
 	rf12_initialize(1, RF12_868MHZ, 33);
