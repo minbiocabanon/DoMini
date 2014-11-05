@@ -272,6 +272,7 @@
 				  <li><a href="pellet_conso.php">Consommation</a></li>
 				  <li><a href="pellet_bilan.php">Bilan</a></li>
 				  <li class="active"><a href="pellet.php">Stock</a></li>
+				  <li><a href="pellet_rsv.php">Niv. reservoir</a></li
 				</ul>
 			  </div>
 			</div>
