@@ -10,6 +10,7 @@
 #include <JeeLib.h>
 #include <Timer.h>
 #include <Ultrasonic.h>
+#include "RunningMedian.h"
 
 #define version "JeeNode Poele"
 char stNum[] = "POL";
@@ -54,6 +55,8 @@ char stNum[] = "POL";
 
 #define NB_BLIP_LED	500			//nb de cycle à attendre entr 2 clignotements de la led status
 #define NBCONSIGNE_RAZ 3		// nb de consigne à appliquer entre 2 recalage_zero
+
+#define NB_SAMPLE_US 5
 
 const int LED=15; 				//Port2 AIO  - DIGITAL 15 
 
@@ -143,6 +146,7 @@ char payload[16] = "$POL,XXX,N**";
 
 Timer t;
 Ultrasonic ultrasonic(16);	// Entrée captant l'info ultrason  AIO de P3 - DIGITAL 16
+RunningMedian samples = RunningMedian(NB_SAMPLE_US);
 
 //----------------------------------------------------------------------
 //!\brief           Test du timer , écrit du debug sur la console
@@ -790,19 +794,18 @@ void tache_mesure_niveau_granule(){
 		//on realise la mesure
 		unsigned int x = -1;
 		unsigned int i = 0;
-		//on fait une premiere mesure
-		ultrasonic.MeasureInCentimeters();
-		x = ultrasonic.RangeInCentimeters;
-		// on refait la mesure tant qu'elle est incoherente ou si on fait plus de 10 mesure
-		while( !(x > 0 && x <= 150) && i < 10){
+		//on fait plusieurs mesures
+		for( i = 0; i < NB_SAMPLE_US; i++){
 			ultrasonic.MeasureInCentimeters();
-			x = ultrasonic.RangeInCentimeters;
-			i++;
-			Serial.print("(while)Niveau granule : mesure ultrason (cm) = ");
-			Serial.println(x);
-			delay(100);
+			//on ajoute la mesure dans une table
+			samples.add(ultrasonic.RangeInCentimeters);
+			delay(50);
 		}
-		if(i < 10){
+		//on calcule la valeur mediane, ce qui éliminera les mesures incohérentes
+		x = samples.getMedian();
+		
+		//si la mesure est cohérente
+		if(x > 0 && x <= 100){
 			// on prepare le flag pour envoyer la mesure par radio
 			bflag_envoie_niveau = true;
 			niveau_granule = x;
