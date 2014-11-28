@@ -51,7 +51,7 @@
 				            
 				            x = Date.UTC(date[2], date[1] - 1, date[0], time[0], time[1]);
 				            
-				            niv_rsv.push([x, point[2]]);
+				            niv_rsv.push([x, parseInt(point[2])]);
 
 				        }
 				    }
