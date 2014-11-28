@@ -38,29 +38,29 @@
 	$comma = "";
 	$fp = fopen($filename, "w");
 
-	foreach($row as $name => $value) {
-		$line .= $comma .  str_replace('"', '""', $name) ;
-		$comma = ";";
-	}
-	$line .= "\n";
-	fputs($fp, $line);
-
-	// remove the result pointer back to the start
-	mysql_data_seek($RESULT, 0);
-
-	// and loop through the actual data
-	while($row = mysql_fetch_assoc($RESULT)) {
-	   
-		$line = "";
-		$comma = "";
-		foreach($row as $value) {
-			$line .= $comma . str_replace('"', '""', $value);
+		foreach($row as $name => $value) {
+			$line .= $comma .  str_replace('"', '""', $name) ;
 			$comma = ";";
 		}
 		$line .= "\n";
 		fputs($fp, $line);
-	}
 
+		// remove the result pointer back to the start
+		mysql_data_seek($RESULT, 0);
+
+		// and loop through the actual data
+		while($row = mysql_fetch_assoc($RESULT)) {
+		   
+			$line = "";
+			$comma = "";
+			foreach($row as $value) {
+				$line .= $comma . str_replace('"', '""', $value);
+				$comma = ";";
+			}
+			$line .= "\n";
+			fputs($fp, $line);
+		}
+	
 	fclose($fp);		 
 	
 	echo"CSV pellet exporté.<br>";
