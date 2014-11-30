@@ -172,7 +172,7 @@
 	FROM analog1 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )";
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);	
+	$RESULT = mysql_query($SQL) or die(mysql_error());	
 	// on récupère le nombre de résultat
 	$numrows = mysql_num_rows($RESULT);
 	echo"<br/>nb de ligne Te = $numrows <br>";

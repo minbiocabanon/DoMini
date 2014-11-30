@@ -88,6 +88,20 @@
 									  </p>
 									</div>								
 								</div>
+								<div class="item">
+									<img src="./webcam/test.jpg" alt="">
+									<div class="carousel-caption">
+									  <h4>Test</h4>
+									  <p>
+									 <?PHP
+										$filename_cam4 = './webcam/test.jpg';
+										if(file_exists($filename_cam4)){
+											echo date("Y-m-d H:i:s",  filemtime($filename_cam4));
+										}
+									  ?>
+									  </p>
+									</div>								
+								</div>								
 							  </div>
 							  
 							  <!-- Carousel nav -->

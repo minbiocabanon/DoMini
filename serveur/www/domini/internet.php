@@ -77,7 +77,7 @@
 						shadow: true,
 				        //type: 'spline',
 						step: true,
-				        name: 'Flux solaire',
+				        name: 'Ping internet',
 				        data: ping
 				        //yAxis: 1
 				    }],

@@ -412,9 +412,11 @@ int ConfigOpenPortCOM(int argc, char *argv[]){
 
 	// inter-character timer in 1/100s
 	// returns after a 100ms blank
-	newtio.c_cc[VTIME] = 10;
+	// newtio.c_cc[VTIME] = 10;
+	newtio.c_cc[VTIME] = 0;
 	// blocking read until 100 chars received
-	newtio.c_cc[VMIN] = 100;
+	// newtio.c_cc[VMIN] = 100;
+	newtio.c_cc[VMIN] = 1;
 	// So, return must occur when a continuous flow of VMIN bytes max
 	// separated by at the most VTIME/100 s
 
@@ -1069,6 +1071,7 @@ int main(int argc, char *argv[]) {
 				time_out_portCOM = 0;
 				sprintf(szTrace, "receiver : reinitialisation du portCOM suite a expiration du time_out_portCOM > 60");
 				syslog(LOG_DEBUG, szTrace);
+				printf("\n(!!RESET PortCOM!!)\n");
 			}
 			fflush(stdout);
 			// on boucle au while(keep_looping)
