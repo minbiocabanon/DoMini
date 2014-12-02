@@ -105,7 +105,6 @@ void trt_serial(void){
 				// on a atteint la fin du msg = LF (ou \n)
 				if(charin == 0X0A || charin == 0X0D) {
 					// on change d'etat, message suivant
-					// discutable, a preciser depend du traitement du message
 					serial_state = SM_SERIAL_WAIT_DEB;
 					// on leve un flag pour indiquer que le msg est complet
 					bMsg_serie_recu = true;
