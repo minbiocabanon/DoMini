@@ -50,8 +50,10 @@
 		//on force le lancement de deux logiciels pour que l'action sur les VR soit immédiate
 		// on lance le soft qui rempli la table d'état des VR
 		exec("/var/www/domini/bin/gestion_vr",$result);
+		//var_dump($result);
 		// on force l'envoi des messages
 		exec("/var/www/domini/bin/emitter /dev/ttyUSB0",$result);
+		//var_dump($result);
 	//}
 	
 	//si le mode est Manuel

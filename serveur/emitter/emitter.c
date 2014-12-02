@@ -99,7 +99,7 @@ void sigfun(int sig) {
 int ConfigOpenPortCOM(int argc, char *argv[]){
 
   if(argc != 2) {
-    printf("Incorrect number of args: usage arduinomonitor <USB port> e.g. /dev/ttyUSB0\n");
+    printf("Incorrect number of args (%d), argv = %s: usage arduinomonitor <USB port> e.g. /dev/ttyUSB0\n", argc, argv[1]);
     return(-1);
   }
   printf("connecting to port %s\n", argv[1]);
