@@ -1,8 +1,9 @@
 **ATTENTION**
 Pour les scripts situés dans /var/www/domini/script/ , veillez à ce que ce soit l'utilisation **www-data:www-data** qui éxécute les tâches CRON
 
-*NOTES*
+## NOTES
 
+#dpkg
 Il est possible de lister l'ensemble des paquetages installés grâce à la commande : 
 dpkg --get-selections
 
@@ -17,7 +18,11 @@ dpkg --set-selections < mes_paquetages
 Installation de la liste : 
 apt-get dselect-upgrade
 
-
-
 La commande dpkg -l retourne la liste des paquets installés avec plus d'informations.
  Cependant il n'est pas possible de l'utiliser pour installer une liste de paquets.
+
+ #crontab
+ pour enlever les notifications mail, ajouter dans le crontab avec la commande :
+	$crontab -e
+ la ligne suite :
+	MAILTO=""
