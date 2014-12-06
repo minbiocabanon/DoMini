@@ -38,7 +38,7 @@ int supp_donnees(char *table);
 int keep_looping = TRUE;
 
 //déclaration de la table sur laquelle on va travailler
-char *table[]={"chauffage_log","voletroulant_log"};
+char *table[]={"chauffage_log", "voletroulant_log", "bypass_pc_log"};
 #define NB_ELEMENT_TABLE	2
 
 // Déclaration du pointeur de structure de type MYSQL

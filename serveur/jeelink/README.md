@@ -1,9 +1,10 @@
 #ATTENTION !
 
-Le port ttyUSBx doit être utilisabla par l'utilisateur www (www-data la plupart du temps).
+Le port ttyUSBx doit Ãªtre utilisabla par l'utilisateur www (www-data la plupart du temps).
 
-(TO DO)
-	usermod -a -G dialout www-data (pas suffisant)
+	usermod -a -G dialout www-data
+	ou
+	adduser www-data dialout
 
 
 
