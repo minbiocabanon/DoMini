@@ -3,8 +3,6 @@ Domini
 
 Mon projet domotique / My Home automation project
 
-((BROUILLON))
-
 #ToDo
 
 - trouver un moyen de ne pas mettre en dur les chemins dans les scripts de crontab ou certains scripts
@@ -123,7 +121,9 @@ Commande à éxécuter :
 
 ### Users
 L'utilisateur www-data doit disposer d'un mot de passe pour être compatible avec la configuration de mes caméras. Les caméras envoient par FTP des images dans le répertoire du serveur web.
+
 Par défaut www-data ne possède pas de mot de passe. Lui donner "www-data" comme mot de passe à l'aide de la commande :
+
 	sudo passwd www-data
 	
 	
