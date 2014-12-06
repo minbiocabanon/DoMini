@@ -105,6 +105,12 @@ puis ajouter **avant exit 0**:
 	/home/julien/bin/receiver /dev/ttyUSB0&
 	echo "exiting from rc.local"
 
+### Accès au portCOM/USB
+Le port ttyUSBx doit être utilisable par l'utilisateur www-data pour l'envoi de message directement depuis l'interface web.
+
+	usermod -a -G dialout www-data
+	ou
+	adduser www-data dialout
 
 ### Crontab:
 Importer les taches CRON listées dans ce fichier :
@@ -115,6 +121,37 @@ Commande à éxécuter :
 
 	crontab crontab.txt
 
+### Users
+L'utilisateur www-data doit disposer d'un mot de passe pour être compatible avec la configuration de mes caméras. Les caméras envoient par FTP des images dans le répertoire du serveur web.
+Par défaut www-data ne possède pas de mot de passe. Lui donner "www-data" comme mot de passe à l'aide de la commande :
+	sudo passwd www-data
+	
+	
+### vsFTP
+Ce serveur FTP doit être installé si vous avez installé tous les paquets présents dans le fichier ~/serveur/systeme/dpkg.txt
+
+La configuration qui fonctionne (dans mon cas) est celle-ci :
+
+fichier de configuration /etc/vsftpd.conf :
+
+	listen=YES
+	anonymous_enable=YES
+	local_enable=YES
+	write_enable=YES
+	anon_upload_enable=YES
+	anon_mkdir_write_enable=YES
+	dirmessage_enable=YES
+	xferlog_enable=YES
+	connect_from_port_20=YES
+	chown_uploads=YES
+	chown_username=ftp
+	ftpd_banner=Welcome to blah FTP service.
+	secure_chroot_dir=/var/run/vsftpd
+	pam_service_name=vsftpd
+	rsa_cert_file=/etc/ssl/certs/vsftpd.pem
+	anon_root=/var/www/	
+	
+	
 ## Logiciel
  - Modifier le fichier suivant pour y renseigner les identifiants de connexion à la base de données ainsi que le nom de la table:
 
@@ -133,14 +170,6 @@ Faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini
 	
 	#la commande suivante permet de donner accés en lecture/écriture à tous les groupes
 	sudo chmod 666 /dev/ttyUSB0
-
-ajouter le multihost dans lighttp.conf
-
-	 ### Ajout virtual host Webcam ###
-	$SERVER["socket"] == ":82" {
-	 server.document-root = "/var/www/webcam/"
-	 server.errorlog = "/var/log/lighttpd/webcam/error.log"
-	 }
 
 ### BOOTSTRAP
 le framework [bootstrap](http://getbootstrap.com/) est utilisé pour la création des pages web.
