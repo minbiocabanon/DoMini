@@ -89,12 +89,12 @@
 									</div>								
 								</div>
 								<div class="item">
-									<img src="./webcam/test.jpg" alt="">
+									<img src="./webcam/garage.jpg" alt="">
 									<div class="carousel-caption">
 									  <h4>Test</h4>
 									  <p>
 									 <?PHP
-										$filename_cam4 = './webcam/test.jpg';
+										$filename_cam4 = './webcam/garage.jpg';
 										if(file_exists($filename_cam4)){
 											echo date("Y-m-d H:i:s",  filemtime($filename_cam4));
 										}
