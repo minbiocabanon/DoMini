@@ -47,7 +47,11 @@
 					  <li class="active"><a href="camera_gal.php">Galerie</a></li>
 					</ul>
 				  </div>
-				</div>			
+				</div>	
+				<div class="row-fluid">
+					<h2>GARAGE</h2>
+					<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/garage'); ?>			
+				</div>				
 				<div class="row-fluid">			
 					<h2>JARDIN</h2>
 					<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/ext'); ?>

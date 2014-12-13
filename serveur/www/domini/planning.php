@@ -39,6 +39,28 @@
 	}
 	// on libère la mémoire
 	mysql_free_result($RESULT) ;
+	
+	//on récupére la température
+	//requete pour récupérer la température de consigne de saison
+	$SQL="	SELECT `consigne_temperature`
+			FROM `calendrier_saison` 
+			WHERE `type` = ( 
+				SELECT `saison` 
+				FROM `calendrier` 
+				WHERE `date` =  DATE_FORMAT(NOW(), '%Y-%m-%d')) 
+			LIMIT 0 , 1"; 
+	
+	//on envoie la requete
+	$RESULT = @mysql_query($SQL);
+	//on récupère le résultat
+	$myrow=@mysql_fetch_array($RESULT); 
+	// on extrait le résultat et on le stocke dans une variable
+	$temp_consigne = $myrow["consigne_temperature"];
+	//libération de la variable
+	mysql_free_result($RESULT) ;
+	
+	
+	
 	// on ferme la session mysql
 	mysql_close();		
 ?>
@@ -62,7 +84,8 @@
 			$(document).ready(function(){
 				$('table td').click(function(){
 					var cell = $(this).attr('id');
-					// alert('Cellule: '+cell);
+					var temp_man = $('#temp_manuel').val();
+					//alert('temp_man: '+temp_man);
 
 					// TEST ------------ !!
 					if (cell==""){
@@ -82,7 +105,7 @@
 							document.getElementById(cell).innerHTML=xmlhttp.responseText;
 						}
 					}
-					xmlhttp.open("GET","./planning/change_cellule.php?IdCell="+cell,true);
+					xmlhttp.open("GET","./planning/change_cellule.php?IdCell="+cell+"&temp_man="+temp_man,true);
 					xmlhttp.send();
 					
 					// référence à mon élément (la cellule dont je veux changer la couleur de fond)
@@ -152,10 +175,19 @@
 				</div>
 				
 				<div class="row-fluid">
-					<div class="span12 offset5">
+					<div class="span6">
 						<a class="btn" href="planning.php?num_semaine=<?php echo $num_semaine-1; ?>"><i class="icon-chevron-left"></i></a>
 						S<?php echo $num_semaine; ?>
 						<a class="btn" href="planning.php?num_semaine=<?php echo $num_semaine+1; ?>"><i class="icon-chevron-right"></i></a>
+					</div>
+					<div class="span6">
+						<div class="input-append input-prepend">
+							<span class="add-on">Température :</span>
+							<input class="span2" id="temp_manuel" type="text" maxlength="4" value="<?php echo $temp_consigne; ?>"> 
+							<span class="add-on">°C</span>
+							<!--<button id="formulaire_chauffe" class="btn" type="button">Appliquer</button> -->
+						</div>
+						<!--<input class="span2" type="text" name="temp_man" maxlength="4" placeholder="<?php echo $temp_consigne; ?>"> °C -->
 					</div>
 				</div>
 				<div class="row-fluid">	
