@@ -1,6 +1,30 @@
 <?PHP
 	include("infos/config.inc.php"); // on inclu le fichier de config
 	@include("php/restore_donnees_instant.php");
+	
+	$galtoerase = isset($_POST['gal']) ? $_POST['gal'] : '';
+	
+	// echo 'galtoerase='.$galtoerase;
+	
+	if($galtoerase == "garage" || $galtoerase == "jardin" || $galtoerase == "porche"){
+	
+		switch($galtoerase){
+			case "garage":
+				// echo "<br>garage exec";
+				exec("rm /var/www/domini/webcam/garage/*.jpg");
+				break;
+			case "jardin":
+				// echo "<br>jardin exec";
+				exec("rm /var/www/domini/webcam/ext/*.jpg");
+				break;
+			case "porche":
+				// echo "<br>porche exec";
+				exec("rm /var/www/domini/webcam/porche/*.jpg");
+				break;
+			default:
+				break;		
+		}
+	}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -50,14 +74,26 @@
 				</div>	
 				<div class="row-fluid">
 					<h2>GARAGE</h2>
-					<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/garage'); ?>			
+						<form method="POST" action="camera_gal.php" name="formulaire">
+							<input type="hidden" name="gal" value="garage">
+							<input type="submit" name="bteffacer" value="Effacer"/>
+						</form>
+						<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/garage'); ?>
 				</div>				
 				<div class="row-fluid">			
 					<h2>JARDIN</h2>
+					<form method="POST" action="camera_gal.php" name="formulaire">
+						<input type="hidden" name="gal" value="jardin">
+						<input type="submit" name="bteffacer" value="Effacer"/>
+					</form>
 					<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/ext'); ?>
 				</div>
 				<div class="row-fluid">
-					<h2>PORCHE</h2>
+					<h2>PORCHE</h2>				
+					<form method="POST" action="camera_gal.php" name="formulaire">
+						<input type="hidden" name="gal" value="porche">
+						<input type="submit" name="bteffacer" value="Effacer"/>
+					</form>					
 					<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/porche'); ?>			
 				</div>
 			</div><!-- /container -->

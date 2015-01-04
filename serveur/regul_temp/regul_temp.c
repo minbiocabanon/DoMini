@@ -96,6 +96,7 @@ int init_mysql(void){
   //printf("Envoi de la requete USE DOMOTIQUE\n");
   if (mysql_query(conn, "USE domotique")) {
     fprintf(stderr, "%s\n", mysql_error(conn));
+	syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
     return(1);
   }
   // s'il n'y a pas d'erreurs, tout est ok, on le dit
@@ -130,6 +131,7 @@ int envoie_msg_poele(int consigne_p){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
 	
@@ -155,6 +157,7 @@ int get_etat(void){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(ETAT_ERREUR);
 	}
 
@@ -232,6 +235,7 @@ int sauve_heure_debut_consigne(unsigned int heure){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
 	syslog(LOG_DEBUG, "Heure debut de chauffe ecrit dans la base.", heure);
@@ -244,6 +248,7 @@ int sauve_heure_debut_consigne(unsigned int heure){
 //!\return		string avec la date au format 2013-11-06 17:30:00
 //----------------------------------------------------------------------
 int unixtime_to_date(unsigned int unixstamp){
+	MYSQL_RES *result_ = NULL;
 	// Preparation de la requete MySQL
 	sprintf(query, "SELECT FROM_UNIXTIME( %d )", unixstamp);	// envoi de la requete
 
@@ -252,19 +257,20 @@ int unixtime_to_date(unsigned int unixstamp){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
 	
 	// la requête s'est bien passée, on rend le jeu de résultats disponible via le pointeur result
 	//printf("\nRecuperation des donnees");
-	result = mysql_use_result(conn);
+	result_ = mysql_use_result(conn);
 	
 	// si aucune valeur retournée
 	// si la requête ne retourne rien (arrive à la première requete aprés la création de la table... ou suite à bug)
 	// on récupère le résultat (une seule ligne en principe... si la table est bien faite)
-	if (!(row = mysql_fetch_row(result))){
+	if (!(row = mysql_fetch_row(result_))){
 		// probleme : la requete n'a rien retourné	
-		mysql_free_result(result);
+		mysql_free_result(result_);
 		syslog(LOG_DEBUG, "  Erreur de requete MySQL");
 		return(0);
 		
@@ -274,7 +280,7 @@ int unixtime_to_date(unsigned int unixstamp){
 		//printf("\n #### date convertie %s \n\n", row[0]);
 		sprintf(datestring, row[0]);
 		// on libère la requête
-		mysql_free_result(result);
+		mysql_free_result(result_);
 		return(1);
 	}
 }
@@ -380,6 +386,7 @@ int get_mode(void){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(-1);
 	}
 
@@ -439,6 +446,7 @@ int get_h_dem(void){
 		if (mysql_query(conn, query)) {
 			// si la requete echoue on retourne 1
 			fprintf(stderr, "%s\n", mysql_error(conn));
+			syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 			return(-1);
 		}
 
@@ -675,6 +683,7 @@ int calcul_consigne_anticipe(void){
 
 	if (mysql_query(conn, query)) {
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
     }
 	
@@ -718,6 +727,7 @@ int calcul_consigne_anticipe(void){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
 	
@@ -756,6 +766,7 @@ int chercher_consigne_3h(void){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
 
@@ -815,6 +826,7 @@ int chercher_consigne_now(void){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
 
@@ -861,6 +873,7 @@ int change_etat(int etat){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
 	syslog(LOG_DEBUG, "Mode %d ecrit dans la base.", etat);
@@ -887,6 +900,7 @@ int change_mode(int mode){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
 
@@ -909,6 +923,7 @@ float get_temperature(void) {
 
 	if (mysql_query(conn, query)) {
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
     }
 	
@@ -981,6 +996,7 @@ float get_consigne(void){
 	
 	if (mysql_query(conn, query)) {
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
     }
 	
@@ -1052,6 +1068,7 @@ int get_heure_consigne(void){
 
 	if (mysql_query(conn, query)) {
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
     }
 		
@@ -1170,6 +1187,7 @@ int recup_donnees_PID(){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(-1);
 	}
 
@@ -1224,6 +1242,7 @@ int sauve_donnees_PID(){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
 	syslog(LOG_DEBUG, "Donnees PID sauvees dans la bdd -> D_prec=%.2f , ecart_prec=%.2f , Consigne_prec=%.2f",stPID_poele.D_prec, stPID_poele.ecart_prec, stPID_poele.Consigne_prec);	
@@ -1273,6 +1292,7 @@ int log_donnees(void){
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
 		fprintf(stderr, "%s\n", mysql_error(conn));
+		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
 

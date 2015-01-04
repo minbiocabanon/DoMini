@@ -15,7 +15,7 @@
 			
 			
 			// requete MySQL pour obtenir les données du compteur
-			$SQL="SELECT DATE_FORMAT(date_time, '%e %M %X - %T') as DATE,HC,HP
+			$SQL="SELECT DATE_FORMAT(date_time, '%e %M %Y - %T') as DATE,HC,HP
 				FROM teleinfo
 				ORDER BY date_time DESC
 				LIMIT 0 , 1"; 

@@ -91,7 +91,7 @@
 								<div class="item">
 									<img src="./webcam/garage.jpg" alt="">
 									<div class="carousel-caption">
-									  <h4>Test</h4>
+									  <h4>Garage</h4>
 									  <p>
 									 <?PHP
 										$filename_cam4 = './webcam/garage.jpg';

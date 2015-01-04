@@ -593,6 +593,7 @@ python-imaging					install
 python-magic					install
 python-minimal					install
 python-mysql.connector				install
+python-mysqldb					install
 python-pexpect					install
 python-renderpm					install
 python-reportbug				install

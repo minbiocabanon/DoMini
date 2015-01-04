@@ -267,9 +267,7 @@ void sigfun(int sig) {
     printf("You have pressed Ctrl-C , aborting!\n");
     keep_looping = FALSE;
 	sprintf(szTrace, "receiver : You have pressed Ctrl-C , aborting!\n");
-	syslog(LOG_DEBUG, szTrace);
-	close_mysql();
-	
+	syslog(LOG_DEBUG, szTrace);	
     exit(0);
 }
 
@@ -279,21 +277,18 @@ void sigfun(int sig) {
 //!\return        1 si erreur, 0 sinon
 //----------------------------------------------------------------------
 int init_mysql(void){
-
-  printf("With MySQL support\n");
-
   //Initialisation liaison avec mysql
   conn = mysql_init(NULL);
     
   // Connexion à la BDD
-  printf("Connexion a la BDD\n");
+  // printf("Connexion a la BDD\n");
   if(!mysql_real_connect(conn, server, user, password, database, 0, NULL, 0)) {
     fprintf(stderr, "%s\n", mysql_error(conn));
     return(1);
   }
   
   // Envoi de la requete de sélection de la base à utiliser
-  printf("Envoi de la requete USE DOMOTIQUE\n");
+  // printf("Envoi de la requete USE DOMOTIQUE\n");
   if (mysql_query(conn, "USE domotique")) {
     fprintf(stderr, "%s\n", mysql_error(conn));
     return(1);
@@ -309,11 +304,9 @@ int init_mysql(void){
 //----------------------------------------------------------------------
 int close_mysql(void){
 
-	printf("Deconnexion MySQL\n");
-
+	//printf("Deconnexion MySQL\n");
 	// fermeture de MySQL
 	mysql_close(conn);
-  
 	// s'il n'y a pas d'erreurs, tout est ok, on le dit
 	return(0);
 }
@@ -463,14 +456,25 @@ int exec_requete(void) {
 //----------------------------------------------------------------------
 int put_into_teleinfo_database(char *table, char *entete, int HC, int HP, char *tarif, int courant, int courantmax, int puissance) {
 
-	// on prépare la requete
-	sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %d, %d, '%s', %d, %d, %d,'')", table, entete, HC, HP, tarif, courant, courantmax, puissance);	
-	// on envoie la requete avec controle du retour
-	if (mysql_query(conn, query)) {
-		fprintf(stderr, "%s\n", mysql_error(conn));
-		return(1);
+	//initialisation BDD
+	if(init_mysql() == 1) {
+	// erreur de liaison avec la bdd
+	sprintf(szTrace, "receiver : erreur a l'ouverture de la BDD");
+	syslog(LOG_DEBUG, szTrace);
+	closelog();
+	exit(1);
 	}
-			
+	else{
+		// on prépare la requete
+		sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %d, %d, '%s', %d, %d, %d,'')", table, entete, HC, HP, tarif, courant, courantmax, puissance);	
+		// on envoie la requete avec controle du retour
+		if (mysql_query(conn, query)) {
+			fprintf(stderr, "%s\n", mysql_error(conn));
+			return(1);
+		}
+		close_mysql();
+	}
+
 	// on retourne 0 car tout est ok
 	return(0);
 }
@@ -482,13 +486,23 @@ int put_into_teleinfo_database(char *table, char *entete, int HC, int HP, char *
 //----------------------------------------------------------------------
 int put_into_analog_database(char *table, char *entete, float ana1, float ana2, float ana3, float ana4) {
 
-	// send SQL query 
-	sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %2.2f, %2.2f, %2.2f, %2.2f,0)", table, entete, ana1/100, ana2/100, ana3/100, ana4/100);
-	if (mysql_query(conn, query)) {
-		fprintf(stderr, "%s\n", mysql_error(conn));
-		return(1);
-    }
-	
+	//initialisation BDD
+	if(init_mysql() == 1) {
+	// erreur de liaison avec la bdd
+	sprintf(szTrace, "receiver : erreur a l'ouverture de la BDD");
+	syslog(LOG_DEBUG, szTrace);
+	closelog();
+	exit(1);
+	}
+	else{
+		// send SQL query 
+		sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %2.2f, %2.2f, %2.2f, %2.2f,0)", table, entete, ana1/100, ana2/100, ana3/100, ana4/100);
+		if (mysql_query(conn, query)) {
+			fprintf(stderr, "%s\n", mysql_error(conn));
+			return(1);
+		}
+		close_mysql();
+	}
 	// on retourne 0 car tout est ok
 	return(0);
 }
@@ -500,13 +514,23 @@ int put_into_analog_database(char *table, char *entete, float ana1, float ana2, 
 //----------------------------------------------------------------------
 int put_into_pyranometre_database(char *table, char *entete, float ana1) {
 
-	// send SQL query 
-	sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %2.2f,0)", table, entete, ana1/100);
-	if (mysql_query(conn, query)) {
-		fprintf(stderr, "%s\n", mysql_error(conn));
-		return(1);
-    }
-	
+	//initialisation BDD
+	if(init_mysql() == 1) {
+	// erreur de liaison avec la bdd
+	sprintf(szTrace, "receiver : erreur a l'ouverture de la BDD");
+	syslog(LOG_DEBUG, szTrace);
+	closelog();
+	exit(1);
+	}
+	else{
+		// send SQL query 
+		sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %2.2f,0)", table, entete, ana1/100);
+		if (mysql_query(conn, query)) {
+			fprintf(stderr, "%s\n", mysql_error(conn));
+			return(1);
+		}
+		close_mysql();
+	}	
 	// on retourne 0 car tout est ok
 	return(0);
 }
@@ -518,46 +542,57 @@ int put_into_pyranometre_database(char *table, char *entete, float ana1) {
 //----------------------------------------------------------------------
 int put_into_pellet_database(char *table, char *entete, int nb_sac){
 
-	int stock_pellet = 0;
+	//initialisation BDD
+	if(init_mysql() == 1) {
+	// erreur de liaison avec la bdd
+	sprintf(szTrace, "receiver : erreur a l'ouverture de la BDD");
+	syslog(LOG_DEBUG, szTrace);
+	closelog();
+	exit(1);
+	}
+	else{
+		int stock_pellet = 0;
 
-	// On prépare la requete qui récupère le nb de sacs en granulés
-	sprintf(query, "SELECT capital FROM pellets	ORDER BY id DESC LIMIT 0 , 1");
-	
-	if (mysql_query(conn, query)) {
-		fprintf(stderr, "%s\n", mysql_error(conn));
-		return(1);
-    }
+		// On prépare la requete qui récupère le nb de sacs en granulés
+		sprintf(query, "SELECT capital FROM pellets	ORDER BY id DESC LIMIT 0 , 1");
 		
-	result = mysql_use_result(conn);
-	
-	// si la requete a retourné une ligne non nulle
-	// on lit la ligne demandée
-	if (row = mysql_fetch_row(result)){
-		//on converti la chaine en integer
-		stock_pellet = atoi(row[0]);
-		sprintf(szTrace, "receiver : Nb de sacs en stock: %d", stock_pellet);
-		syslog(LOG_DEBUG, szTrace);
-	}
-	else {
-		// euh... je réfléchis
-		printf("\n  ERREUR : RECUPERATION STOCK DE GRANULES IMPOSSIBLE");
-		stock_pellet = 0; 
-	}
-	
-	// on libère la requête
-	mysql_free_result(result);  
+		if (mysql_query(conn, query)) {
+			fprintf(stderr, "%s\n", mysql_error(conn));
+			return(1);
+		}
+			
+		result = mysql_use_result(conn);
+		
+		// si la requete a retourné une ligne non nulle
+		// on lit la ligne demandée
+		if (row = mysql_fetch_row(result)){
+			//on converti la chaine en integer
+			stock_pellet = atoi(row[0]);
+			sprintf(szTrace, "receiver : Nb de sacs en stock: %d", stock_pellet);
+			syslog(LOG_DEBUG, szTrace);
+		}
+		else {
+			// euh... je réfléchis
+			printf("\n  ERREUR : RECUPERATION STOCK DE GRANULES IMPOSSIBLE");
+			stock_pellet = 0; 
+		}
+		
+		// on libère la requête
+		mysql_free_result(result);  
 
-	// On ajoute une ligne pour mettre à jour le stock
-	sprintf(query, "INSERT INTO %s VALUES('',NOW(), '0', %d, %d)", table, nb_sac, (stock_pellet - nb_sac));
-	
-	sprintf(szTrace, "receiver : requete pour les pellets -> %s", query);
-	syslog(LOG_DEBUG, szTrace);	
-	
-	if (mysql_query(conn, query)) {
-		fprintf(stderr, "%s\n", mysql_error(conn));
-		return(1);
-    }
-	
+		// On ajoute une ligne pour mettre à jour le stock
+		sprintf(query, "INSERT INTO %s VALUES('',NOW(), '0', %d, %d)", table, nb_sac, (stock_pellet - nb_sac));
+		
+		sprintf(szTrace, "receiver : requete pour les pellets -> %s", query);
+		syslog(LOG_DEBUG, szTrace);	
+		
+		if (mysql_query(conn, query)) {
+			fprintf(stderr, "%s\n", mysql_error(conn));
+			return(1);
+		}
+		
+		close_mysql();
+	}
 	// on retourne 0 car tout est ok
 	return(0);
 }
@@ -568,13 +603,23 @@ int put_into_pellet_database(char *table, char *entete, int nb_sac){
 //----------------------------------------------------------------------
 int put_into_pelletres_database(char *table, char *entete, int niveau_res){
 
-	// send SQL query 
-	sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %3d,0)", table, entete, niveau_res);
-	if (mysql_query(conn, query)) {
-		fprintf(stderr, "%s\n", mysql_error(conn));
-		return(1);
-    }
-	
+	//initialisation BDD
+	if(init_mysql() == 1) {
+	// erreur de liaison avec la bdd
+	sprintf(szTrace, "receiver : erreur a l'ouverture de la BDD");
+	syslog(LOG_DEBUG, szTrace);
+	closelog();
+	exit(1);
+	}
+	else{
+		// send SQL query 
+		sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %3d,0)", table, entete, niveau_res);
+		if (mysql_query(conn, query)) {
+			fprintf(stderr, "%s\n", mysql_error(conn));
+			return(1);
+		}
+		close_mysql();	
+	}
 	// on retourne 0 car tout est ok
 	return(0);
 }
@@ -586,23 +631,33 @@ int put_into_pelletres_database(char *table, char *entete, int niveau_res){
 //----------------------------------------------------------------------
 int  put_into_tnd_database(char *table, char *entete, long flat, long flon){
 
-	float tmplat = (float)flat/1000000.0;
-	float tmplon = (float)flon/1000000.0;
-	
-	sprintf(szTrace, "receiver : GPS tondeuse , tmpflat:%7.6f   tmpflon:%7.6f",tmplat, tmplon);
-	syslog(LOG_DEBUG, szTrace);		
-	
-	// send SQL query 
-	sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %f, %f)", table, entete, tmplat, tmplon);
+	//initialisation BDD
+	if(init_mysql() == 1) {
+	// erreur de liaison avec la bdd
+	sprintf(szTrace, "receiver : erreur a l'ouverture de la BDD");
+	syslog(LOG_DEBUG, szTrace);
+	closelog();
+	exit(1);
+	}
+	else{
+		float tmplat = (float)flat/1000000.0;
+		float tmplon = (float)flon/1000000.0;
+		
+		sprintf(szTrace, "receiver : GPS tondeuse , tmpflat:%7.6f   tmpflon:%7.6f",tmplat, tmplon);
+		syslog(LOG_DEBUG, szTrace);		
+		
+		// send SQL query 
+		sprintf(query, "INSERT INTO %s VALUES('',NOW(), '%s', %f, %f)", table, entete, tmplat, tmplon);
 
-	sprintf(szTrace, "receiver : requete pour les positions GPS de la tondeuse -> %s", query);
-	syslog(LOG_DEBUG, szTrace);	 
+		sprintf(szTrace, "receiver : requete pour les positions GPS de la tondeuse -> %s", query);
+		syslog(LOG_DEBUG, szTrace);	 
 
-	if (mysql_query(conn, query)) {
-		fprintf(stderr, "%s\n", mysql_error(conn));
-		return(1);
-    }
-	
+		if (mysql_query(conn, query)) {
+			fprintf(stderr, "%s\n", mysql_error(conn));
+			return(1);
+		}
+		close_mysql();	
+	}
 	// on retourne 0 car tout est ok
 	return(0);
 }
@@ -1015,14 +1070,6 @@ int main(int argc, char *argv[]) {
 	// LOG_CONS, on écrit sur la console en cas de défaillance de syslog
 	openlog(log_name, LOG_CONS, LOG_USER);
 	syslog(LOG_DEBUG, "receiver : Demarrage");
-	//initialisation BDD
-	if(init_mysql() == 1) {
-	// erreur de liaison avec la bdd
-	sprintf(szTrace, "receiver : erreur a l'ouverture de la BDD");
-	syslog(LOG_DEBUG, szTrace);
-	closelog();
-	exit(1);
-	}
 
 	// on configure et on ouvre le port COM
 	if(ConfigOpenPortCOM(argc, argv) == 1) {
@@ -1095,9 +1142,6 @@ int main(int argc, char *argv[]) {
 
 		//on effectue le traitement associé au type de message reçu
 		trt_message();
-		
-		//fermeture de la connexion à MySQL
-		//close_mysql();
 		
 	}	
 	

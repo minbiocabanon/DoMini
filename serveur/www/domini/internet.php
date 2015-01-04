@@ -106,6 +106,7 @@
 						// height: 350,
 						//width: 500,
 						min: 0,
+						max: 1500,
 						opposite : false,
 				        lineWidth: 1
 				    }],
