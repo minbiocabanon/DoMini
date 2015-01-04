@@ -381,7 +381,7 @@ int set_puissance(int puissance){
 		recalage_zero();
 
 	//on regarde si la consigne est inférieure à la puissance en cours
-	if(pos_puissance <= puissance && puissance < 100){
+	if(pos_puissance <= puissance && puissance <= 100){
 		//tant que l'index puissance  est inférieure  de la puissance souhaitée
 		while(pos_puissance < puissance){
 			// on incrémente la position dans le menu
