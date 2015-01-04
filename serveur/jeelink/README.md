@@ -1,3 +1,8 @@
+# jeelink_transparent_noack
+Ce sketche est pour le test uniquement 
+	si plusieurs jeelink sont présents en même temps de le réseau, il ne faut qu'un seul Jeelink qui retourne les ACK (sinon c'est le plus rapide qui répond et le message peut etre perdu pour le serveur principal)
+
+
 #ATTENTION !
 
 Le port ttyUSBx doit être utilisabla par l'utilisateur www (www-data la plupart du temps).
