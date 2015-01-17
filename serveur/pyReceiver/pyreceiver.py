@@ -183,7 +183,7 @@ def task_receiver():
 				print logmessage
 				syslog.syslog(logmessage)
 				
-		elif line.startswith( '$POL' ) :
+		elif line.startswith( '$POL' ) or line.startswith( '!POL' ):
 			# exemple : $POL,MOD,0\r\n
 			# exemple : $POL,SAC,1\r\n
 			# exemple : $POL,NVG,54\r\n
