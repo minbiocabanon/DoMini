@@ -189,3 +189,41 @@ J'ai utilisé [Highstock](http://www.highcharts.com/) pour générer les graphiq
 ![Domini Consommation electrique mensuelle](docs/img/screenshot/web_elec_mois.png)
 
 ![Domini Ensoleillement mensuel](docs/img/screenshot/web_soleil_mois.png)
+
+
+# Python (brouillon)
+## Pyserial
+http://pyserial.sourceforge.net/pyserial.html#from-source-tar-gz-or-checkout
+
+télécharger le source, puis
+	tar zxvf pyserial-2.7.tar.gz
+	cd pyserial-2.7
+	sudo python setup.py install
+	
+lancer Python
+	python
+
+importer serial
+	>>>import serial
+	
+##MySQL Python
+Installer le paquet :
+	sudo apt-get install python-mysqldb
+
+Interpreteur PYTHON :
+
+	>>> import MySQLdb as mdb
+	>>> con = mdb.connect('localhost','root','mysql','domotique')
+	>>> cur = con.cursor()
+	>>> cur.execute("select version()")
+	1L
+	>>> ver = cur.fetchone()
+	>>> print "%s" % ver
+	5.5.40-0+wheezy1
+	>>>
+	
+
+	
+	
+
+	
