@@ -1,10 +1,12 @@
 #!/bin/sh
 #include pour les login et mot de passe du FTP. (ce fichier n'est pas sur le dépot SVN pour la confidentialité)
-installpath=~/src/SHEEVA_SERVER/www/domini/script/
+installpath=/var/www/domini/script/
 . $installpath/myvar.sh
 
 # on se  place dans le répertoire de telechargement
-cd /tmp/cache_wget/192.168.0.102/
+cd /tmp
+mkdir cache_wget
+cd cache_wget
 
 # on crée le répertoire ou sont stocké les fichers CSV
 echo copie des fichiers csv ...
@@ -26,18 +28,18 @@ cp /var/www/domini/*.php .
 # cp -r -n /var/www/domini/webcam/* ./webcam/
 
 #suppression des pages "cas particuliers"
-rm -f  /tmp/cache_wget/192.168.0.102/index.php 
-rm -f  /tmp/cache_wget/192.168.0.102/teleinfo_edf.php
-rm -f  /tmp/cache_wget/192.168.0.102/voletroulant.php
-rm -f  /tmp/cache_wget/192.168.0.102/pellet.php
-rm -f  /tmp/cache_wget/192.168.0.102/chauffage_config.php
-rm -f  /tmp/cache_wget/192.168.0.102/conf_externe.php
-rm -f  /tmp/cache_wget/192.168.0.102/ventilation_flux.php
-rm -f  /tmp/cache_wget/192.168.0.102/webcam.php
-rm -f  /tmp/cache_wget/192.168.0.102/map_tondeuse.php
-rm -f  /tmp/cache_wget/192.168.0.102/planning.php
-rm -f  /tmp/cache_wget/192.168.0.102/reseau.php
-rm -f  /tmp/cache_wget/192.168.0.102/restemperature_stat.php
+rm -f  /tmp/cache_wget/index.php 
+rm -f  /tmp/cache_wget/teleinfo_edf.php
+rm -f  /tmp/cache_wget/voletroulant.php
+rm -f  /tmp/cache_wget/pellet.php
+rm -f  /tmp/cache_wget/chauffage_config.php
+rm -f  /tmp/cache_wget/conf_externe.php
+rm -f  /tmp/cache_wget/ventilation_flux.php
+rm -f  /tmp/cache_wget/webcam.php
+rm -f  /tmp/cache_wget/map_tondeuse.php
+rm -f  /tmp/cache_wget/planning.php
+rm -f  /tmp/cache_wget/reseau.php
+rm -f  /tmp/cache_wget/restemperature_stat.php
 
 #on charge les pages "cas particuliers
 #wget -r http://192.168.0.102:80
@@ -54,15 +56,15 @@ wget http://0.0.0.0:80/planning.php
 wget http://0.0.0.0:80/temperature_stat.php
 
 #On supprimer l'image du sejour (vie privee!!!)
-rm -f  /tmp/cache_wget/192.168.0.102/webcam/sejour.jpg
+rm -f  /tmp/cache_wget/webcam/sejour.jpg
 
 # upload des fichiers sur le site distant
 echo upload du site ...
-lftp ftp://$LOGIN:$PASSWORD@ftpperso.free.fr -e "mirror -R /tmp/cache_wget/192.168.0.102/ /static_domini  ; quit"
+lftp ftp://$LOGIN:$PASSWORD@ftpperso.free.fr -e "mirror -R /tmp/cache_wget/ /static_domini  ; quit"
 
 #suppression des fichiers temporaires
 echo supression des fichiers temporaires ...
-rm -f  /tmp/cache_wget/192.168.0.102/*
-rm -f  -r /tmp/cache_wget/192.168.0.102/csv
-rm -f  -r /tmp/cache_wget/192.168.0.102/css
-rm -f  -r /tmp/cache_wget/192.168.0.102/webcam
+rm -f  /tmp/cache_wget/*
+rm -f -r /tmp/cache_wget/csv
+rm -f -r /tmp/cache_wget/css
+rm -f -r /tmp/cache_wget/webcam
