@@ -56,7 +56,8 @@ wget http://0.0.0.0:80/planning.php
 wget http://0.0.0.0:80/temperature_stat.php
 
 #On supprimer l'image du sejour (vie privee!!!)
-rm -f  /tmp/cache_wget/webcam/sejour.jpg
+rm -f  /tmp/cache_wget/webcam/sejour*.jpg
+rm -f  /tmp/cache_wget/webcam/garage*.jpg
 
 # upload des fichiers sur le site distant
 echo upload du site ...

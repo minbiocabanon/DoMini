@@ -83,6 +83,17 @@
 	
 	//on récupère l'état du bypass de la VMCDF
 	$bypass_VMC = $myrow["bypass_vmcdf"];
+
+	// ------------------- recuperation de toutes les donnees instantanees
+	
+	//requete pour récupérer la dernière consommation instantanée
+	$SQL="SELECT `nvg`  FROM `pellets_rsv` ORDER BY `date_time` DESC LIMIT 0,1"; 
+	//Envoie de la requete
+	$RESULT = @mysql_query($SQL);
+	// //lecture du resultat de la requete
+	$myrow=@mysql_fetch_array($RESULT); 
+	//on récupère l'heure
+	$pellets_nvg = $myrow["nvg"];
 	
 	// ------------------- Récupération Etat et heure de début de chauffage -------------------------------------
 	

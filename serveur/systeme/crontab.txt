@@ -7,5 +7,5 @@
 15 1 1 * * /var/www/domini/script/graph_1mo.sh        #creation des graphes tous les mois
 * 1 * * 0 /var/www/domini/script/graph_1w.sh        #Execution des pages php pour g�n�rer graphes toutes les semaines
 @daily /var/www/domini/script/graph_1j.sh     #Tache a lancer une fois par jour -> mise � jour graph et fichier CSV
-5 0,6,12,18 * * * /var/www/domini/script/graph_6h.sh        #Execution des pages php pour g�n�rer graphes toutes les 6h
-0 7-19 * * * /var/www/domini/script/ftp.sh   #Creation d'une image du site et upload sur un site distant
+0 7-19 * * * /var/www/domini/script/graph_6h.sh         #Execution des pages php pour g�n�rer graphes toutes les 6h
+0 7-19 * * * /var/www/domini/script/ftp.sh     #Creation d'une image du site et upload sur un site distant

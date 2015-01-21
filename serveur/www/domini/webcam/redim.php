@@ -1,6 +1,17 @@
 <?php
 $redimOK = fctredimimage(640,480,'','sejour.jpg','','sejour_full.jpg');
-if ($redimOK == 1) { echo 'Redimensionnement OK !'; } else { echo 'Redimensionnement NNNNNNOK !'; }
+if ($redimOK == 1) { echo 'Redimensionnement sejour OK !<br>'; } else { echo 'Redimensionnement sejour NNNNNNOK !<br>'; }
+
+$redimOK = fctredimimage(150,110,'','garage_tn.jpg','','garage.jpg');
+if ($redimOK == 1) { echo 'Redimensionnement garage OK !<br>'; } else { echo 'Redimensionnement garage NNNNNNOK !<br>'; }
+$redimOK = fctredimimage(150,110,'','sejour_tn.jpg','','sejour.jpg');
+if ($redimOK == 1) { echo 'Redimensionnement sejour OK !<br>'; } else { echo 'Redimensionnement sejour NNNNNNOK !<br>'; }
+$redimOK = fctredimimage(150,110,'','ext_tn.jpg','','ext.jpg');
+if ($redimOK == 1) { echo 'Redimensionnement ext OK !<br>'; } else { echo 'Redimensionnement ext NNNNNNOK !<br>'; }
+$redimOK = fctredimimage(150,110,'','porche_tn.jpg','','porche.jpg');
+if ($redimOK == 1) { echo 'Redimensionnement porche OK !<br>'; } else { echo 'Redimensionnement porche NNNNNNOK !<br>'; }
+
+
 
 // © Jérome Réaux : http://j-reaux.developpez.com - http://www.jerome-reaux-creations.fr
 // ---------------------------------------------------
