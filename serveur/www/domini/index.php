@@ -305,7 +305,7 @@
 								<?PHP echo $temp_consigne;	?>									
 							</td>
 							<td>
-								<?PHP echo $pellets_nvg.' cm' ; ?>
+								<?PHP echo $pellets_nvg.' %' ; ?>
 							</td>
 							<td>
 								<?PHP //echo $h_demarr;	?>
