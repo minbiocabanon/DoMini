@@ -40,6 +40,7 @@
 #define POSITION_PC 0
 #define POSITION_EXT 100
 
+
 // Variables
 int keep_looping = TRUE;
 
