@@ -102,6 +102,12 @@ puis ajouter **avant exit 0**:
 	echo "running receiver"
 	/home/julien/bin/receiver /dev/ttyUSB0&
 	echo "exiting from rc.local"
+	
+Pour la version pyton de receiver (pyReceiver) :
+	
+	echo "running pyReceiver"
+	cd /home/julien/src/domini/serveur/pyReceiver/
+	python pyreceiver.py	
 
 ### Accès au portCOM/USB
 Le port ttyUSBx doit être utilisable par l'utilisateur www-data pour l'envoi de message directement depuis l'interface web.
@@ -109,6 +115,8 @@ Le port ttyUSBx doit être utilisable par l'utilisateur www-data pour l'envoi de
 	usermod -a -G dialout www-data
 	ou
 	adduser www-data dialout
+
+Si vous lancer pyReceiver depuis votre compte user, ajoutez votre compte également de la même façon pour avoir le droit d'utiliser le port serie.
 
 ### Crontab:
 Importer les taches CRON listées dans ce fichier :

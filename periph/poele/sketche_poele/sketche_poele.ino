@@ -56,9 +56,12 @@ char stNum[] = "POL";
 #define NB_BLIP_LED	500			//nb de cycle à attendre entr 2 clignotements de la led status
 #define NBCONSIGNE_RAZ 3		// nb de consigne à appliquer entre 2 recalage_zero
 
-#define NB_SAMPLE_US 5
+// reservoir pellets
+#define NB_SAMPLE_US 50	
+#define MAX_MESURE_US 45		// profondeur maxi du reservoir en cm
+#define MIN_MESURE_US 0			// profondeur mini du reservoir en cm
 
-const int LED=15; 				//Port2 AIO  - DIGITAL 15 
+const int LED = 15;				//Port2 AIO  - DIGITAL 15 
 
 enum MSG_POL{
 	MSG_OFF, 		// 0
@@ -799,13 +802,13 @@ void tache_mesure_niveau_granule(){
 			ultrasonic.MeasureInCentimeters();
 			//on ajoute la mesure dans une table
 			samples.add(ultrasonic.RangeInCentimeters);
-			delay(50);
+			delay(10);
 		}
 		//on calcule la valeur mediane, ce qui éliminera les mesures incohérentes
 		x = samples.getMedian();
 		
 		//si la mesure est cohérente
-		if(x > 0 && x <= 100){
+		if(x > MIN_MESURE_US && x <= MAX_MESURE_US ){
 			// on prepare le flag pour envoyer la mesure par radio
 			bflag_envoie_niveau = true;
 			niveau_granule = x;
@@ -940,7 +943,7 @@ void setup (void) {
 	t.every(600000, NiveauGranules);	// 10 minutes (attention, ne pas ecrire 1000 * 60 * 10 -> ne fonctionne pas !
 	
 	//test pour vérifier que le timer tourne
-	t.every(60000, CheckTimer);	// 10 minutes (attention, ne pas ecrire 1000 * 60 * 10 -> ne fonctionne pas !
+	t.every(60000, CheckTimer);	// 1 minute (attention, ne pas ecrire 1000 * 60 * 10 -> ne fonctionne pas !
 	
 	//initialisation du module radio RF12
 	rf12_initialize(1, RF12_868MHZ, 33);
