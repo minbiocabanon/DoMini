@@ -7,7 +7,7 @@ from time import sleep
 from threading import Thread
 
 
-port = '/dev/ttyUSB1'
+port = '/dev/ttyUSB0'
 ser = serial.Serial(port, 57600, timeout=0)
 keepThis = ''
 
@@ -24,14 +24,19 @@ def setup():
 # -- manage serial reception -- 
 def task_receiver():
 	global keepThis
-	data=keepThis + ser.read(ser.inWaiting()) # read no.of bytes in waiting
-	m = data.split("\n")	# get the individual lines from input
-	if(len(m[-1])==0):		# true if only complete lines present (nothing after last newline)
-	  processThis = m
-	  keepThis = ''
-	else:
-	  processThis = m[0:-1]		# skip incomplete line
-	  keepThis = m[-1]			# fragment
+	try :
+		data=keepThis + ser.read(ser.inWaiting()) # read no.of bytes in waiting
+		m = data.split("\n")	# get the individual lines from input
+		if(len(m[-1])==0):		# true if only complete lines present (nothing after last newline)
+		  processThis = m
+		  keepThis = ''
+		else:
+		  processThis = m[0:-1]		# skip incomplete line
+		  keepThis = m[-1]			# fragment
+	except :
+		logmessage = " ERROR while opening" + port
+		print logmessage
+		syslog.syslog(logmessage)
 
 	# process the complete lines:
 	for line in processThis:
@@ -340,53 +345,59 @@ def task_emitter():
 			print "MySQL Error: %s" % str(e)
 
 	# for each messages in the stack
-	for message in messages:
-		#check if timestamp is not to old 
-		# display date/time
-		print time.strftime("\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Y-%m-%d %H:%M:%S")		
-		if (time.time() - message[2] < TIMEOUTMSG) :
-			#send this message on the serial port
-			try:
-				# write message to serial port
-				msg = message[3] + "\n" # add LF at the end of the message, because Jeelink need it as a trigger caracter
-				ser.write(msg)
-				logmessage = " Emitter_task : message send to serial : " + str(message[3])
-				print logmessage
-				syslog.syslog(logmessage)
-			except:
-				# if error, print error returned
-				logmessage = " Emitter_task : ERROR in sending this message over serial : " + str(message[3])
+	try :
+		for message in messages:
+			#check if timestamp is not to old 
+			# display date/time
+			print time.strftime("\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Y-%m-%d %H:%M:%S")		
+			if (time.time() - message[2] < TIMEOUTMSG) :
+				#send this message on the serial port
+				try:
+					# write message to serial port
+					msg = message[3] + "\n" # add LF at the end of the message, because Jeelink need it as a trigger caracter
+					ser.write(msg)
+					logmessage = " Emitter_task : message send to serial : " + str(message[3])
+					print logmessage
+					syslog.syslog(logmessage)
+				except:
+					# if error, print error returned
+					logmessage = " Emitter_task : ERROR in sending this message over serial : " + str(message[3])
+					print logmessage
+					syslog.syslog(logmessage)			
+			else :
+				# Message has expired
+				logmessage = " Emitter_task : message has expired : " + str(message[3]) + " date/time :" + str(message[1]) + "-" + str(message[2])
 				print logmessage
 				syslog.syslog(logmessage)			
-		else :
-			# Message has expired
-			logmessage = " Emitter_task : message has expired : " + str(message[3]) + " date/time :" + str(message[1]) + "-" + str(message[2])
-			print logmessage
-			syslog.syslog(logmessage)			
-		
-		# delete this message
-		try:
-			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
-			cur = con.cursor()
-			# prepare query 
-			query = 'DELETE FROM `domotique`.`tx_msg_radio` WHERE `tx_msg_radio`.`id` = {0};'.format(message[0])
-			# run MySQL Query
-			cur.execute(query)		
-			# Close all cursors
-			cur.close()					
-			# Close MySQL session
-			con.close()	
-			# Add some log messages
-			logmessage = " Emitter_task : message has been deleted : " + str(message[3]) + " id :" + str(message[0])
-			print logmessage
-			syslog.syslog(logmessage)			
-		except mdb.Error, e:
-			# Display MySQL errors
+			
+			# delete this message
 			try:
-				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
-			except IndexError:
-				print "MySQL Error: %s" % str(e)		
+				# Open MySQL session
+				con = mdb.connect('localhost','root','mysql','domotique')
+				cur = con.cursor()
+				# prepare query 
+				query = 'DELETE FROM `domotique`.`tx_msg_radio` WHERE `tx_msg_radio`.`id` = {0};'.format(message[0])
+				# run MySQL Query
+				cur.execute(query)		
+				# Close all cursors
+				cur.close()					
+				# Close MySQL session
+				con.close()	
+				# Add some log messages
+				logmessage = " Emitter_task : message has been deleted : " + str(message[3]) + " id :" + str(message[0])
+				print logmessage
+				syslog.syslog(logmessage)			
+			except mdb.Error, e:
+				# Display MySQL errors
+				try:
+					print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				except IndexError:
+					print "MySQL Error: %s" % str(e)		
+	except :
+		# Add some log messages
+		logmessage = " Emitter_task : error with MySQL or messages variable content"
+		print logmessage
+		syslog.syslog(logmessage)		
 # -- end task_emitter --
 
 
