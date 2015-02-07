@@ -92,7 +92,7 @@
 	$myrow=@mysql_fetch_array($RESULT); 
 	//on récupère la mesure
 	$pellets_nvg = $myrow["nvg"];
-	$pellets_nvg = 100 * ( 45 - $pellets_nvg )/45;
+	$pellets_nvg = round(100 * ( 45 - $pellets_nvg )/45, 0);
 	
 	
 	// ------------------- Récupération Etat et heure de début de chauffage -------------------------------------

@@ -50,7 +50,7 @@
 		$RGB[] = "";
 		
 		// on lance le soft qui regénère le fichier CSV
-		exec("/var/www/domini/bin/emitter /dev/ttyUSB0");
+		// exec("/var/www/domini/bin/emitter /dev/ttyUSB0"); // inutile, le logiciel pyReceiver.py gère l'envoi des messages spontanés
 
 	}
 	

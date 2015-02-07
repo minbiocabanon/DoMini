@@ -52,7 +52,7 @@
 		exec("/var/www/domini/bin/gestion_vr",$result);
 		//var_dump($result);
 		// on force l'envoi des messages
-		exec("/var/www/domini/bin/emitter /dev/ttyUSB0",$result);
+		// exec("/var/www/domini/bin/emitter /dev/ttyUSB0",$result); // inutile, le logiciel pyReceiver.py gère l'envoi des messages spontanés
 		//var_dump($result);
 	//}
 	

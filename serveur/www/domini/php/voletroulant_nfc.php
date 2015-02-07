@@ -101,7 +101,7 @@
 		// on lance le soft qui rempli la table d'état des VR
 		exec("/var/www/domini/bin/gestion_vr",$result);
 		// on force l'envoi des messages
-		exec("/var/www/domini/bin/emitter /dev/ttyUSB0",$result);
+		// exec("/var/www/domini/bin/emitter /dev/ttyUSB0",$result); // inutile, le logiciel pyReceiver.py gère l'envoi des messages spontanés
 		echo"<br/>Consignes envoyées aux volets<br>";
 		
 		//si le mode est Manuel
