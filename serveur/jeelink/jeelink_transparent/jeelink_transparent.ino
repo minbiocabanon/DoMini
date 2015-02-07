@@ -3,7 +3,7 @@
 
 #include <JeeLib.h>
 
-#define version "JeeLink Serial to RF12 transparent mode 2013-02-21"
+#define version "JeeLink Serial to RF12 transparent mode with ACK"
 #define LED_PIN 9
 
 // Mode radio

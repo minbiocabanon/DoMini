@@ -25,6 +25,7 @@ Un message est stocke dans la base à l'attention du jeenode qui gère le bypass
 Le logiciel 'emitter' enverra ce message.
 
 ##emitter
+Edit : remplacé par pyReceiver !
 Ce logiciel gère la liaison série SORTANTE vers le Jeelink (ttyUSB0). Il extrait de la base de données les messages à transmettre vers les jeenodes.
 Le logiciel est lancé périodiquement par la CRONTAB
 
@@ -49,12 +50,19 @@ Le jeelink transmet les messages au jeenodes et gère les ACK (si on l'applicati
 ##include
 ce répertoire contient le fichier **passwd.h** , fichier include nécessaire aux applications en langage C car il contient les identifiants pour la connexion à la base de données ainsi que le nom de la base.
 
+##pyReceiver
+Edit : Programme en langage python
+Ce logiciel gère la réception des messages reçus par le Jeelink et l'émission des messages placés dans la pile en base de données (MySQL)
+En fonction du type de message, il dépouille et stocke les données dans la table correspondance dans la base de données.
+**Ce logiciel doit tourner en permanence afin de ne pas rater de message!**
+
 ##planning
 Ce répertoire contient les tableurs dans lesquels je créée un CSV qui sera le planning annuel.
 Ce CSV sera importé manuellement dans la table 'planning'.
 Ensuite il faut lancer l'application planning qui va construire une table à partir de ce planning, des saisons et des types de jours spécifiés.
 
 ##receiver
+Edit : remplacé par pyReceiver !
 Ce logiciel gère la réception des messages reçus par le Jeelink.
 En fonction du type de message, il dépouille et stocke les données dans la table correspondance dans la base de données.
 **Ce logiciel doit tourner en permanence afin de ne pas rater de message!**

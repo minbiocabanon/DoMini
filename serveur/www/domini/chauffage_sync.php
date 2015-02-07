@@ -51,7 +51,7 @@
 			
 			// echo"Envoi msq radio<br>";
 			// on force l'envoi des messages radio présent dans la pile
-			exec("/var/www/domini/bin/emitter /dev/ttyUSB0",$result);
+			//exec("/var/www/domini/bin/emitter /dev/ttyUSB0",$result); // sera automatiquement envoyé par PyReceiver (lecture de la table toutes les secondes)
 			//variable pour afficher un message de confirmation
 			$msg_sent = true;
 		}
