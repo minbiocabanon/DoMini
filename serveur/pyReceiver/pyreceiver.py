@@ -183,7 +183,7 @@ def task_receiver():
 				print logmessage
 				syslog.syslog(logmessage)
 				
-		elif line.startswith( '$POL' ) :
+		elif line.startswith( '$POL' ) or line.startswith( '!POL' ):
 			# exemple : $POL,MOD,0\r\n
 			# exemple : $POL,SAC,1\r\n
 			# exemple : $POL,NVG,54\r\n
@@ -348,7 +348,8 @@ def task_emitter():
 			#send this message on the serial port
 			try:
 				# write message to serial port
-				ser.write(message[3])
+				msg = message[3] + "\n" # add LF at the end of the message, because Jeelink need it as a trigger caracter
+				ser.write(msg)
 				logmessage = " Emitter_task : message send to serial : " + str(message[3])
 				print logmessage
 				syslog.syslog(logmessage)

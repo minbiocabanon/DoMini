@@ -128,16 +128,36 @@
 						 </table>
 					</div>		<!-- /span > -->
 
+					<div class="span6">
+						<table class="table table-bordered table-striped ">
+							<thead>
+							  <tr>
+								<th colspan="5">Cameras</th>
+							  </tr>
+							</thead>
+							<tbody>
+							  <tr>
+								<td>
+								<a href="camera.php"><img src="webcam/ext_tn.jpg" alt="ext"  width="110"></a>
+								<a href="camera.php"><img src="webcam/porche_tn.jpg" alt="porche" width="110"></a>
+								<a href="camera.php"><img src="webcam/sejour_tn.jpg" alt="sejour" width="110"></a>
+								<a href="camera.php"><img src="webcam/garage_tn.jpg" alt="garage" width="110"></a>
+								</td>
+							  </tr>
+							  </tbody>
+						 </table>
+					</div>		<!-- /span6 > -->
 
 					<div class="span6">
 						 <div class="center" >
-							<object type="application/x-shockwave-flash" data="http://swf.yowindow.com/yowidget3.swf" width="400" >
+							<!--<object type="application/x-shockwave-flash" data="http://swf.yowindow.com/yowidget3.swf" width="400" >
 								<param name="movie" value="http://swf.yowindow.com/yowidget3.swf"/>
 								<param name="allowfullscreen" value="true"/>
 								<param name="wmode" value="opaque"/>
 								<param name="bgcolor" value="#FFFFFF"/>
 								<param name="flashvars" value="location_id=gn:2972315&amp;location_name=cadours&amp;time_format=24&amp;unit_system=metric&amp;lang=fr&amp;background=#FFFFFF&amp;mini_temperature=true&amp;mini_time=true&amp;mini_locationBar=false&amp;mini_momentBar=true&amp;copyright_bar=false"/>
 							</object>
+							-->
 						</div>
 
 						<table class="table table-bordered table-striped ">
@@ -274,8 +294,8 @@
 							<td class="tdhead">Poele</td>
 							<td class="tdhead">Consigne</td>
 							<td class="tdhead">Granulés</td>
-							<td class="tdhead">H. démarrage</td>
-							<td class="tdhead">H. fin</td>
+							<td class="tdhead">démarrage</td>
+							<td class="tdhead">fin</td>
 						  </tr>
 						  <tr>
 							<td>
@@ -285,13 +305,13 @@
 								<?PHP echo $temp_consigne;	?>									
 							</td>
 							<td>
-							-
+								<?PHP echo $pellets_nvg.' cm' ; ?>
 							</td>
 							<td>
-								<?PHP echo $h_demarr;	?>
+								<?PHP //echo $h_demarr;	?>
 							</td>
 							<td>
-								<?PHP echo $h_fin;	?>
+								<?PHP //echo $h_fin;	?>
 							</td>
 						  </tr>
 						</tbody>
