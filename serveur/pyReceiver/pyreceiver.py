@@ -24,15 +24,20 @@ def setup():
 # -- manage serial reception -- 
 def task_receiver():
 	global keepThis
-	data=keepThis + ser.read(ser.inWaiting()) # read no.of bytes in waiting
-	m = data.split("\n")	# get the individual lines from input
-	if(len(m[-1])==0):		# true if only complete lines present (nothing after last newline)
-	  processThis = m
-	  keepThis = ''
-	else:
-	  processThis = m[0:-1]		# skip incomplete line
-	  keepThis = m[-1]			# fragment
-
+	try :
+		data=keepThis + ser.read(ser.inWaiting()) # read no.of bytes in waiting
+		m = data.split("\n")	# get the individual lines from input
+		if(len(m[-1])==0):		# true if only complete lines present (nothing after last newline)
+		  processThis = m
+		  keepThis = ''
+		else:
+		  processThis = m[0:-1]		# skip incomplete line
+		  keepThis = m[-1]			# fragment
+	except :
+		logmessage = " ERROR while opening" + port
+		print logmessage
+		syslog.syslog(logmessage)
+		
 	# process the complete lines:
 	for line in processThis:
 		if line.startswith( '$EDF' ) :
@@ -333,6 +338,8 @@ def task_emitter():
 		# Close MySQL session
 		con.close()
 	except mdb.Error, e:
+		# create variable for next loop (for message in messages)
+		messages = 0 
 		# Display MySQL errors
 		try:
 			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
