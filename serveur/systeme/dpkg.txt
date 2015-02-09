@@ -21,12 +21,8 @@ base-passwd					install
 bash						install
 bash-completion					install
 bc						install
-bind9						install
-bind9-doc					install
 bind9-host					install
-bind9utils					install
 binutils					install
-bsd-mailx					install
 bsdmainutils					install
 bsdutils					install
 build-essential					install
@@ -77,7 +73,6 @@ diffutils					install
 discover					install
 discover-data					install
 distro-info-data				install
-dlint						install
 dmidecode					install
 dmsetup						install
 dnsutils					install
@@ -139,6 +134,7 @@ grub2-common					install
 gsfonts						install
 gzip						install
 hardening-includes				install
+heirloom-mailx					install
 host						install
 hostname					install
 hp-ppd						install
@@ -282,6 +278,7 @@ libgphoto2-port0:i386				install
 libgpm2:i386					install
 libgs9						install
 libgs9-common					install
+libgsasl7					install
 libgssapi-krb5-2:i386				install
 libgssglue1:i386				install
 libgudev-1.0-0:i386				install
@@ -358,9 +355,10 @@ libnet-ssleay-perl				install
 libnewt0.52					install
 libnfnetlink0					install
 libnfsidmap2:i386				install
-libnss-lwres					install
+libnss-lwres					deinstall
 libnss-mdns					install
 libnss-winbind:i386				install
+libntlm0					install
 libonig2					install
 libopenjpeg2:i386				install
 libossp-uuid-perl				install
@@ -491,7 +489,7 @@ lrzsz						install
 lsb-base					install
 lsb-release					install
 lsof						install
-lwresd						install
+lwresd						deinstall
 m4						install
 maint-guide-fr					install
 make						install
@@ -509,6 +507,7 @@ module-init-tools				install
 mount						install
 mr						install
 mscompress					install
+msmtp						install
 multiarch-support				install
 mutt						install
 mysql-client					install
@@ -633,7 +632,6 @@ sysv-rc						install
 sysvinit					install
 sysvinit-utils					install
 tar						install
-task-dns-server					install
 task-file-server				install
 task-french					install
 task-print-server				install
