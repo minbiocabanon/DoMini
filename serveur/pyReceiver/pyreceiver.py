@@ -37,11 +37,6 @@ def task_receiver():
 		logmessage = " ERROR while opening" + port
 		print logmessage
 		syslog.syslog(logmessage)
-<<<<<<< HEAD
-
-=======
-		
->>>>>>> 560ab27658497a8c8b50f8bb0f966c002b73eb11
 	# process the complete lines:
 	for line in processThis:
 		if line.startswith( '$EDF' ) :
