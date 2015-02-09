@@ -4,11 +4,6 @@ cd /var/www/domini/php/highstock/
 
 # GRAPHIQUE HIGHSTOCK
 # Génére le CSV avec les info téléinfo annuelle
-wget 0.0.0.0:80/php/highstock/csv_teleinfo_an.php
-wget 0.0.0.0:80/php/highstock/csv_pellet_conso.php
-
-#suppression des fichiers temporaire crees
-rm -f /var/www/domini/php/highstock/csv_teleinfo_an.php.*
-rm -f /var/www/domini/php/highstock/csv_pellet_conso.php.*
-
+curl 0.0.0.0:80/php/highstock/csv_teleinfo_an.php
+curl 0.0.0.0:80/php/highstock/csv_pellet_conso.php
 
