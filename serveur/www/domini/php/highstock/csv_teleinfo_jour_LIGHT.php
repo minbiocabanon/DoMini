@@ -85,7 +85,9 @@
 		$n++;
 		$myrow=0;
 	}
-
+	
+	//fermeture du fichier
+	fclose($fp);
 	
 	mysql_free_result($RESULT) ;
 	mysql_close();

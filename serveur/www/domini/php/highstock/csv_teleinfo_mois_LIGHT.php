@@ -85,5 +85,6 @@
 	
 	mysql_free_result($RESULT) ;
 	mysql_close();
+	fclose($fp);
 	echo"CSV teleinfo_mois_LIGHT exporté.<br>";
 ?>

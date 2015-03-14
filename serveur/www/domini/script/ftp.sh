@@ -43,17 +43,17 @@ rm -f  /tmp/cache_wget/restemperature_stat.php
 
 #on charge les pages "cas particuliers
 #wget -r http://192.168.0.102:80
-curl http://0.0.0.0:80/index.php
-curl http://0.0.0.0:80/teleinfo_edf.php
-curl http://0.0.0.0:80/voletroulant.php
-curl http://0.0.0.0:80/pellet.php
-curl http://0.0.0.0:80/chauffage_config.php
-curl http://0.0.0.0:80/conf_externe.php
-curl http://0.0.0.0:80/ventilation_flux.php
-curl http://0.0.0.0:80/webcam.php
-curl http://0.0.0.0:80/map_tondeuse.php
-curl http://0.0.0.0:80/planning.php
-curl http://0.0.0.0:80/temperature_stat.php
+curl -O http://0.0.0.0:80/index.php
+curl -O http://0.0.0.0:80/teleinfo_edf.php
+curl -O http://0.0.0.0:80/voletroulant.php
+curl -O http://0.0.0.0:80/pellet.php
+curl -O http://0.0.0.0:80/chauffage_config.php
+curl -O http://0.0.0.0:80/conf_externe.php
+curl -O http://0.0.0.0:80/ventilation_flux.php
+curl -O http://0.0.0.0:80/webcam.php
+curl -O http://0.0.0.0:80/map_tondeuse.php
+curl -O http://0.0.0.0:80/planning.php
+curl -O http://0.0.0.0:80/temperature_stat.php
 
 #On supprimer l'image du sejour (vie privee!!!)
 rm -f  /tmp/cache_wget/webcam/sejour*.jpg

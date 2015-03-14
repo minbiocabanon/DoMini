@@ -16,91 +16,101 @@
 	$SQL="SET lc_time_names = 'fr_FR'" ; // Pour afficher date en français dans MySql. 
 	mysql_query($SQL) ;
 	//on récupére l'année en cours
-	$annee = date('Y');
+	$annee_crte = date('Y');
 	//on récupére le mois en cours (1-12)
-	$mois = date('m');
-	//on récupére le mois en cours (Janvier-Decembre)
-	//$moisM = date('F');
-	$moisM = strftime("%B");
+	$mois_crt = date('m');	
 	
-	
-	//on récupére le mois en cours (1-31)
-	$jour = date('j');
 	$n=0;
 
-	//DEBUG
-	for($m=1 ; $m<=$mois ; $m++){
-
-		// requete MySQL pour obtenir le nb de jour dans le mois en cours
-		$SQL="SELECT COUNT( DISTINCT DAY( date_time ) ) AS NBJOUR
-			FROM teleinfo
-			WHERE MONTH( date_time ) = $m";
-		// echo "<br>requete SQL : $SQL<br>";
-		$RESULT = @mysql_query($SQL);
-		$myrow=@mysql_fetch_array($RESULT);
-		$jour = $myrow["NBJOUR"];
+	//Pour chaque année depuis 2010 jusqu'à aujourd'hui
+	for($annee = 2010; $annee <= $annee_crte; $annee++){
 		
-		// Pour les jours du mois en cours
-		 for($j=1 ; $j<=$jour ; $j++){
-			// echo" jour : $i, n: $n<br>";
-			//requete pour récupérer les infos du mois en cours
-			$SQL="SELECT  DATE_FORMAT(date_time, '%d-%m-%Y') AS DATE, HC,HP 
-			FROM  teleinfo 
-			WHERE  DAY(date_time)=$j AND YEAR(date_time)=$annee AND MONTH(date_time)=$m 
-			ORDER BY date_time
-			LIMIT 0,1"; 
-			$RESULT = @mysql_query($SQL);
+		//pour l'année en cours, on s'arrête au mois en cours
+		if($annee == $annee_crte)
+			//on récupére le mois en cours (1-12)
+			$mois = date('m');
+		else
+			// sinon on fait pour les 12 mois
+			$mois = 12;
+	
+		for($m=1 ; $m<=$mois ; $m++){
+			//pour l'année en cours et le mois, on s'arrête au jour en cours
+			if($annee == $annee_crte && $m = $mois_crt){
+				//on récupére le mois en cours (1-12)
+				$jour = date('j');
+			}
+			else{
+				// requete MySQL pour obtenir le nb de jour dans le mois en cours
+				$SQL="SELECT COUNT( DISTINCT DAY( date_time ) ) AS NBJOUR
+					FROM teleinfo
+					WHERE MONTH( date_time ) = $m";
+				// echo "<br>requete SQL : $SQL<br>";
+				$RESULT = @mysql_query($SQL);
+				$myrow=@mysql_fetch_assoc($RESULT);
+				$jour = $myrow["NBJOUR"];
+			}
 			
-			//on ne prend que le premier élement de la table HC et HP
-			if($myrow=@mysql_fetch_array($RESULT)){
-				// echo "<br>resultat : $myrow[1]";
-				$data_date[$n]= $myrow["DATE"];
-				$data_HC_deb[0] = $myrow["HC"] / 1000; // on divise par mille pour avoir des kWh
-				$data_HP_deb[0] = $myrow["HP"] / 1000; // on divise par mille pour avoir des kWh
-				// echo "data_date : $data_date[$n]   <br> data_HC_deb : $data_HC_deb[0]     data_HP_deb : $data_HP_deb[0] <br>";
-
+			// Pour les jours du mois en cours
+			 for($j=1 ; $j<=$jour ; $j++){
+				// echo" jour : $i, n: $n<br>";
 				//requete pour récupérer les infos du mois en cours
-				$SQL="SELECT DATE_FORMAT(date_time, '%d-%m-%Y') AS DATE, HC,HP 
+				$SQL="SELECT  DATE_FORMAT(date_time, '%d-%m-%Y') AS DATE, HC,HP 
 				FROM  teleinfo 
 				WHERE  DAY(date_time)=$j AND YEAR(date_time)=$annee AND MONTH(date_time)=$m 
-				ORDER BY date_time DESC
+				ORDER BY date_time
 				LIMIT 0,1"; 
 				$RESULT = @mysql_query($SQL);
 				
-				//on lit la seconde ligne avec les HP+HC de fin d'année
-				if( $myrow=@mysql_fetch_array($RESULT)){
-					
-					$data_HC_fin[0] = $myrow["HC"] / 1000; // on divise par mille pour avoir des kWh
-					$data_HP_fin[0] = $myrow["HP"] / 1000; // on divise par mille pour avoir des kWh
-					// echo "data_HC_fin : $data_HC_fin[0]     data_HP_fin : $data_HP_fin[0] <br>";
+				//on ne prend que le premier élement de la table HC et HP
+				if($myrow=@mysql_fetch_assoc($RESULT)){
+					// echo "<br>resultat : $myrow[1]";
+					$data_date = $myrow["DATE"];
+					$data_HC_deb = $myrow["HC"] / 1000; // on divise par mille pour avoir des kWh
+					$data_HP_deb = $myrow["HP"] / 1000; // on divise par mille pour avoir des kWh
+					// echo "data_date : $data_date[$n]   <br> data_HC_deb : $data_HC_deb[0]     data_HP_deb : $data_HP_deb[0] <br>";
 
-					// On calcul la conso mensuelle
-					$data_consojourHC[$n] = $data_HC_fin[0] - $data_HC_deb[0] ;
-					$data_consojourHP[$n] = $data_HP_fin[0] - $data_HP_deb[0] ;
+					//requete pour récupérer les infos du mois en cours
+					$SQL="SELECT HC,HP 
+					FROM  teleinfo 
+					WHERE  DAY(date_time)=$j AND YEAR(date_time)=$annee AND MONTH(date_time)=$m 
+					ORDER BY date_time DESC
+					LIMIT 0,1"; 
+					$RESULT = @mysql_query($SQL);
 					
-					//DEBUG
-					//echo "data_consojourHC : $data_consojourHC[$n]; <br> data_consojourHP : $data_consojourHP[$n];<br>";
-							
-					// On converti en euros
-					$data_consojourHC[$n] = round($tarif_HC * $data_consojourHC[$n] , 2);
-					$data_consojourHP[$n] = round($tarif_HP * $data_consojourHP[$n] , 2);
-					
-					//DEBUG
-					//echo "data_consojourHC : $data_consojourHC[$n]; <br> data_consojourHP : $data_consojourHP[$n];<br>";
-					
-					//on écrit les données dans le fichier CSV		
-					$line = $data_date[$n] .";00:00:01;". $data_consojourHPr[$n] .";". $data_consojourHCr[$n]."\n"; 
-					fputs($fp, $line);
+					//on lit la seconde ligne avec les HP+HC de fin d'année
+					if( $myrow=@mysql_fetch_assoc($RESULT)){
+						
+						$data_HC_fin = $myrow["HC"] / 1000; // on divise par mille pour avoir des kWh
+						$data_HP_fin = $myrow["HP"] / 1000; // on divise par mille pour avoir des kWh
+						// echo "data_HC_fin : $data_HC_fin[0]     data_HP_fin : $data_HP_fin[0] <br>";
+
+						// On calcul la conso mensuelle
+						$data_consojourHC = $data_HC_fin - $data_HC_deb ;
+						$data_consojourHP = $data_HP_fin - $data_HP_deb ;
+						
+						//DEBUG
+						//echo "data_consojourHC : $data_consojourHC[$n]; <br> data_consojourHP : $data_consojourHP[$n];<br>";
+								
+						// On converti en euros
+						$data_consojourHC = round($tarif_HC * $data_consojourHC , 2);
+						$data_consojourHP = round($tarif_HP * $data_consojourHP , 2);
+						
+						//DEBUG
+						//echo "data_consojourHC : $data_consojourHC; <br> data_consojourHP : $data_consojourHP;<br>";
+						
+						//on écrit les données dans le fichier CSV		
+						$line = $data_date .";00:00:01;". $data_consojourHP .";". $data_consojourHC."\n"; 
+						fputs($fp, $line);
+					}
+					$myrow=0;
 				}
-				
-				$n++;
-				$myrow=0;
-			}
-		 }
+			 }
+		}
 	}
-	
 	mysql_free_result($RESULT) ;
 	mysql_close();
 
+	fclose($fp);
+	
 	echo"CSV teleinfo_jour exporté.<br>";
 ?>

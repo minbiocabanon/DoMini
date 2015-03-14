@@ -68,7 +68,8 @@
 			$n++;
 		}
 	 }
-
+	//fermeture du fichier
+	fclose($fp);
 	echo"CSV teleinfo_an exporté.<br>";
 	mysql_free_result($RESULT) ;
 	mysql_close();

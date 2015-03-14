@@ -12,7 +12,7 @@ tar cvzf domotique.tgz backup-domotique.sql
 echo backup compresse
 
 # on supprime le fichier temporaire
-rm backup-domotique.sql
+rm -f backup-domotique.sql
 echo fichier .sql temporaire supprime
 
 #On sauve l'archive sur un serveur distant... au cas ou le sheevaplus crame (ou la SDCard ou le Disque dur...)
