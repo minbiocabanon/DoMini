@@ -13,15 +13,15 @@ keepThis = ''
 
 TIMEOUTMSG  = 120 # in seconds
 
-#--- setup --- 
+#--- setup ---
 def setup():
 	print ('Setup')
 	syslog.openlog("pyReceiver")
 	syslog.syslog("Demarrage")
 	print ('End Setup')
-# -- fin setup -- 
+# -- fin setup --
 
-# -- manage serial reception -- 
+# -- manage serial reception --
 def task_receiver():
 	global keepThis
 	try :
@@ -75,7 +75,7 @@ def task_receiver():
 				# log this error
 				print logmessage
 				syslog.syslog(logmessage)
-			
+
 		elif line.startswith( '$VMC' ) :
 			# exemple : $VMC,0645,-27315,-3966,0010\r\n
 			try :
@@ -91,13 +91,13 @@ def task_receiver():
 					# Open MySQL session
 					con = mdb.connect('localhost','root','mysql','domotique')
 					cur = con.cursor()
-					# prepare query 
+					# prepare query
 					query = 'INSERT INTO domotique.{0} VALUES(NULL, NOW(), \'{1}\', {2:.2f}, {3:.2f}, {4:.2f}, {5:.2f}, 0)'.format(table, header, float(an1)/100, float(an2)/100, float(an3)/100, float(an4)/100)
 					print " " + query
 					# run MySQL Query
 					cur.execute(query)
 					# Close all cursors
-					cur.close()					
+					cur.close()
 					# Close MySQL session
 					con.close()
 					# Print some debug
@@ -107,12 +107,12 @@ def task_receiver():
 					try:
 						print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 					except IndexError:
-						print "MySQL Error: %s" % str(e)				
+						print "MySQL Error: %s" % str(e)
 			except :
 				logmessage = " ERROR while parsing message $VMC" + line
 				print logmessage
 				syslog.syslog(logmessage)
-	
+
 		elif line.startswith( '$AN1' ) or line.startswith( '$AN2' ) or line.startswith( '$AN3' ) or line.startswith( '$AN4' ) or line.startswith( '$AN5' ) or line.startswith( '$AN6' ):
 			# exemple : $AN4,1509,5942,0724,0000\r\n
 			try :
@@ -128,13 +128,13 @@ def task_receiver():
 					# Open MySQL session
 					con = mdb.connect('localhost','root','mysql','domotique')
 					cur = con.cursor()
-					# prepare query 
+					# prepare query
 					query = 'INSERT INTO domotique.{0} VALUES(NULL, NOW(), \'{1}\', {2:.2f}, {3:.2f}, {4:.2f}, {5:.2f}, 0)'.format(table, header, float(an1)/100, float(an2)/100, float(an3)/100, float(an4)/100)
 					print " " + query
 					# run MySQL Query
 					cur.execute(query)
 					# Close all cursors
-					cur.close()					
+					cur.close()
 					# Close MySQL session
 					con.close()
 					# Print some debug
@@ -144,12 +144,12 @@ def task_receiver():
 					try:
 						print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 					except IndexError:
-						print "MySQL Error: %s" % str(e)				
+						print "MySQL Error: %s" % str(e)
 			except :
 				logmessage = " ERROR while parsing message $AN" + line
 				print logmessage
 				syslog.syslog(logmessage)
-				
+
 		elif line.startswith( '$PYR' ) :
 			# exemple : $PYR,01515\r\n
 			try :
@@ -165,13 +165,13 @@ def task_receiver():
 					# Open MySQL session
 					con = mdb.connect('localhost','root','mysql','domotique')
 					cur = con.cursor()
-					# prepare query 
+					# prepare query
 					query = 'INSERT INTO domotique.{0} VALUES(NULL, NOW(), \'{1}\', {2:.2f}, 0)'.format( table, header, float(an1)/100 )
 					print " " + query
 					# run MySQL Query
 					cur.execute(query)
 					# Close all cursors
-					cur.close()					
+					cur.close()
 					# Close MySQL session
 					con.close()
 					# Print some debug
@@ -181,12 +181,12 @@ def task_receiver():
 					try:
 						print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 					except IndexError:
-						print "MySQL Error: %s" % str(e)				
+						print "MySQL Error: %s" % str(e)
 			except :
 				logmessage = " ERROR while parsing message $PYR : " + line
 				print logmessage
 				syslog.syslog(logmessage)
-				
+
 		elif line.startswith( '$POL' ) or line.startswith( '!POL' ):
 			# exemple : $POL,MOD,0\r\n
 			# exemple : $POL,SAC,1\r\n
@@ -217,14 +217,14 @@ def task_receiver():
 						logmessage = ' Nb de sacs en stock: {}'.format(stock_pellet)
 						print logmessage
 						syslog.syslog(logmessage)
-						
+
 						# Prepare a new query to save new value of stock
 						query = 'INSERT INTO domotique.pellets VALUES(NULL, NOW(), 0, {}, {})'.format( int(var1), (int(stock_pellet) - int(var1)))
 						print " " + query
 						# run MySQL Query
-						cur.execute(query)						
+						cur.execute(query)
 						# Close all cursors
-						cur.close()						
+						cur.close()
 						# Close MySQL session
 						con.close()
 						# Print some debug
@@ -251,14 +251,14 @@ def task_receiver():
 						# logmessage = ' Nb de sacs en stock: {}'.format(stock_pellet)
 						# print logmessage
 						# syslog.syslog(logmessage)
-						
+
 						# # Prepare a new query to save new value of stock
 						# query = 'INSERT INTO domotique.pellets VALUES(NULL, NOW(), 0, {}, {})'.format( int(var1), (int(stock_pellet) - int(var1)))
 						# print " " + query
 						# # run MySQL Query
-						# # cur.execute(query)						
+						# # cur.execute(query)
 						# # Close all cursors
-						# cur.close()						
+						# cur.close()
 						# # Close MySQL session
 						# con.close()
 						# Print some debug
@@ -282,9 +282,9 @@ def task_receiver():
 						query = 'INSERT INTO domotique.pellets_rsv VALUES(NULL, NOW(), \'{0}\', {1:3d}, 0)'.format( header, int(var1))
 						print " " + query
 						# run MySQL Query
-						cur.execute(query)						
+						cur.execute(query)
 						# Close all cursors
-						cur.close()						
+						cur.close()
 						# Close MySQL session
 						con.close()
 						# Print some debug
@@ -297,13 +297,13 @@ def task_receiver():
 							print "MySQL Error: %s" % str(e)
 				else :
 					print "ici"
-				
+
 			except :
 				# if error, display header
 				logmessage = " ERROR while parsing message $POL" + line
 				print logmessage
 				# log this error
-				syslog.syslog(logmessage)	
+				syslog.syslog(logmessage)
 
 		else :
 			# display received message (not recognized but usefull for debug)
@@ -320,25 +320,25 @@ def task_receiver():
 					syslog.syslog(logmessage)
 # -- end task_receiver --
 
-# -- manage serial emission -- 
+# -- manage serial emission --
 def task_emitter():
 	# Check messages in the MySQL stack
 	try:
 		# Open MySQL session
 		con = mdb.connect('localhost','root','mysql','domotique')
 		cur = con.cursor()
-		# prepare query 
+		# prepare query
 		query = 'SELECT id, date_time, UNIX_TIMESTAMP(date_time) AS date_unix, message FROM `domotique`.`tx_msg_radio` ORDER BY date_time ASC'
 		# run MySQL Query
 		cur.execute(query)
-		messages = cur.fetchall()		
+		messages = cur.fetchall()
 		# Close all cursors
-		cur.close()					
+		cur.close()
 		# Close MySQL session
 		con.close()
 	except mdb.Error, e:
 		# create variable for next loop (for message in messages)
-		messages = 0 
+		messages = 0
 		# Display MySQL errors
 		try:
 			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
@@ -348,9 +348,9 @@ def task_emitter():
 	# for each messages in the stack
 	try :
 		for message in messages:
-			#check if timestamp is not to old 
+			#check if timestamp is not to old
 			# display date/time
-			print time.strftime("\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Y-%m-%d %H:%M:%S")		
+			print time.strftime("\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Y-%m-%d %H:%M:%S")
 			if (time.time() - message[2] < TIMEOUTMSG) :
 				#send this message on the serial port
 				try:
@@ -364,51 +364,51 @@ def task_emitter():
 					# if error, print error returned
 					logmessage = " Emitter_task : ERROR in sending this message over serial : " + str(message[3])
 					print logmessage
-					syslog.syslog(logmessage)			
+					syslog.syslog(logmessage)
 			else :
 				# Message has expired
 				logmessage = " Emitter_task : message has expired : " + str(message[3]) + " date/time :" + str(message[1]) + "-" + str(message[2])
 				print logmessage
-				syslog.syslog(logmessage)			
-			
+				syslog.syslog(logmessage)
+
 			# delete this message
 			try:
 				# Open MySQL session
 				con = mdb.connect('localhost','root','mysql','domotique')
 				cur = con.cursor()
-				# prepare query 
+				# prepare query
 				query = 'DELETE FROM `domotique`.`tx_msg_radio` WHERE `tx_msg_radio`.`id` = {0};'.format(message[0])
 				# run MySQL Query
-				cur.execute(query)		
+				cur.execute(query)
 				# Close all cursors
-				cur.close()					
+				cur.close()
 				# Close MySQL session
-				con.close()	
+				con.close()
 				# Add some log messages
 				logmessage = " Emitter_task : message has been deleted : " + str(message[3]) + " id :" + str(message[0])
 				print logmessage
-				syslog.syslog(logmessage)			
+				syslog.syslog(logmessage)
 			except mdb.Error, e:
 				# Display MySQL errors
 				try:
 					print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 				except IndexError:
-					print "MySQL Error: %s" % str(e)		
+					print "MySQL Error: %s" % str(e)
 	except :
 		# Add some log messages
 		logmessage = " Emitter_task : error with MySQL or messages variable content"
 		print logmessage
-		syslog.syslog(logmessage)		
+		syslog.syslog(logmessage)
 # -- end task_emitter --
 
 
-#--- obligatoire pour lancement du code -- 
+#--- obligatoire pour lancement du code --
 if __name__=="__main__": # set executable code
 	setup() 	# setup() function call
 	while(1): 	# infinite loop
 		task_receiver()
 		task_emitter()
-		
+
 		sleep(1)
 		print ('.'),
 		sys.stdout.flush()
