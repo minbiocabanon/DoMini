@@ -30,9 +30,6 @@
 			mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
 			mysql_close();
 			
-			// echo"Envoi msq radio<br>";
-			// on force l'envoi des messages radio présent dans la pile
-			exec("/var/www/domini/bin/emitter /dev/ttyUSB0 &",$result);
 			//variable pour afficher un message de confirmation
 			$msg_sent = true;
 		}

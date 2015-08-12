@@ -43,12 +43,9 @@
 				  </div>
 				</div>
 				<div id="frame_ventilation">
-					<div id="image_ventilation">
-						<img src="img/plan_ventilation.jpg" alt="plan ventilation" ></img>
-					</div>
-					<div id="image_bypass">
-						<img src="img/<?php if($consigne_pc == 100){echo "bypass_pc_ext.jpg";}else{echo "bypass_pc_pc.jpg";} ?>" alt="bypass_pc"></img>	
-					</div>
+					<div id="image_vmc"><?php if($bypass_VMC == 1){echo "<img src=\"img/vmcdf_bypass.jpg\" alt=\"vmc_bypass\"></img>";} ?></div>
+					<div id="image_ventilation"><img src="img/plan_ventilation.jpg" alt="plan ventilation" ></img></div>
+					<div id="image_bypass"><img src="img/<?php if($consigne_pc == 100){echo "bypass_pc_ext.jpg";}else{echo "bypass_pc_pc.jpg";} ?>" alt="bypass_pc"></img></div>
 					<div id="temp_ext"><?php echo $data_tempext[0];?>°C</div>
 					<div id="text_temp_garage">garage</div>
 					<div id="temp_garage"><?php echo $temp_garage;?>°C</div>
@@ -68,10 +65,8 @@
 							echo '<div id="rendement_vmcdf">'.$rendement.'%</div>';
 						}
 					?>
-					<div id="image_vmc">
-						<?php if($bypass_VMC == 1){echo "<img src=\"img/vmcdf_bypass.jpg\" alt=\"vmc_bypass\"></img>";} ?>
-					</div>
 				</div>
+				
 			</div><!-- /container -->
 		</div><!-- /wrap -->
 	</body>

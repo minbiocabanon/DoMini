@@ -431,6 +431,7 @@ libtirpc1:i386					install
 libtokyocabinet9:i386				install
 libudev0:i386					install
 libunistring0:i386				install
+libupsclient1					install
 liburi-perl					install
 libusb-0.1-4:i386				install
 libusb-1.0-0:i386				install
@@ -516,6 +517,9 @@ netcat-traditional				install
 nfs-common					install
 nfs-kernel-server				install
 ntpdate						install
+nut						install
+nut-client					install
+nut-server					install
 openbsd-inetd					install
 openprinting-ppds				install
 openssh-blacklist				install
@@ -535,6 +539,7 @@ perl-base					install
 perl-modules					install
 php5-cgi					install
 php5-common					install
+php5-curl					install
 php5-fpm					purge
 php5-gd						install
 php5-mcrypt					install
@@ -598,6 +603,7 @@ sed						install
 sensible-utils					install
 sgml-base					install
 shared-mime-info				install
+sl						install
 smartmontools					install
 smbclient					install
 spawn-fcgi					install

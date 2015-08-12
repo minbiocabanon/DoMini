@@ -41,17 +41,17 @@
 	z-index:-1;
 }
 #image_bypass {
-	position:absolute;
-	top:159px;
+	position:relative;
+	top:0px;
 	left:400px;
 	z-index:3;
 }
 #image_vmc {
-	position:absolute;
-	z-index:2;
+	position:relative;
 	top:116px;
 	left:572px;
 	height:156px;
+	z-index:3;
 }
 
 #temp_ext {

@@ -100,6 +100,7 @@
 						$msg_sent = false;
 					}
 				?>
+				</div>
 					<div class="span12 offset3">
 						<FORM method="POST" name="formulaire">
 							<ul style="list-style-type:none">
@@ -116,6 +117,7 @@
 							<input type="hidden" name="envoi" value="OK">
 						</form>
 					</div>
+				
 				</div>		
 			</div><!-- /container -->
 		</div><!-- /wrap -->

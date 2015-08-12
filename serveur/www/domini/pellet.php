@@ -48,7 +48,7 @@
 
 	
 	
-		//si on vient de saisir des infos passées en paramètre de l'adresse
+	//si on vient de saisir des infos passées en paramètre de l'adresse
 	if($form_envoi == "OK"){
 		// Connexion à la BDD
 		@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
