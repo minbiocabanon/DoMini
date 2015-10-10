@@ -89,25 +89,13 @@ L'importation de gros fichiers n'est pas possible via phpmyadmin, il faut utilis
  
 ## SYSTEME
 ### rc.local
-Afin de garantir le fonctionnement de la domotique en cas de redémarrage intempestif du serveur (si pas d'onduleur ou à la reprise du courant lorsque l'onduleur est sec), il convient d'appeler le petit logiciel 'receiver' au démarrage.
+Afin de garantir le fonctionnement de la domotique en cas de redémarrage intempestif du serveur (si pas d'onduleur ou à la reprise du courant lorsque l'onduleur est sec), il convient d'appeler un script 'go.sh' qui contiendra les actions à lancer au démarrage.
 Pour cela, il faut modifier le fichier rc.local en ajoutant ces quelques lignes à la fin du fichier (avant exit 0) :
 
 	éditer le fichier (avec nano ou vi):
 	nano /etc/rc.local
-
-puis ajouter **avant exit 0**:
-
-	#setting baudrate
-	stty -F /dev/ttyUSB0 57600&
-	echo "running receiver"
-	/home/julien/bin/receiver /dev/ttyUSB0&
-	echo "exiting from rc.local"
-	
-Pour la version pyton de receiver (pyReceiver) :
-	
-	echo "running pyReceiver"
-	cd /home/julien/src/domini/serveur/pyReceiver/
-	python pyreceiver.py	
+	echo "running go.sh"
+	/home/julien/src/domini/serveur/go.sh
 
 ### Accès au portCOM/USB
 Le port ttyUSBx doit être utilisable par l'utilisateur www-data pour l'envoi de message directement depuis l'interface web.
@@ -198,8 +186,13 @@ J'ai utilisé [Highstock](http://www.highcharts.com/) pour générer les graphiq
 
 ![Domini Ensoleillement mensuel](docs/img/screenshot/web_soleil_mois.png)
 
+### cURL
 
-# Python (brouillon)
+Installer le paquet cURL pour PHP (optionnel)
+
+	sudo apt-get install php5-curl
+
+# Python
 ## Pyserial
 http://pyserial.sourceforge.net/pyserial.html#from-source-tar-gz-or-checkout
 
@@ -231,7 +224,17 @@ Interpreteur PYTHON :
 	>>>
 	
 
-	
-	
+## Gestion onduleur USB (brouillon)
 
-	
+liens utiles
+http://eole.orion.education.fr/oldwiki/index.php/Installation_Onduleur
+http://ovanhoof.developpez.com/upsusb/
+
+	$dmesg
+	[ 4877.404023] usb 2-2: new low-speed USB device number 2 using uhci_hcd
+	[ 4879.510653] usb 2-2: New USB device found, idVendor=0463, idProduct=ffff
+	[ 4879.510659] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=4
+	[ 4879.510663] usb 2-2: Product: Protection Station
+	[ 4879.510667] usb 2-2: Manufacturer: EATON
+	[ 4879.510670] usb 2-2: SerialNumber: AN2E49008
+	[ 4881.710163] generic-usb 0003:0463:FFFF.0004: hiddev0,hidraw2: USB HID v10.10 Device [EATON Protection Station] on usb-0000:00:1d.0-2/input0
