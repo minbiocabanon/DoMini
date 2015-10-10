@@ -1,6 +1,8 @@
 0,10,20,30,40,50 * * * * cp /var/log/user.log /var/www/domini/log/user.log    #Copie du user.log pour consultation depuis l'interface web domotique
 @weekly /home/julien/src/domini/serveur/systeme/crontab_export.sh       #export de la crontab
 # 0 7 * * * /etc/init.d/networking restart  #reboot network interfaces (Wifi disconnection sometimes)
+5,10,15,20,25,30,35,40,45,50,55,59 * * * * /home/julien/src/domini/serveur/systeme/checkwifi.sh #Vérification de la connextion wifi (intervalle de 5 minutes)
+0 * * * * /etc/webmin/bandwidth/rotate.pl
 0,15,30,45 * * * * /var/www/domini/script/graph_15m.sh           #Mise a jour des graphs rafraichis toutes les 15 minutes
 1,11,21,31,41,51 * * * * /var/www/domini/script/webcam_10m.sh      #Captures des images des cameras
 @hourly /var/www/domini/script/graph_1h.sh         #Execution des pages php pour g�n�rer graphes toutes les 1h
