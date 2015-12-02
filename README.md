@@ -146,7 +146,22 @@ fichier de configuration /etc/vsftpd.conf :
 	pam_service_name=vsftpd
 	rsa_cert_file=/etc/ssl/certs/vsftpd.pem
 	anon_root=/var/www/	
+
+### resolv.conf
+(pour résoudre pb de DNS si votre FAI est mauvais...)
+installer le packet resolvconf
+	sudo apt-get install resolvconf
 	
+éditer manuellement le fichier base :
+	sudo nano /etc/resolvconf/resolv.conf.d/base
+		
+ajouter ces deux lignes :
+	nameserver 208.67.222.222
+	nameserver 208.67.220.220
+
+sauver et relancer l'interface wifi/ethernet
+	sudo /etc/init.d/networking restart
+
 	
 ## Logiciel
  - Modifier le fichier suivant pour y renseigner les identifiants de connexion à la base de données ainsi que le nom de la table:
