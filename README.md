@@ -150,16 +150,20 @@ fichier de configuration /etc/vsftpd.conf :
 ### resolv.conf
 (pour résoudre pb de DNS si votre FAI est mauvais...)
 installer le packet resolvconf
+
 	sudo apt-get install resolvconf
 	
 éditer manuellement le fichier base :
+
 	sudo nano /etc/resolvconf/resolv.conf.d/base
 		
 ajouter ces deux lignes :
+
 	nameserver 208.67.222.222
 	nameserver 208.67.220.220
 
 sauver et relancer l'interface wifi/ethernet
+
 	sudo /etc/init.d/networking restart
 
 	
