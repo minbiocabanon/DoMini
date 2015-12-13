@@ -304,6 +304,24 @@ def task_receiver():
 				# log this error
 				syslog.syslog(logmessage)
 
+		elif line.startswith( '$DBG' ) :
+			# exemple : $DBG,blablabla\r\n
+			try :
+				# display date/time
+				print time.strftime("\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Y-%m-%d %H:%M:%S")
+				# Parse data in the message
+				header,msgdbg = line.strip().split(',')
+				# log this data
+				logmessage = " " + header + " received, message : " + msgdbg
+				syslog.syslog(logmessage)
+				print header, msgdbg
+			except :
+				# if error, display header
+				logmessage = " ERROR while parsing message $DBG" + line
+				print logmessage
+				# log this error
+				syslog.syslog(logmessage)				
+				
 		else :
 			# display received message (not recognized but usefull for debug)
 			if len( line ) > 0 :
