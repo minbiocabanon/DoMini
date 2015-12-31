@@ -8,7 +8,7 @@ from time import sleep
 from threading import Thread
 
 
-port = '/dev/ttyUSB0'
+port = '/dev/ttyUSB1'
 ser = serial.Serial(port, 57600, timeout=0)
 keepThis = ''
 
