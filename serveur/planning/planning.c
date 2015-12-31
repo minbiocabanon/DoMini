@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------
-//!\file          planning.c
-//!\date
-//!\author    Minbiocabanon
-//!\brief       Programme qui créé le planning pour l'année
+//!\file		planning.c
+//!\date		2015
+//!\author		Minbiocabanon
+//!\brief		Programme qui cree les tables de planning pour l'annee
 //----------------------------------------------------------------------
  
 #include <sys/types.h>
@@ -49,9 +49,9 @@ void sigfun(int sig);
 int init_mysql(void);
 int recup_info_jour(unsigned int nId);
 int read_consigne_chauffe(char *inf_saison);
-unsigned int calcul_nb_jour(void);
-unsigned int calcul_t0(void);
-int planning_vierge(void);
+unsigned int calcul_nb_jour(unsigned int annee);
+unsigned int calcul_t0(unsigned int annee);
+int planning_vierge(unsigned int annee);
 int affectation_jour_planning(void);
 
 // Declaration des variables 
@@ -61,6 +61,7 @@ char stconsigne_temperature[] = "19.0";	//consigne de température, 19°C par d�
 
 typedef struct stMydata stMydata;
 struct stMydata{
+	unsigned int annee_planning;	
 	unsigned int nIdJour ; 			//Id du jour en cours de traitement,  0 < nIdJour <= 365
 	unsigned int nUnixTime; 		//date du jour au format Unix Time
 	float fconsigne_temperature;	//consigne de température, 19°C par défaut. 
@@ -159,14 +160,15 @@ int vider_table_jour(void){
 
 //----------------------------------------------------------------------
 //!\brief          On calcul avec une requete MySQL le nombre de jour qui compose l'année à venir
+//!\param[in]  		Anne pour laquelle effectuer la requete
 //!\return        retour dans variable globale nNbJour
 //!\return        1 si erreur, 0 sinon
 //----------------------------------------------------------------------
-unsigned int calcul_nb_jour(void){
+unsigned int calcul_nb_jour(unsigned int annee){
 
 	// Preparation de la requete MySQL
 	// on ne récupère le nombre de jours pour l'année en cours
-	sprintf(query, "select to_days(concat(year(now()),'-12-31')) - to_days(concat(year(now()),'-01-01')) +1  as days_left;");
+	sprintf(query, "select to_days('%d-12-31') - to_days('%d-01-01') +1  as days_left;", annee, annee);
 
 	// envoi de la requete
 	printf("\nEnvoi de la requete : %s", query);
@@ -188,7 +190,7 @@ unsigned int calcul_nb_jour(void){
 	nNbJour = atoi(row[0]);
 
 	// on affiche la valeur de la consigne de température pour le type de saison récupéré
-	printf ("\nNb de jour cette année : %d \n", nNbJour);
+	printf ("\nNb de jour cette annee : %d \n", nNbJour);
   
 	// on libère la requête
 	mysql_free_result(result);
@@ -197,17 +199,18 @@ unsigned int calcul_nb_jour(void){
 
 //----------------------------------------------------------------------
 //!\brief           Calcule le unixtime du 01-01 00:00:00 de l'année en cours
-//!\return        unixtime
+//!\param[in]  		Anne pour laquelle effectuer la requete
+//!\return        	unixtime
 //----------------------------------------------------------------------
-unsigned int calcul_t0(void){
+unsigned int calcul_t0(unsigned int annee){
 
 	//variable index du temps
 	unsigned int nt0 = 0;
 	
-	//on récupère le unixtime du 01-01 00:00 de l'année en cours
+	//on récupère le unixtime du 01-01 00:00 de l'année passee en paramètre
 	// ne sachant pas le faire en C (trop compliqué de manipuler le temps en C !!!) je le fais avec une requet SQL bien plus simple
 	// Preparation de la requete MySQL
-	sprintf(query, "SELECT UNIX_TIMESTAMP(concat(year(now()),'-01-01 00:00:00:'));");
+	sprintf(query, "SELECT UNIX_TIMESTAMP('%d-01-01 00:00:00:');", annee);
 
 	// envoi de la requete
 	printf("\nEnvoi de la requete : %s", query);
@@ -239,13 +242,14 @@ unsigned int calcul_t0(void){
 
 //----------------------------------------------------------------------
 //!\brief           On créé le planning vierge pour toute l'année
-//!\return        1 si erreur, 0 sinon
+//!\param[in]  		Anne pour laquelle effectuer la requete
+//!\return        	1 si erreur, 0 sinon
 //----------------------------------------------------------------------
-int planning_vierge(void){
+int planning_vierge(unsigned int annee){
 
 	//variable pour l'incrémente des tranches horaires, on va fonctionner en unixtime depuis 00:00 du jour de l'an, donc on va ajouter 20 minutes
-	// on initialise avec le t0 à savoir le 01-01 00:00:00 de l'année en cours
-	unsigned int nIndexTemps = calcul_t0();
+	// on initialise avec le t0 à savoir le 01-01 00:00:00 de l'année passee en parametre
+	unsigned int nIndexTemps = calcul_t0(annee);
 	unsigned int nIndexTemps_fin  = nIndexTemps + INTERVALLE_PLANNING;
 	unsigned int crenau_30min = 1;
 	//Pour chaque jour de l'année
@@ -282,7 +286,7 @@ int affectation_jour_planning(void){
 	
 
 	//pour chaque jour de l'année, défini par un l'Id=1 à l'Id=nNbJour (365)
-	for(stJourTraite.nIdJour = 1; stJourTraite.nIdJour < nNbJour ; stJourTraite.nIdJour++){
+	for(stJourTraite.nIdJour = 1; stJourTraite.nIdJour <= nNbJour ; stJourTraite.nIdJour++){
 	
 		//récupérer le type de jour et saison
 		recup_info_jour(stJourTraite.nIdJour);	
@@ -368,9 +372,9 @@ int affectation_jour_planning(void){
 
 
 //----------------------------------------------------------------------
-//!\brief           récupération des infos du jour dans la table calendrier (type de jour et saison)
-//!\param		Id du jour pour lequel il faut trouver la saisn et le type de jour
-//!\return        1 si erreur, 0 sinon
+//!\brief		récupération des infos du jour dans la table calendrier (type de jour et saison)
+//!\param[in]	Id du jour pour lequel il faut trouver la saison et le type de jour
+//!\return		1 si erreur, 0 sinon
 //----------------------------------------------------------------------
 int recup_info_jour(unsigned int nId){
 
@@ -421,9 +425,9 @@ int recup_info_jour(unsigned int nId){
 }
 
 //----------------------------------------------------------------------
-//!\brief          Dans la table saison,  requête pour récupérer la consigne de chauffage en fonction de la saison
+//!\brief		Dans la table saison,  requête pour récupérer la consigne de chauffage en fonction de la saison
 //!\param		saison (string) pour laquelle on veut la consigne de chauffage
-//!\return        1 si erreur, 0 sinon
+//!\return		1 si erreur, 0 sinon
 //----------------------------------------------------------------------
 int read_consigne_chauffe(char *inf_saison){
 	// Preparation de la requete MySQL
@@ -466,11 +470,15 @@ int read_consigne_chauffe(char *inf_saison){
 
 //***********************************************
 //----------------------------------------------------------------------
-//!\brief           le main !
+//!\brief		le main !
+//!\input		Année pour laquelle il faut créer le planning; si NULL alors on prend l'année courante
 //----------------------------------------------------------------------
 //***********************************************
 int main(int argc, char *argv[]) {  
   
+	// Rappel
+	printf("Arg : Annee pour laquelle il faut creer le planning\n Exemple : \n $ ./planning 2020\n");
+
 	//***************************
 	//* INITIALISATION
 	//***************************
@@ -485,7 +493,7 @@ int main(int argc, char *argv[]) {
 	// prévoir un msg de log vers un fichier de log
 	exit(1);
 	}
-
+	
 	//***************************************************************************
 	//* PROGRAMME PRINCIPAL 
 	//***************************************************************************
@@ -497,7 +505,19 @@ int main(int argc, char *argv[]) {
 	local = localtime(&t); 
 	printf("Heure et date courante : %s\n", asctime(local));
 
-
+	// si l'utilisateur n'a pas passée l'annee en argument
+	if(argc != 2) {
+		// on détermine l'année en cours
+		stJourTraite.annee_planning = local->tm_year + 1900;
+		printf("\n Pas d'argument, on prend l'année  en cours : %d", stJourTraite.annee_planning);
+	}
+	else{
+		//sinon on prend l'annee passe en arguments
+		stJourTraite.annee_planning = atoi(argv[1]);
+		printf("on prend l'aneee  en argument : %d", stJourTraite.annee_planning);
+	}
+	
+	
 	//on commence par vider la table , l'année précédent étant passé, place à l'aveniiiiiiiiiiir
 	// requete de la mort qui vide la une table : TRUNCATE TABLE `calendrier_30min`
 	if(vider_table_jour() == 1) {
@@ -507,14 +527,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	//on calcule le nombre de jour pour l'année à venir
-	if(calcul_nb_jour() == 1) {
+	if(calcul_nb_jour(stJourTraite.annee_planning) == 1) {
 		// erreur sur la recuperation des messages
 		// prévoir un msg de log vers un fichier de log
 		exit(1);
 	}
 
 	//Création du planning vierge
-	if(planning_vierge() == 1) {
+	if(planning_vierge(stJourTraite.annee_planning) == 1) {
 		// erreur sur la recuperation des messages
 		// prévoir un msg de log vers un fichier de log
 		exit(1);

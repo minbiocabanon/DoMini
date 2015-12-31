@@ -6,7 +6,7 @@ import time
 import MySQLdb as mdb
 from time import sleep
 
-port = '/dev/ttyUSB0'
+port = '/dev/ttyUSB1'
 ser = serial.Serial(port, 57600, timeout=0)
 keepThis = ''
 
