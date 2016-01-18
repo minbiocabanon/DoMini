@@ -242,6 +242,22 @@ Interpreteur PYTHON :
 	5.5.40-0+wheezy1
 	>>>
 	
+##pushbullet python
+
+installer ez-python :
+télécharger ez-setup.py ici : https://pypi.python.org/pypi/setuptools	
+
+	sudo python ez_setup.py
+
+Cloner le github pushbullet.py en local 
+	mkdire ~/download/pypushbullet
+	cd ~/download/pypushbullet
+	git clone https://github.com/randomchars/pushbullet.py
+	
+dans le répertoire , lancer :
+	$ sudo python setup.py install
+	
+	
 
 ## Gestion onduleur USB (brouillon)
 
