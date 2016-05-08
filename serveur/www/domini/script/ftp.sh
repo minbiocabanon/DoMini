@@ -8,6 +8,13 @@ cd /tmp
 mkdir cache_wget
 cd cache_wget
 
+# on commence par créer un fichier contenant son @ IP publique
+echo recuperation adresse IP publique
+date > myip.txt
+curl ipinfo.io/ip >> myip.txt
+
+
+
 # on crée le répertoire ou sont stocké les fichers CSV
 echo copie des fichiers csv ...
 mkdir csv

@@ -337,6 +337,7 @@ libmime-tools-perl				install
 libmount1					install
 libmpc2:i386					install
 libmpfr4:i386					install
+libmysqlclient-dev				install
 libmysqlclient18:i386				install
 libncurses5:i386				install
 libncursesw5:i386				install
@@ -590,6 +591,7 @@ python2.7					install
 python2.7-minimal				install
 readline-common					install
 reportbug					install
+resolvconf					install
 rpcbind						install
 rsync						install
 rsyslog						install
@@ -659,3 +661,4 @@ xml-core					install
 xsltproc					install
 xz-utils					install
 zlib1g:i386					install
+zlib1g-dev:i386					install

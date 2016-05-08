@@ -10,8 +10,12 @@ curl --url http://user:user@192.168.0.117/axis-cgi/jpg/image.cgi --output ./porc
 # capture l'image de la webcam du garage sortie sous le nom garage.jpg
 curl --url "http://192.168.0.121:88/cgi-bin/CGIProxy.fcgi?usr=user&pwd=user&cmd=snapPicture2" --output ./garage_full.jpg
 
+# Capture Foscam C2 sejour
+curl --url "http://192.168.0.130:88/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=user&pwd=userFoscamC2" --output ./sejour_full.jpg
+
+
 # Capture webcam HTC Wildfire S -> image pleine resolution avec autofocus
-curl --url http://user:user@192.168.0.115:8080/photoaf.jpg --output ./sejour_full.jpg
+#curl --url http://user:user@192.168.0.115:8080/photoaf.jpg --output ./sejour_full.jpg
 
 # on redimensionne l'image 
 curl http://0.0.0.0:80/webcam/redim.php

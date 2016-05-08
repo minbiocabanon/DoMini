@@ -192,7 +192,8 @@ unsigned int calcul_consigne_bypass(char *saison, float ftempconsigne){
 		
 		
 	// Pour info
-	syslog(LOG_DEBUG, "000 -> bypass donne l'air du puits canadien.\n 100 -> bypass donne l'air extérieur.\n");
+	syslog(LOG_DEBUG, "000 -> bypass donne l'air du puits canadien.");
+	syslog(LOG_DEBUG, "100 -> bypass donne l'air extérieur.");
 
 	switch(int_saison){
 		// on est dans aucun des modes (au cas ou ça merderai...)
@@ -413,7 +414,6 @@ int init_mysql(void){
 	// s'il n'y a pas d'erreurs, tout est ok, on le dit
 	return(0);
 }
-
 
 //----------------------------------------------------------------------
 //!\brief           le main !

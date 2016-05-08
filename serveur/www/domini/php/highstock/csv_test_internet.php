@@ -7,11 +7,15 @@
 	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
 
 	//requete pour recuperer les infos du mois en cours
+	// $SQL="SELECT DATE_FORMAT(date_time, '%d-%m-%Y') AS DATE, DATE_FORMAT(date_time, '%H:%i:%s') AS Heure, ping
+		// FROM `internet_connex`
+		// WHERE date_time <=  NOW( ) AND date_time >= SUBDATE(NOW(),60) 
+		// ORDER BY date_time"; 
+
 	$SQL="SELECT DATE_FORMAT(date_time, '%d-%m-%Y') AS DATE, DATE_FORMAT(date_time, '%H:%i:%s') AS Heure, ping
 		FROM `internet_connex`
-		WHERE date_time <=  NOW( ) AND date_time >= SUBDATE(NOW(),60) 
 		ORDER BY date_time"; 
-
+		
 	// on execute la requete
 	$RESULT = @mysql_query($SQL);
 

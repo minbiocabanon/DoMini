@@ -89,7 +89,7 @@
 		//on affiche une led verte
 		$str_ledTi="label-success";
 	//si le nombre de mesures est compris entre 5 et 10
-	}else if($numrows >= 5){
+	}else if($numrows >= 1){
 		//on affiche une led orange
 		$str_ledTi="label-warning";
 	}else{
@@ -181,7 +181,7 @@
 		//on affiche une led verte
 		$str_ledTe="label-success";
 	//si le nombre de mesures est compris entre 5 et 10
-	}else if($numrows >= 5){
+	}else if($numrows >= 1){
 		//on affiche une led orange
 		$str_ledTe="label-warning";
 	}else{
@@ -279,7 +279,7 @@
 		//on affiche une led verte
 		$str_ledPC="label-success";
 	//si le nombre de mesures est compris entre 5 et 10
-	}elseif($numrows >= 5){
+	}elseif($numrows >= 1){
 		//on affiche une led orange
 		$str_ledPC="label-warning";
 	}else{
@@ -348,9 +348,32 @@
 	// lecture du resultat de la requete
 	$myrow=@mysql_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
-	$vmc_temp_air_bouche = $myrow["temp_air_bouche"];	
+	$vmc_temp_air_bouche = $myrow["temp_air_bouche"];
 
-	// ------------------- Récupère la température de sortie de bouche ventilation-------------------------------------
+	//requete pour récupérer déterminer si les données sont récentes
+	$SQL="SELECT date_time 
+	FROM analog4 
+	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
+	//Envoie de la requete
+	$RESULT = @mysql_query($SQL);
+	//on récupère le nombre de résultat
+	//on récupère le nombre de résultat
+	$numrows = mysql_num_rows($RESULT);
+	echo"<br/>nb de ligne analog4 (air bouche insuflation) = $numrows <br>";
+	//si le nombre de mesures est >= 10 
+	if($numrows >= 10){
+		//on affiche une led verte
+		$str_ledAirneuf="label-success";
+	//si le nombre de mesures est compris entre 5 et 10
+	}elseif($numrows >= 1){
+		//on affiche une led orange
+		$str_ledAirneuf="label-warning";
+	}else{
+		//on affiche une led rouge
+		$str_ledAirneuf="label-important";
+	}	
+
+	// ------------------- Récupère la température de sortie du garage (capteur dans bypass PC) -------------------------------------
 	//Requete pour récuère les dernières valeurs
 	$SQL="SELECT ana1 AS temp_garage
 	FROM VMC
@@ -363,6 +386,29 @@
 	$myrow=@mysql_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$temp_garage = $myrow["temp_garage"];
+	
+	//requete pour récupérer déterminer si les données sont récentes
+	$SQL="SELECT date_time 
+	FROM VMC 
+	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
+	//Envoie de la requete
+	$RESULT = @mysql_query($SQL);
+	//on récupère le nombre de résultat
+	//on récupère le nombre de résultat
+	$numrows = mysql_num_rows($RESULT);
+	echo"<br/>nb de ligne VMC = $numrows <br>";
+	//si le nombre de mesures est >= 10 
+	if($numrows >= 10){
+		//on affiche une led verte
+		$str_ledVMC="label-success";
+	//si le nombre de mesures est compris entre 5 et 10
+	}elseif($numrows >= 1){
+		//on affiche une led orange
+		$str_ledVMC="label-warning";
+	}else{
+		//on affiche une led rouge
+		$str_ledVMC="label-important";
+	}	
 	
 	// ------------------- Récupère la température des combles-------------------------------------
 	//Requete pour récuère les dernières valeurs
@@ -377,6 +423,29 @@
 	$myrow=@mysql_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$temp_comble = $myrow["temp_comble"];
+	
+	//requete pour récupérer déterminer si les données sont récentes
+	$SQL="SELECT date_time 
+	FROM analog5 
+	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
+	//Envoie de la requete
+	$RESULT = @mysql_query($SQL);
+	//on récupère le nombre de résultat
+	//on récupère le nombre de résultat
+	$numrows = mysql_num_rows($RESULT);
+	echo"<br/>nb de ligne analog5 = $numrows <br>";
+	//si le nombre de mesures est >= 10 
+	if($numrows >= 2){
+		//on affiche une led verte
+		$str_ledCombles="label-success";
+	//si le nombre de mesures est compris entre 5 et 10
+	}elseif($numrows >= 1){
+		//on affiche une led orange
+		$str_ledCombles="label-warning";
+	}else{
+		//on affiche une led rouge
+		$str_ledCombles="label-important";
+	}		
 	
 	// ------------------- Récupère le flux solaire-------------------------------------
 	//Requete pour récuère les dernières valeurs
@@ -445,7 +514,10 @@
 		`icon_led_edf` = '$str_lededf',
 		`icon_led_Ti` = '$str_ledTi',
 		`icon_led_Te` = '$str_ledTe',
-		`icon_led_pc` = '$str_ledPC'
+		`icon_led_pc` = '$str_ledPC',
+		`icon_led_vmc` = '$str_ledVMC',
+		`icon_led_combles` = '$str_ledCombles',
+		`icon_led_airneuf` = '$str_ledAirneuf'
 		WHERE `donnees_instant`.`id` =1;";
 	//Envoie de la requete
 	$RESULT = @mysql_query($SQL);

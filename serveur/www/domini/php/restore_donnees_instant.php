@@ -80,6 +80,9 @@
 	$str_ledTi = $myrow["icon_led_Ti"];
 	$str_ledTe = $myrow["icon_led_Te"];
 	$str_ledPC = $myrow["icon_led_pc"];
+	$str_ledVMC = $myrow["icon_led_vmc"];
+	$str_ledCombles = $myrow["icon_led_combles"];
+	$str_ledAirneuf = $myrow["icon_led_airneuf"];
 	
 	//on récupère l'état du bypass de la VMCDF
 	$bypass_VMC = $myrow["bypass_vmcdf"];

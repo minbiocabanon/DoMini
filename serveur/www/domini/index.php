@@ -171,7 +171,7 @@
 							  <tr>
 								<td>
 									<?PHP
-										echo'<span rel="tooltip" title="'.$data_teleinfo_date[0].'">'.$data_consojour[0].' W  </span>';
+										echo'<span rel="tooltip" title="'.$data_teleinfo_date[0].'">'.$data_consojour[0].' W  </span><br>';
 										// si on est en heure pleine
 										if($data_tarif[0] == "HP..")
 											// on affiche HP en rouge
@@ -186,6 +186,13 @@
 									<span class="label <?PHP echo"$str_ledTi"; ?>">Int</span>
 									<span class="label <?PHP echo"$str_ledPC"; ?>">PC</span>
 									<span class="label <?PHP echo"$str_icon_lededf"; ?>">Téléinfo</span>
+									<br>
+									<span class="label <?PHP echo"$str_ledVMC"; ?>">Garage</span> <!-- capteur T° garage est dans le bypass PC-->
+									<span class="label <?PHP echo"$str_ledCombles"; ?>">Combles</span>
+									<span class="label <?PHP echo"$str_ledVMC"; ?>">BPC</span> 
+									<span class="label <?PHP echo"$str_ledAirneuf"; ?>">AirNeuf</span>
+									
+									
 								</td>
 							  </tr>
 							  </tbody>
