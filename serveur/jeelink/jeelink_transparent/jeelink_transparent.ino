@@ -24,7 +24,7 @@
 #define SM_SERIAL_MSG 2
 
 #define ACK_TIME 5000
-#define NB_ATTEMPTS_ACK 3
+#define NB_ATTEMPTS_ACK 5
 
 unsigned int serial_state = SM_SERIAL_NIL;
 
@@ -137,8 +137,8 @@ void trt_message_to_send(void){
 		str_payload.toCharArray(payload, sizeof(payload));
 		int nPayloadSize = str_payload.length();
 		// DEBUG
-		// Serial.print("\n Msg a emettre \n");
-		// for(byte i=0; i < nPayloadSize; i++)
+		 // Serial.print("$DBG,Msg a emettre :");
+		 // for(byte i=0; i < nPayloadSize; i++)
 			// Serial.print(payload[i]);
 		// Serial.println();
 		//tant que porteuse pas libre
@@ -162,7 +162,7 @@ void trt_message_to_send(void){
 		//sinon le message à envoyer nécessite un traitement d'ACK
 		else{
 			// tant que le nb de tentative n'est pas dépassé ou qu'on a pas reçu un ACK
-			while(nAttempt < NB_ATTEMPTS_ACK && !flag_ACK_received ){
+			while(nAttempt <= NB_ATTEMPTS_ACK && !flag_ACK_received ){
 				// on attend que le module soit dispo pour l'emission
 				while (!rf12_canSend())
 					rf12_recvDone();
@@ -173,12 +173,24 @@ void trt_message_to_send(void){
 				// Serial.print("Attemps : ");Serial.println(nAttempt);
 				
 				if (waitForAck()){
-					// Serial.println("ACK received\n");
+					Serial.println("$DBG,ACK recu");
 					flag_ACK_received = true;
-				}else 
-					// Serial.println("ACK NOK received\n");
+				}
+				else{ 
+					Serial.print("$DBG,ACK NOK essai ");
+					Serial.print(nAttempt);
+					Serial.print("/");
+					Serial.println(NB_ATTEMPTS_ACK);
+				}
 				// on incrémente le compteur de tentative d'ACK
 				nAttempt++;
+			}
+			
+			if( flag_ACK_received == false ){
+				Serial.println("$DBG,message non transmis");
+			}
+			else{
+				Serial.println("$DBG,message transmis");
 			}
 			// on reset le flag pour le prochain coup
 			bAck_dmd = false;
