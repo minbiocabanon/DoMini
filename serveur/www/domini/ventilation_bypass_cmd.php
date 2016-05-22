@@ -24,7 +24,7 @@
 			@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
 
 			// requete MySQL pour stocker les nouvelles valeurs
-			$SQL="INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), '\$BPC,$form_cmdbypass,0');"; 
+			$SQL="INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), '\!BPC,$form_cmdbypass,0');"; 
 
 			//Execution de la requete
 			mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
