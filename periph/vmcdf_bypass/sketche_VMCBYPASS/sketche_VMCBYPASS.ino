@@ -295,17 +295,22 @@ int TrtReceptRadio(void){
 		 Serial.println("<");	 
 		//on verifie que l'entet du message est la bonne, en théorie c'est toujours le cas si on utilise les ID radio
 		if( buffer_recept_rf12[0] == '$' && buffer_recept_rf12[1] == 'B' && buffer_recept_rf12[2] == 'P' && buffer_recept_rf12[3] == 'C'){
-		 //on affiche le message reçu
-		 //Serial.println(buffer_recept_rf12);
-		 // on retourne 1
-		 RetVal = 1;
+			//on affiche le message reçu
+			//Serial.println(buffer_recept_rf12);
+			//si l'émetteur du message veut un ACK, on lui envoie!
+			if(RF12_WANTS_ACK){
+				rf12_sendStart(RF12_ACK_REPLY, 0, 0);
+				Serial.println("\n ACK sent");
+			}			
+			// on retourne 1
+			RetVal = 1;
 		}
 		else{
 		 Serial.println("Msg recu non reconnu");
 		 // on retourne 0
 		}
-	 }
-	 return(RetVal);
+	}
+	return(RetVal);
 }
 
 //----------------------------------------------------------------------
