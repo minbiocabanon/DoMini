@@ -6,10 +6,15 @@
 	
 	// on récupère les variables du formulaire (retournée suite a l'appui sur le bouton OK)
 	$form_cmdbypass = isset($_POST['ssmenu']) ? $_POST['ssmenu'] : '';
+	//$form_cmdbypass = $_GET['ssmenu'];
 	$form_envoi = isset($_POST['envoi']) ? $_POST['envoi'] : '';
+
+	// echo"form_envoi = $form_envoi<br>";
+	// echo"form_cmdbypass = $form_cmdbypass<br>";
 	
 	//si le formulaire a été rempli
 	if($form_envoi == "OK"){
+	// if(true){
 		//DEBUG
 		// echo"form_envoi = $form_envoi<br>";
 		// echo"form_cmdbypass = $form_cmdbypass<br>";
@@ -24,7 +29,7 @@
 			@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
 
 			// requete MySQL pour stocker les nouvelles valeurs
-			$SQL="INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), '\!BPC,$form_cmdbypass,0');"; 
+			$SQL="INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), '!BPC,$form_cmdbypass,0');"; 
 
 			//Execution de la requete
 			mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
@@ -45,19 +50,16 @@
 	<!-- Les feuilles de styles -->
 	<link href="css/bootstrap.css" rel="stylesheet">
 	<link href="css/bootstrap-responsive.css" rel="stylesheet">
-	<link href="css/bootstrap-slider.css" rel="stylesheet">
 		
 	<!-- JS files for Jquery -->
 	<script type="text/javascript" src="js/jquery-latest.js"></script>
 	<!-- JS files for bootstrap -->
 	<script type="text/javascript" src="js/bootstrap.js"></script>
-	<script type="text/javascript" src="js/bootstrap-slider.js"></script>
 </head>
 	<body>
 		<!-- Part 1: Wrap all page content here -->
 		<div id="wrap">
 			<?PHP include("menu.html"); ?>
-		
 			<div class="container">
 				
 				<div class="navbar">
@@ -83,29 +85,16 @@
 					}
 				?>
 					<div class="span12 offset3">
-						<FORM method="POST" name="formulaire">
-							Sélectionner la valeur à transmettre au  bypass :</br></br></br>
-							<input name="ssmenu" id="ex8" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="<?php echo "$form_cmdbypass"; ?>"/>
-							</br>
-							<!--<select name="ssmenu">
-								<option <?php if($form_cmdbypass == "00") { echo "selected=\"selected\""; } ?> value = 0 >000</option>
-								<option <?php if($form_cmdbypass == "100") { echo "selected=\"selected\""; } ?> value = 100>100</option>
-							</select>	-->
-							</br>		
-							<input class="btn btn-primary" type="button" name="btenvoyer" value="Envoyer configuration"/>
+						<FORM method="POST" action="ventilation_bypass_cmd.php" name="formulaire">
+							Sélectionner la valeur à transmettre au  bypass :</br></br>
+							<input name="ssmenu" class="span5" type="text" maxlength="3">
+							</br>							
+							<input class="btn btn-primary" type="submit" name="btenvoyer" value="Envoyer configuration">
 							<input type="hidden" name="envoi" value="OK">
 						</form>
 					</div>
 				</div>		
 			</div><!-- /container -->
 		</div><!-- /wrap -->
-						
-		<script type='text/javascript'>
-			$(document).ready(function() {
-				$("#ex8").slider({
-						tooltip: 'always'
-					});
-			});
-		</script>
 	</body>
 </html>
