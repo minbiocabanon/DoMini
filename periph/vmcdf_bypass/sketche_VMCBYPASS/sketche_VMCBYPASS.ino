@@ -294,7 +294,7 @@ int TrtReceptRadio(void){
 		Serial.print(buffer_recept_rf12);
 		 Serial.println("<");	 
 		//on verifie que l'entet du message est la bonne, en théorie c'est toujours le cas si on utilise les ID radio
-		if( buffer_recept_rf12[0] == '$' && buffer_recept_rf12[1] == 'B' && buffer_recept_rf12[2] == 'P' && buffer_recept_rf12[3] == 'C'){
+		if( buffer_recept_rf12[1] == 'B' && buffer_recept_rf12[2] == 'P' && buffer_recept_rf12[3] == 'C'){
 			//on affiche le message reçu
 			//Serial.println(buffer_recept_rf12);
 			//si l'émetteur du message veut un ACK, on lui envoie!
