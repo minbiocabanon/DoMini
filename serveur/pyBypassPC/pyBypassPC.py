@@ -289,6 +289,37 @@ def send_consigne():
 			print "MySQL Error: %s" % str(e)	
 # -- end send_etat_vr --
 
+
+# -- Fonction qui log la structure stDonnees dans la BDD pour mise au point --
+def log_donnees():
+	global consignebypass
+
+	print '\n send_consigne()'	
+	# --- Add message into 'tx_msg_radio' table
+	try:
+		# Open MySQL session
+		con = mdb.connect('localhost','root','mysql','domotique')
+		cur = con.cursor()
+		# prepare query
+		query = 'INSERT INTO `domotique`.`bypass_pc_log` (`id`, `date_time`, `consigne`) VALUES (NULL, NOW(), \'{0}\');'.format(consignebypass)
+		# run MySQL Query
+		cur.execute(query)
+		# Close all cursors
+		cur.close()
+		# Close MySQL session
+		con.close()
+		# log
+		logmessage = "  Message de log ecrit dans la bdd"
+		print logmessage
+		syslog.syslog(logmessage)
+	except mdb.Error, e:
+		# Display MySQL errors
+		try:
+			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+		except IndexError:
+			print "MySQL Error: %s" % str(e)	
+# -- end send_etat_vr --
+
 #--- obligatoire pour lancement du code --
 if __name__=="__main__": # set executable code
 	setup()
@@ -298,3 +329,4 @@ if __name__=="__main__": # set executable code
 	read_consigne()
 	calcul_consigne()
 	send_consigne()
+	log_donnees()
