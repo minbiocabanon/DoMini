@@ -26,8 +26,9 @@ MODE_VR = enum('AUTOMATIQUE', 'TOUS_FERME', 'TOUS_OUVERT', 'MANUEL')
 def setup():
 	print ('Setup')
 	syslog.openlog("pyGestion_vr")
+	syslog.syslog("***************************************************************")
 	syslog.syslog("Demarrage")
-	logmessage = " Infos utiles :\n 0 -> VOLET_FERME , 1 -> VOLET_FERME , 2 -> VOLET_MIOMBRE , 3 -> IMMOBILE"
+	logmessage = " Infos utiles : 0 -> VOLET_FERME , 1 -> VOLET_OUVERT , 2 -> VOLET_MIOMBRE , 3 -> IMMOBILE"
 	print logmessage
 	syslog.syslog(logmessage)
 	print ('End Setup')
@@ -35,7 +36,7 @@ def setup():
 
 # -- get all about time and date --
 def get_time():
-	print '\nget_time()'
+	print 'get_time()'
 	# display date/time
 	logmessage = time.strftime(" Date et heure : %Y-%m-%d %H:%M:%S")
 	print logmessage
@@ -48,7 +49,7 @@ def get_time():
 
 # -- recuperation de l'etat des volets roulants --
 def read_etat_vr():
-	print '\nread_etat_vr()'
+	print 'read_etat_vr()'
 	global vr_mode
 	global etat_vr_bureau
 	global etat_vr_salon
