@@ -89,15 +89,13 @@ int TrtReceptRadio(void){
 		}
 		else{
 			// on écrase le buffer (par sécurité)
-			memcpy(buffer_recept_rf12, 0, rf12_len);
+			memcpy(buffer_recept_rf12, 0, sizeof(buffer_recept_rf12));
 			// on retourne 0
 			return(0);
 		}
 
 	}
 	else{
-		// on écrase le buffer (par sécurité)
-		memcpy(buffer_recept_rf12, 0, rf12_len);
 		return(0);
 	}
 }
