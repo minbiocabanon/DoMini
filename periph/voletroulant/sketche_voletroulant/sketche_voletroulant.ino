@@ -9,10 +9,12 @@
 // PROTOYPES DES FONCTIONS
 void clignote_led(void);
 int TrtReceptRadio(void);
+int check(int consignevr);
 void TrtConsigne(char *message);
 void change_canal(void);
 void set_vr(int consigne);
 void status(void);
+
 
 #define version "JeeNode Gestion Volet Roulant"
 #define TIME_0_TO_100	60	//Nb de seconde que mets le registre à parcourir la totalité de sa course
@@ -86,13 +88,35 @@ int TrtReceptRadio(void){
 			return(1);
 		}
 		else{
+			// on écrase le buffer (par sécurité)
+			memcpy(buffer_recept_rf12, 0, rf12_len);
 			// on retourne 0
 			return(0);
 		}
 
 	}
+	else{
+		// on écrase le buffer (par sécurité)
+		memcpy(buffer_recept_rf12, 0, rf12_len);
+		return(0);
+	}
 }
 
+//----------------------------------------------------------------------
+//!\brief        Verifie que la consigne recue a bien une valeur cohérente
+//!\param        consigne volet
+//!\return		1 si consigne est valide, 0 sinon
+//---------------------------------------------------------------------- 
+int check(int consignevr){
+	//on compare aux différentes valeur possible
+	if(consignevr == VOLET_FERME || consignevr == VOLET_OUVERT || consignevr == VOLET_MIOMBRE || consignevr == IMMOBILE ){
+		// si la consigne existe on retourne 1
+		return(1);
+	}
+	else{
+		return(0);
+	}
+}
 
 //----------------------------------------------------------------------
 //!\brief           Traite la consigne reçue
@@ -104,52 +128,68 @@ void TrtConsigne(char *message){
 	char *entete, *i;
 	int consigne_bureau, consigne_salon, consigne_chm, consigne_chjf;
 
-	Serial.print("\nOn analyse le message reçu");
+	Serial.print("\nOn analyse le message recu");
 	
-	//on dépouille le message reçu
+	//on depouille le message reçu
 	entete = strtok_r(message, ",", &i);
 	consigne_bureau = atoi(strtok_r(NULL, ",", &i)); 
 	consigne_salon = atoi(strtok_r(NULL, ",", &i)); 
 	consigne_chm = atoi(strtok_r(NULL, ",", &i)); 
 	consigne_chjf = atoi(strtok_r(NULL, ",", &i)); 
 	
+	// on verifie que les valeurs recuperees sont coherentes avant de les envoyer (pour eviter cas de messages corrompus recus)
+	if( check(consigne_bureau) == 1 && check(consigne_salon) == 1 && check(consigne_chm) == 1 && check(consigne_chjf) == 1 ){
+		// les consignes sont ok pour appliques les consignes aux volets :
+		Serial.print("\nConsignes verifiees, on peut les appliquer.");
+		Serial.print("\nPilotage de la telecommande");
+		//on sélectionne le premier canal, le premier appui active le canal 1
+		Serial.print("\nSelection canal 1");
+		//on appui 2 fois car par défaut, le canal 5 est sélectionné
+		change_canal();
+		change_canal();
+		// on envoie la consigne pour le bureau
+		set_vr(consigne_chjf);
+		
+		// apres une consigne, il faut appuyer 2 fois sur le bouton canal pour changer de canal
+		Serial.print("\nSelection canal 2");
+		change_canal();
+		// on envoie la consigne pour le salon
+		set_vr(consigne_chm);
+		
+		// apres une consigne, il faut appuyer 2 fois sur le bouton canal pour changer de canal
+		Serial.print("\nSelection canal 3");
+		change_canal();
+		// on envoie la consigne pour la chm
+		set_vr(consigne_salon);
+		
+		// apres une consigne, il faut appuyer 2 fois sur le bouton canal pour changer de canal
+		Serial.print("\nSelection canal 4");
+		change_canal();
+		// on envoie la consigne pour la chjf
+		set_vr(consigne_bureau);
 
-	Serial.print("\nPilotage de la télécommande");
-	//on sélectionne le premier canal, le premier appui active le canal 1
-	Serial.print("\nSelection canal 1");
-	//on appui 2 fois car par défaut, le canal 5 est sélectionné
-	change_canal();
-	change_canal();
-	// on envoie la consigne pour le bureau
-	set_vr(consigne_chjf);
+		// on saute le canal 5 et on revient au canal1 : 2 appui pour passer au canal 5 + 1 appui pour passer au canal1
+		Serial.print("\nSelection canal 5");
+		change_canal();
+		
+		Serial.print("\nSequence terminee");
+		
+		//on attend 5000ms pour attendre que la téléco passe au repos (sinon risque de réglage si on reçoit deux commandes successives par la radio)
+		delay(DELAY_REPOS);
 	
-	// apres une consigne, il faut appuyer 2 fois sur le bouton canal pour changer de canal
-	Serial.print("\nSelection canal 2");
-	change_canal();
-	// on envoie la consigne pour le salon
-	set_vr(consigne_chm);
-	
-	// apres une consigne, il faut appuyer 2 fois sur le bouton canal pour changer de canal
-	Serial.print("\nSelection canal 3");
-	change_canal();
-	// on envoie la consigne pour la chm
-	set_vr(consigne_salon);
-	
-	// apres une consigne, il faut appuyer 2 fois sur le bouton canal pour changer de canal
-	Serial.print("\nSelection canal 4");
-	change_canal();
-	// on envoie la consigne pour la chjf
-	set_vr(consigne_bureau);
-
-	// on saute le canal 5 et on revient au canal1 : 2 appui pour passer au canal 5 + 1 appui pour passer au canal1
-	Serial.print("\nSelection canal 5");
-	change_canal();
-	
-	Serial.print("\nSequence terminee");
-	
-	//on attend 5000ms pour attendre que la téléco passe au repos (sinon risque de réglage si on reçoit deux commandes successives par la radio)
-	delay(DELAY_REPOS);
-
+	}
+	// si c'est pas bon, il ne faut pas transmettre la consigne. 
+	else{
+		// on affiche du debug
+		Serial.println("\nConsigne erronnee, on ne fait rien.\nConsigne_bureau:");
+		Serial.println(consigne_bureau);
+		Serial.println("consigne_salon:");
+		Serial.println(consigne_salon);
+		Serial.println("consigne_chm:");
+		Serial.println(consigne_chm);
+		Serial.println("consigne_chjf:");
+		Serial.println(consigne_chjf);
+	}
 }
 
 //----------------------------------------------------------------------
