@@ -56,10 +56,10 @@
 	if($form_envoi == "OK"){
 		// Connexion à la BDD
 			$link = mysqli_connect($host,$login,$passe,$bdd);
-	if (!$link) {
-		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
-				. mysqli_connect_error());
-	}
+			if (!$link) {
+				die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+						. mysqli_connect_error());
+			}
 		
 		// requete MySQL pour stocker les nouvelles valeurs
 		$SQL="INSERT INTO pellets VALUES('','$date', $quantite_in, $quantite_out, ($data_nbpellets+$quantite_in-$quantite_out))"; 
@@ -90,10 +90,10 @@
 
 	// Connexion à la BDD
 		$link = mysqli_connect($host,$login,$passe,$bdd);
-	if (!$link) {
-		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
-				. mysqli_connect_error());
-	}
+		if (!$link) {
+			die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+					. mysqli_connect_error());
+		}
 	
 
 	

@@ -51,7 +51,8 @@
 	//if($mode != 0){
 		//on force le lancement de deux logiciels pour que l'action sur les VR soit immédiate
 		// on lance le soft qui rempli la table d'état des VR
-		exec("/var/www/domini/bin/gestion_vr",$result);
+		//exec("/var/www/domini/bin/gestion_vr",$result);
+		exec("python /var/www/domini/bin/pygestion_vr.py",$result);
 		//var_dump($result);
 		// on force l'envoi des messages
 		// exec("/var/www/domini/bin/emitter /dev/ttyUSB0",$result); // inutile, le logiciel pyReceiver.py gère l'envoi des messages spontanés

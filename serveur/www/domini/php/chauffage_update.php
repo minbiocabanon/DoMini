@@ -25,21 +25,20 @@
 			echo "Chauffage ET puissance : $puissance<br>";
 			//on met à jour la base avec le mode et la puissance
 			$SQL="UPDATE `domotique`.`chauffage_statut` SET `etat` = '$etat_chauffage_status', `consigne_utilisateur` = '$puissance' WHERE `chauffage_statut`.`id` =1;"; 
-			// on execute la requete
-			$RESULT = @mysqli_query($link,$SQL);
 		}
 
 		else{
 			// echo "chauffage seul<br>";
 			//on met à jour la base avec le mode 
 			$SQL="UPDATE `domotique`.`chauffage_statut` SET `etat` = '$etat_chauffage_status' WHERE `chauffage_statut`.`id` =1;"; 
-			// on execute la requete
-			$RESULT = @mysqli_query($link$SQL);
 		}
 		
 		//Execution de la requete
-		mysqli_query($link,$SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysqli_error());
+		mysqli_query($link,$SQL);
 		mysqli_close($link);
+		
+		exec("/var/www/domini/bin/regul_temp",$result);
+		exec("/var/www/domini/bin/regul_temp",$result);
 		
 		include('../php/restore_donnees_instant.php');
 		
