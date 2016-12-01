@@ -122,7 +122,7 @@
 	mysqli_free_result($RESULT);
 
 	//requete pour récupérer les états et température du chauffage
-	$SQL="SELECT etat, mode
+	$SQL="SELECT etat, mode, consigne_utilisateur
 	FROM `chauffage_statut`
 	LIMIT 0,1"; 
 	//Envoie de la requete
@@ -132,9 +132,10 @@
 	//on récupère la dernière température relevée
 	$etat[0] = $myrow["etat"];	
 	$mode[0] = $myrow["mode"];	
+	$consigne_utilisateur[0] = $myrow["consigne_utilisateur"];
 	mysqli_free_result($RESULT);
 	
-	// ETAT_ERREUR, 	//0
+	// ETAT_ERREUR, 	// 0
     // ETAT_OFF, 		// 1
 	// ETAT_ON, 		// 2
 	// ETAT_AUTO		// 3
@@ -142,7 +143,7 @@
 	// MODE_ERREUR, 	// 0
 	// MODE_ATTENTE,	// 1
 	// MODE_ANTICIPE,	// 2
-	// MODE_CHAUFFE	// 3 
+	// MODE_CHAUFFE		// 3 
 
 	//on préparer les variables pour position les boutons dans le bon état dans la page principale (index)
 	// on lit l'état du poele
@@ -170,6 +171,7 @@
 		case 2 :
 			$etat_chauffage_status = "";
 			$mode_chauffage_status = "checked";
+			$puissance_poele = $consigne_utilisateur[0].'%';
 			$temp_consigne = "-";
 			$h_demarr = "-";
 			$h_fin = "-";
@@ -179,28 +181,35 @@
 			$etat_chauffage_status = "checked";
 			$mode_chauffage_status = "disabled";
 			$temp_consigne .= "°C";
+			
+				switch($mode[0]){
+				// MODE_ERREUR
+				case 0:
+					$etat_chauffage_status .= "";
+					$mode_chauffage_status .= "";
+					$puissance_poele = "Err.";
+					break;
+				// MODE_ATTENTE
+				case 1:
+					$etat_chauffage_status .= "";
+					$mode_chauffage_status .= "";
+					$puissance_poele = "Veille";
+					break;
+				// MODE_ANTICIPE
+				case 2:
+					$etat_chauffage_status .= "";
+					$mode_chauffage_status .= " checked";
+					break;	
+				// MODE_CHAUFFE
+				case 3:
+					$etat_chauffage_status .= "";
+					$mode_chauffage_status .= " checked";
+					break;		
+				}
 			break;							
 	}
 	
-	switch($mode[0]){
-		case 0:
-			$etat_chauffage_status .= "";
-			$mode_chauffage_status .= "";
-			$puissance_poele = "Err.";
-		case 1:
-			$etat_chauffage_status .= "";
-			$mode_chauffage_status .= "";
-			$puissance_poele = "Veille";
-		break;
-		case 2:
-			$etat_chauffage_status .= "";
-			$mode_chauffage_status .= " checked";
-		break;	
-		case 3:
-			$etat_chauffage_status .= "";
-			$mode_chauffage_status .= " checked";
-		break;		
-	}
+	
 		
 	//on quitte la BDD
 	mysqli_close($link);
