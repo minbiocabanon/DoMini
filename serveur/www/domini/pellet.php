@@ -12,8 +12,12 @@
 	$date = isset($_POST['date']) ? $_POST['date'] : '';
 	
 	// Connexion à la BDD
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 
 	// requete MySQL pour obtenir les données de pellets pour les 12 derniers mois
 	// pour les 12 derniers mois
@@ -22,15 +26,15 @@
 		ORDER BY id DESC 
 		LIMIT 0 , 1"; 
 	// on execute la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 	// on recupére le resultat
-	$myrow = @mysql_fetch_array($RESULT);
+	$myrow = @mysqli_fetch_array($RESULT);
 	// on stocke la quantité de sacs de pellets en stock
 	$data_nbpellets = $myrow["capital"];
 	//echo"NB de pellets en stock : $data_nbpellets[0]";
 	
-	mysql_free_result($RESULT) ;
-	mysql_close();
+	mysqli_free_result($RESULT) ;
+	mysqli_close($link);
 	
 		
 	// echo" quantité saisie IN : $quantite_in<br>";
@@ -51,14 +55,18 @@
 	//si on vient de saisir des infos passées en paramètre de l'adresse
 	if($form_envoi == "OK"){
 		// Connexion à la BDD
-		@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-		@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+			$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+		
 		// requete MySQL pour stocker les nouvelles valeurs
 		$SQL="INSERT INTO pellets VALUES('','$date', $quantite_in, $quantite_out, ($data_nbpellets+$quantite_in-$quantite_out))"; 
 
 		//Execution de la requete
-		mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
-		mysql_close();
+		mysqli_query($link,$SQL);
+		mysqli_close($link);
 		
 		//message de confirmation
 		//mis à 1 du flag pour afficher le message de confirmatio
@@ -81,8 +89,12 @@
 	}
 
 	// Connexion à la BDD
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 
 	
 	// requete MySQL pour obtenir les données de pellets pour les 12 derniers mois
@@ -92,16 +104,16 @@
 		ORDER BY id DESC 
 		LIMIT 0 , 1"; 
 	// on execute la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 	// on recupére le resultat
-	$myrow = @mysql_fetch_array($RESULT);
+	$myrow = @mysqli_fetch_array($RESULT);
 	// on stocke la quantité de sacs de pellets en stock
 	$data_nbpellets = $myrow["capital"];
 	//echo"NB de pellets en stock : $data_nbpellets[0]";
 	
 	// on clean et on ferme la BDD
-	mysql_free_result($RESULT) ;
-	mysql_close();
+	mysqli_free_result($RESULT) ;
+	mysqli_close($link);
 	
 	
 ?>
@@ -180,8 +192,8 @@
 							<tr>
 								<td>Date</td>
 								<td>
-									<div class="input-append date" id="dp3" data-date="<? echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd">
-										<input class="span4" size="10" type="text" name="date" value="<? echo date("Y-m-d"); ?>" readonly>
+									<div class="input-append date" id="dp3" data-date="<?PHP echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd">
+										<input class="span4" size="10" type="text" name="date" value="<?PHP echo date("Y-m-d"); ?>" readonly>
 										<span class="add-on"><i class="icon-calendar"></i></span>
 									</div>								
 								</td>

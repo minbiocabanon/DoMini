@@ -2,22 +2,26 @@
 	include("../infos/config.inc.php"); // on inclu le fichier de config
 	
 	// requete MySQL pour obtenir les données de la BDD
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 
 	//requete pour récupérer la température EXT pour les 2 derniers jours
 	$SQL="SELECT UNIX_TIMESTAMP(date_time) AS DATE, ana1 
 	FROM analog1
 	WHERE date_time <=  NOW( ) AND date_time >= SUBDATE(NOW(),2) 
 	ORDER BY date_time"; 
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 	// fetch a row and write the column names out to the file
-	$row = mysql_fetch_assoc($RESULT);
+	$row = mysqli_fetch_assoc($RESULT);
 	// remove the result pointer back to the start
-	mysql_data_seek($RESULT, 0);
+	mysqli_data_seek($RESULT, 0);
 	
 	// pour chaque ligne
-	while($myrow = @mysql_fetch_array($RESULT)) {
+	while($myrow = @mysqli_fetch_array($RESULT)) {
 		// on récupère la date au format unixtime
 		$data_timestamp = $myrow["DATE"];
 		// on récupère la temperature en °C
@@ -27,21 +31,21 @@
 		// on créé la série de données
 		$datatempext[] = "[$data_timestamp, $datatemp]";
 	}
-	mysql_free_result($RESULT) ;
+	mysqli_free_result($RESULT) ;
 	
 	//requete pour récupérer la température INT pour les 2 derniers jours
 	$SQL="SELECT UNIX_TIMESTAMP(date_time) AS DATE, ana1 
 	FROM analog2
 	WHERE date_time <=  NOW( ) AND date_time >= SUBDATE(NOW(),2) 
 	ORDER BY date_time"; 
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 	// fetch a row and write the column names out to the file
-	$row = mysql_fetch_assoc($RESULT);
+	$row = mysqli_fetch_assoc($RESULT);
 	// remove the result pointer back to the start
-	mysql_data_seek($RESULT, 0);
+	mysqli_data_seek($RESULT, 0);
 	
 	// pour chaque ligne
-	while($myrow = @mysql_fetch_array($RESULT)) {
+	while($myrow = @mysqli_fetch_array($RESULT)) {
 		// on récupère la date au format unixtime
 		$data_timestamp = $myrow["DATE"];
 		// on récupère la temperature en °C
@@ -51,21 +55,21 @@
 		// on créé la série de données
 		$datatempint[] = "[$data_timestamp, $datatemp]";
 	}
-	mysql_free_result($RESULT) ;
+	mysqli_free_result($RESULT) ;
 	
 	//requete pour récupérer la température PC pour les 2 derniers jours
 	$SQL="SELECT UNIX_TIMESTAMP(date_time) AS DATE, ana1 
 	FROM analog3
 	WHERE date_time <=  NOW( ) AND date_time >= SUBDATE(NOW(),2) 
 	ORDER BY date_time"; 
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 	// fetch a row and write the column names out to the file
-	$row = mysql_fetch_assoc($RESULT);
+	$row = mysqli_fetch_assoc($RESULT);
 	// remove the result pointer back to the start
-	mysql_data_seek($RESULT, 0);
+	mysqli_data_seek($RESULT, 0);
 	
 	// pour chaque ligne
-	while($myrow = @mysql_fetch_array($RESULT)) {
+	while($myrow = @mysqli_fetch_array($RESULT)) {
 		// on récupère la date au format unixtime
 		$data_timestamp = $myrow["DATE"];
 		// on récupère la temperature en °C
@@ -76,8 +80,8 @@
 		$datatemppc[] = "[$data_timestamp, $datatemp]";
 	}	
 	//on quite la session mysql
-	mysql_free_result($RESULT) ;
-	mysql_close();
+	mysqli_free_result($RESULT) ;
+	mysqli_close($link);
 
 ?>
 <script type="text/javascript">

@@ -14,8 +14,12 @@
 	$comma = "";
 	$fp = fopen($filename, "w");
 	
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 	
 	for($i = 2011; $i <= $annee ; $i++){
 		//requete pour récupérer l'intégrale du flux solaire par mois et pour chaque année
@@ -27,9 +31,9 @@
 				LIMIT 0 , 30"; 
 		
 		// on execute la requete
-		$RESULT = @mysql_query($SQL);	
+		$RESULT = @mysqli_query($link, $SQL);	
 		$line = "$i;";
-		while($row = mysql_fetch_assoc($RESULT)) {
+		while($row = mysqli_fetch_assoc($RESULT)) {
 			
 			foreach($row as $value) {
 				$line .= $comma .  str_replace('"', '""', $value) ;
@@ -46,9 +50,9 @@
 	//fermeture du fichier
 	fclose($fp);
 	// on libère la mémoire
-	mysql_free_result($RESULT) ;
+	mysqli_free_result($RESULT) ;
 	// on ferme la connexion à mysql
-	mysql_close();	 
+	mysqli_close($link);	 
 	 
 echo"CSV pyranomètre mensuel exporté.<br>";
 

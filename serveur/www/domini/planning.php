@@ -11,18 +11,22 @@
 	
 	// requete MySQL pour obtenir les données de la BDD
 	//echo" $host, $login, $passe, $bdd \n";
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 	// requete pour récupérer chaque tranche horaire de 30 minutes pour la semaine en cours
 	$SQL="SELECT `id` , `heure_debut` , `heure_fin` , `temperature` , WEEKDAY(`date`) as dayweek 
 	FROM `calendrier_30min` 
 	WHERE WEEK( `date` , 3 ) = $num_semaine;";
 	//on lance la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT);
+	$myrow=@mysqli_fetch_array($RESULT);
 	// pour chaque 30 minutes
-	while($myrow = @mysql_fetch_array($RESULT)) {
+	while($myrow = @mysqli_fetch_array($RESULT)) {
 		// on fait un traitement particulier de la température (pour ne pas afficher des 0 partout)
 		$temp = $myrow["temperature"];
 		// on fiche la couleur rouge par défaut
@@ -38,7 +42,7 @@
 		$contenusCellules[] = new PlanningCellule($myrow["dayweek"],$myrow["id"],$myrow["heure_debut"],$myrow["heure_fin"],$cellcolor, $temp);
 	}
 	// on libère la mémoire
-	mysql_free_result($RESULT) ;
+	mysqli_free_result($RESULT) ;
 	
 	//on récupére la température
 	//requete pour récupérer la température de consigne de saison
@@ -51,18 +55,18 @@
 			LIMIT 0 , 1"; 
 	
 	//on envoie la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 	//on récupère le résultat
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	// on extrait le résultat et on le stocke dans une variable
 	$temp_consigne = $myrow["consigne_temperature"];
 	//libération de la variable
-	mysql_free_result($RESULT) ;
+	mysqli_free_result($RESULT) ;
 	
 	
 	
 	// on ferme la session mysql
-	mysql_close();		
+	mysqli_close($link);		
 ?>
 <!DOCTYPE html>	
 <html>

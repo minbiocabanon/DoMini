@@ -11,10 +11,14 @@
 	// requete MySQL pour obtenir les données de la BDD
 	//echo" $host, $login, $passe, $bdd \n";
 	
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 	$SQL="SET lc_time_names = 'fr_FR'" ; // Pour afficher date en français dans MySql. 
-	mysql_query($SQL) ;
+	mysqli_query($link, $SQL) ;
 	//on récupére l'année en cours
 	$annee = date('Y');
 	$n=0;
@@ -29,11 +33,11 @@
 				ORDER BY date_time
 				LIMIT 0,1";
 		// echo "<br>requete SQL : $SQL";
-		$RESULT = @mysql_query($SQL);
+		$RESULT = @mysqli_query($link, $SQL);
 		// echo "<br>resultat : $RESULT";
 
 		//on ne prend que le premier élement de la table HC et HP
-		if($myrow=@mysql_fetch_array($RESULT)){
+		if($myrow=@mysqli_fetch_array($RESULT)){
 
 			$data_date[$n] = $myrow["DATE"];
 			$data_HC_deb[0] = $myrow["HC"] / 1000; // on divise par mille pour avoir des kWh
@@ -47,11 +51,11 @@
 					ORDER BY date_time DESC
 					LIMIT 0,1";
 			// echo "<br>requete SQL : $SQL";
-			$RESULT = @mysql_query($SQL);
+			$RESULT = @mysqli_query($link, $SQL);
 			// echo "<br>resultat : $RESULT";
 
 			//on lit la seconde ligne avec les HP+HC de fin d'année
-			if($myrow=@mysql_fetch_array($RESULT)){
+			if($myrow=@mysqli_fetch_array($RESULT)){
 				$data_HC_fin[0] = $myrow["HC"] / 1000; // on divise par mille pour avoir des kWh
 				$data_HP_fin[0] = $myrow["HP"] / 1000; // on divise par mille pour avoir des kWh
 				// echo "<br>data_HC_fin : $data_HC_fin[0]     data_HP_fin : $data_HP_fin[0] <br>";
@@ -71,7 +75,7 @@
 	//fermeture du fichier
 	fclose($fp);
 	echo"CSV teleinfo_an exporté.<br>";
-	mysql_free_result($RESULT) ;
-	mysql_close();
+	mysqli_free_result($RESULT) ;
+	mysqli_close($link);
 
 ?>

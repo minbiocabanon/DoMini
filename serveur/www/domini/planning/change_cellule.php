@@ -6,26 +6,34 @@
 	//$IdCell=$_GET["IdCell"];
 	//echo "$IdCell";
 				
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 	//on va récupérer la consigne de la cellule cliquée
 	$SQL="SELECT `temperature` FROM `calendrier_30min` WHERE `calendrier_30min`.`id` = $IdCell ;";
 	//on envoie la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 	//on récupère le résultat
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	// on extrait le résultat et on le stocke dans une variable
 	$temp_consigne_calendrier = $myrow["temperature"];
 	//echo "$temp_consigne_calendrier";
 	//libération de la variable
-	mysql_free_result($RESULT) ;
+	mysqli_free_result($RESULT) ;
 	//fermeture session MySQL
-	mysql_close();
+	mysqli_close($link);
 	
 	//si la consigne est vide (0.0) alors il faut appliquer la consigne de la saison`
 	if($temp_consigne_calendrier == "0.0"){
-		// mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-		// @mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		// 			$link = mysqli_connect($host,$login,$passe,$bdd);
+			if (!$link) {
+				die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+						. mysqli_connect_error());
+			}
+		// 
 		// //requete pour récupérer la température de consigne de saison
 		// $SQL="	SELECT `consigne_temperature`
 				// FROM `calendrier_saison` 
@@ -39,15 +47,15 @@
 				// LIMIT 0 , 1"; 
 		
 		// //on envoie la requete
-		// $RESULT = @mysql_query($SQL);
+		// $RESULT = @mysqli_query($link, $SQL);
 		// //on récupère le résultat
-		// $myrow=@mysql_fetch_array($RESULT); 
+		// $myrow=@mysqli_fetch_array($RESULT); 
 		// // on extrait le résultat et on le stocke dans une variable
 		// $temp_consigne = $myrow["consigne_temperature"];
 		// //libération de la variable
-		// mysql_free_result($RESULT) ;
+		// mysqli_free_result($RESULT) ;
 		// //fermeture session MySQL
-		// mysql_close();
+		// mysqli_close($link);
 		
 		// on transmet la valeur écrite dans le champ de saisie, par défaut la valeur est de la saison en cours . sinon il s'agit de la consigne de l'utilisateur.
 		$temp_consigne = number_format($temp_man, 1, '.', '');	// on format en float
@@ -59,11 +67,15 @@
 		echo " ";
 	}
 	
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 	$SQL="UPDATE `domotique`.`calendrier_30min` SET `temperature` = '$temp_consigne' WHERE `calendrier_30min`.`id` = $IdCell;";
 	//on envoie la requete
-	mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
+	mysqli_query($link,$SQL);
 	//fermeture session MySQL
-	mysql_close();
+	mysqli_close($link);
 ?>

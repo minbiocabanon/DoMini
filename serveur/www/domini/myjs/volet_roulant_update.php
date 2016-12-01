@@ -29,9 +29,11 @@
 	// echo"etat_vr_chjf_bdd = $etat_vr_chjf_bdd </br>";
 	
 	// Connexion à la BDD
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
-
+	$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
 	// requete MySQL pour stocker les nouvelles valeurs
 	$SQL="UPDATE `domotique`.`voletroulant_statut` SET `date_time` = NOW(),
 			`mode` = '$mode',
@@ -42,8 +44,8 @@
 			WHERE `voletroulant_statut`.`id` =1;"; 
 
 	//Execution de la requete
-	mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
-	mysql_close();
+	mysqli_query($link,$SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysqli_error());
+	mysqli_close($link);
 
 	//si le mode est Manuel ou Tous ouverts ou Tous fermés
 	//if($mode != 0){
@@ -60,9 +62,11 @@
 	if($mode == 3){
 		//on met à jour la BDD	- on force l'état à IMMOBILE pour ne pas que les volets bougent alors qu'on est manuel		
 		// Connexion à la BDD
-		@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-		@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
-
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+		if (!$link) {
+			die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+					. mysqli_connect_error());
+		}
 		// requete MySQL pour stocker les nouvelles valeurs
 		$SQL="UPDATE `domotique`.`voletroulant_statut` SET `date_time` = NOW(),
 				`mode` = '$mode',
@@ -73,8 +77,8 @@
 				WHERE `voletroulant_statut`.`id` =1;"; 
 
 		//Execution de la requete
-		mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
-		mysql_close();	
+		mysqli_query($link,$SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysqli_error());
+		mysqli_close($link);	
 	}
 
 	include('../php/voletroulant_tab.php');

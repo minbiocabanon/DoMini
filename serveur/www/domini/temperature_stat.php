@@ -73,8 +73,12 @@
 							<?php
 								//on récupére l'année en cours
 								$annee = date('Y');
-								@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-								@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+									$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+								
 								
 								//boucle pour récupérer MIN et MAX
 								for($i = 2011; $i <= $annee ; $i++){
@@ -87,13 +91,13 @@
 											LIMIT 0 , 30"; 
 									
 									// on execute la requete
-									$RESULT = @mysql_query($SQL);	
+									$RESULT = @mysqli_query($link, $SQL);	
 									$comma = '';
 									//on écrit les champs pour déclarer les série
 									echo "{shadow: true, type: 'areasplinerange', fillOpacity : 0.25, ";
 									echo 'name: '. $i .', data: [';
 									// pour chaque ligne (une ligne par mois)
-									while($row = mysql_fetch_assoc($RESULT)) {
+									while($row = mysqli_fetch_assoc($RESULT)) {
 										// on fabrique une chaine au format [xx , yy], 
 										echo $comma .'[';
 										$commav = ',';
@@ -108,7 +112,7 @@
 									echo "]},\n";
 								}
 								// on libère la mémoire
-								mysql_free_result($RESULT) ;
+								mysqli_free_result($RESULT) ;
 											
 								//boucle pour récupérer la valeur MOY
 								for($i = 2011; $i <= $annee ; $i++){
@@ -121,12 +125,12 @@
 											LIMIT 0 , 30"; 
 									
 									// on execute la requete
-									$RESULT = @mysql_query($SQL);	
+									$RESULT = @mysqli_query($link, $SQL);	
 									$comma = '';
 									//on écrit les champs pour déclarer les série
 									echo "{shadow: true, type: 'spline', ";
 									echo 'name: \''. $i .'-moy\', data: [';
-									while($row = mysql_fetch_assoc($RESULT)) {
+									while($row = mysqli_fetch_assoc($RESULT)) {
 										// on fabrique une chaine au format [zz], 
 										echo $comma;
 										
@@ -139,9 +143,9 @@
 									echo "]},\n";
 								}
 								// on libère la mémoire
-								mysql_free_result($RESULT) ;								
+								mysqli_free_result($RESULT) ;								
 								// on ferme la connexion à mysql
-								mysql_close();
+								mysqli_close($link);
 							?>
 						
 						],

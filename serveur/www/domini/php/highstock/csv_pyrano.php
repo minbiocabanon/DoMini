@@ -4,8 +4,12 @@
 
 	$filename = "../../csv/pyrano.csv";
 
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 
 	//requete pour récupérer les infos du mois en cours
 	$SQL="SELECT DATE_FORMAT(date_time, '%d-%m-%Y') AS DATE, DATE_FORMAT(date_time, '%H:%i:%s') AS Heure, ana1 * $Coef_V_to_W
@@ -14,10 +18,10 @@
 		ORDER BY date_time"; 
 
 	// on execute la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 
 	// on récupère le resultat de la requete
-	$row = mysql_fetch_assoc($RESULT);
+	$row = mysqli_fetch_assoc($RESULT);
 	$line = "";
 	$comma = "";
 	$fp = fopen($filename, "w");
@@ -31,10 +35,10 @@
 	fputs($fp, $line);
 
 	// on se replace au début du résultat de la requete
-	mysql_data_seek($RESULT, 0);
+	mysqli_data_seek($RESULT, 0);
 
 	// tant qu'il y a des données
-	while($row = mysql_fetch_assoc($RESULT)) {
+	while($row = mysqli_fetch_assoc($RESULT)) {
 	   
 		$line = "";
 		$comma = "";
@@ -52,9 +56,9 @@
 	//fermeture du fichier
 	fclose($fp);
 	// on libère la mémoire
-	mysql_free_result($RESULT) ;
+	mysqli_free_result($RESULT) ;
 	// on ferme la connexion à mysql
-	mysql_close();	 
+	mysqli_close($link);	 
 	 
 echo"CSV pyranomètre exporté.<br>";
 

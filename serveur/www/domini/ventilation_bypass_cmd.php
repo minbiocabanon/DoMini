@@ -25,15 +25,19 @@
 			// echo"Requete SQL<br>";
 		
 			// Connexion à la BDD
-			@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-			@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+				$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+			
 
 			// requete MySQL pour stocker les nouvelles valeurs
 			$SQL="INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), '!BPC,$form_cmdbypass,0');"; 
 
 			//Execution de la requete
-			mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
-			mysql_close();
+			mysqli_query($link,$SQL);
+			mysqli_close($link);
 			
 			//variable pour afficher un message de confirmation
 			$msg_sent = true;

@@ -130,15 +130,19 @@
 							<?PHP
 								// requete MySQL pour obtenir les données de la BDD
 								//echo" $host, $login, $passe, $bdd \n";
-								@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-								@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+									$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+								
 								// requete pour récupérer chaque tranche horaire de 30 minutes pour la semaine en cours
 								$SQL="SELECT  `type` ,  `consigne_temperature` ,  `flux solaire` ,  `commentaire` 
 										FROM  `calendrier_saison`";
 								//on lance la requete
-								$RESULT = @mysql_query($SQL);
+								$RESULT = @mysqli_query($link, $SQL);
 								// pour chaque type de saison renvoyée dans la table (une par ligne)
-								while($myrow = @mysql_fetch_array($RESULT)) {
+								while($myrow = @mysqli_fetch_array($RESULT)) {
 									//on commence une nouvelle ligne du tableau html
 									echo '<tr>';
 									//on affiche le type de saison dans la 1ere colonne
@@ -159,9 +163,9 @@
 								}
 
 								// on libère la mémoire
-								mysql_free_result($RESULT) ;
+								mysqli_free_result($RESULT) ;
 								// on ferme la session mysql
-								mysql_close();
+								mysqli_close($link);
 							?>
 							<tr>
 								<td colspan="4"><input type="submit" name="btenvoyer" value="       Appliquer       "/></td>

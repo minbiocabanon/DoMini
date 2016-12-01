@@ -9,10 +9,14 @@
 	// requete MySQL pour obtenir les données de la BDD
 	//echo" $host, $login, $passe, $bdd \n";
 
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 	$SQL="SET lc_time_names = 'fr_FR'" ; // Pour afficher date en français dans MySql. 
-	mysql_query($SQL) ;
+	mysqli_query($link, $SQL) ;
 	
 	//on récupére l'année en cours
 	$annee = date('Y');
@@ -28,10 +32,10 @@
 			GROUP BY YEAR(`date_time`)
 			ORDER BY YEAR(`date_time`)"; 
 
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 		
 	// fetch a row and write the column names out to the file
-	$row = mysql_fetch_assoc($RESULT);
+	$row = mysqli_fetch_assoc($RESULT);
 	$line = "";
 	$comma = "";
 	$fp = fopen($filename, "w");
@@ -44,10 +48,10 @@
 	fputs($fp, $line);
 
 	// remove the result pointer back to the start
-	mysql_data_seek($RESULT, 0);
+	mysqli_data_seek($RESULT, 0);
 
 	// and loop through the actual data
-	while($row = mysql_fetch_assoc($RESULT)) {
+	while($row = mysqli_fetch_assoc($RESULT)) {
 	   
 		$line = "";
 		$comma = "";
@@ -62,6 +66,6 @@
 	fclose($fp);		 
 	
 	echo"CSV pellet conso exporté.<br>";
-	mysql_free_result($RESULT) ;
-	mysql_close();
+	mysqli_free_result($RESULT) ;
+	mysqli_close($link);
 ?>
