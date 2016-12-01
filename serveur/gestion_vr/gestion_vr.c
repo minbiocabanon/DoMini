@@ -616,7 +616,7 @@ int main(int argc, char *argv[]) {
 	local = localtime(&t);
 	syslog(LOG_DEBUG, "Heure et date courante : %s", asctime(local));
 	syslog(LOG_DEBUG, "Unixtime : %d", t);
-	syslog(LOG_DEBUG, " 0 -> VOLET_FERME , 1 -> VOLET_FERME , 2 -> VOLET_MIOMBRE , 3 -> IMMOBILE");
+	syslog(LOG_DEBUG, " 0 -> VOLET_FERME , 1 -> VOLET_OUVERT , 2 -> VOLET_MIOMBRE , 3 -> IMMOBILE");
 
   
 	// on lit l'état des VR et le mode en cours (1 seule ligne)
