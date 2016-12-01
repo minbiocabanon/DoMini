@@ -23,16 +23,15 @@
 	
 	// requete MySQL pour stocker les résultats les données de la BDD
 	// echo" </br>$host, $login, $passe, $bdd ";
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+	$link = mysqli_connect($host,$login,$passe,$bdd);
 	//requete pour récupérer la dernière consommation instantanée
 
 	//Envoie de la requete
 	$SQL="INSERT INTO  `domotique`.`internet_connex` (`id`, `date_time`, `status`, `ping`) VALUES ( NULL , NOW(), '$status',  '$ping') ";
 	//Execution de la requete
-	mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
+	mysqli_query($link, $SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysqli_error());
 	//on quitte la BDD
-	mysql_close();
+	mysqli_close($link);
 	
 
 	

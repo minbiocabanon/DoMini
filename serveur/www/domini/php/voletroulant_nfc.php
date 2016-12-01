@@ -8,8 +8,12 @@
 	//si le tag NFC envoie le passage en mode Manuel , on vérifie si il fait jour ou nuit pour positionner les volets dans la position adequat
 	if( $etat == "manuel"){
 		// Connexion à la BDD pour récupérer l'état des volets
-		@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-		@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+			$link = mysqli_connect($host,$login,$passe,$bdd);
+			if (!$link) {
+				die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+						. mysqli_connect_error());
+			}
+		
 
 		//heure courante
 		$unixtime = time();
@@ -27,9 +31,9 @@
 		WHERE DATE_FORMAT( `mois-jour` , '%%m-%%d' ) = DATE_FORMAT( NOW( ) , '%%m-%%d' ) 
 		LIMIT 1";
 		
-		$RESULT = @mysql_query($SQL);
-		$myrow=@mysql_fetch_array($RESULT); 
-		mysql_close();
+		$RESULT = @mysqli_query($link, $SQL);
+		$myrow=@mysqli_fetch_array($RESULT); 
+		mysqli_close($link);
 		//on récupère l'heure de levé de soleil
 		$unixtime_leve = $myrow["hlever_unix"];
 		$h_leve = $myrow["hlever"];
@@ -81,8 +85,12 @@
 	if($update_bdd == true) {
 		// applique les changements
 		// Connexion à la BDD
-		@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-		@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+			$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+		
 
 		// requete MySQL pour stocker les nouvelles valeurs
 		$SQL="UPDATE `domotique`.`voletroulant_statut` SET `date_time` = NOW(),
@@ -93,8 +101,8 @@
 				`chambreJF` = '$etat_vr_chjf_bdd'
 				WHERE `voletroulant_statut`.`id` = 1;";
 		//Execution de la requete
-		mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
-		mysql_close();
+		mysqli_query($link,$SQL);
+		mysqli_close($link);
 		echo"<br/>Base de données mise à jour.<br>";
 		
 		//on force le lancement de deux logiciels pour que l'action sur les VR soit immédiate
@@ -108,8 +116,12 @@
 		if($mode == 3){
 			//on met à jour la BDD	- on force l'état à IMMOBILE pour ne pas que les volets bougent alors qu'on est manuel		
 			// Connexion à la BDD
-			@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-			@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+				$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+			
 
 			// requete MySQL pour stocker les nouvelles valeurs
 			$SQL="UPDATE `domotique`.`voletroulant_statut` SET `date_time` = NOW(),
@@ -121,8 +133,8 @@
 					WHERE `voletroulant_statut`.`id` = 1;"; 
 
 			//Execution de la requete
-			mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
-			mysql_close();	
+			mysqli_query($link,$SQL);
+			mysqli_close($link);	
 			echo"<br/>Mode manuel, volets positionnés en Immobiles<br>";
 		}
 	}

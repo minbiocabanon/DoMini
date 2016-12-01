@@ -8,8 +8,12 @@
 	
 	// requete MySQL pour obtenir les données de la BDD
 	//echo" $host, $login, $passe, $bdd \n";
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 
 	// ------------------- Données Température ext. -------------------------------------
 	//$SQL="SELECT TIME(date_time) AS Heure, puissance FROM  teleinfo WHERE  DAY(date_time)=$jour AND YEAR(date_time)=$annee AND MONTH(date_time)=$mois ORDER BY date_time"; 
@@ -20,9 +24,9 @@
 		ORDER BY date_time"; 
 
 	// on lance la requête
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 	// fetch a row and write the column names out to the file
-	$row = mysql_fetch_assoc($RESULT);
+	$row = mysqli_fetch_assoc($RESULT);
 	$line = "";
 	$comma = "";
 	$fp = fopen($filename, "w");
@@ -37,10 +41,10 @@
 	fputs($fp, $line);
 
 	// remove the result pointer back to the start
-	mysql_data_seek($RESULT, 0);
+	mysqli_data_seek($RESULT, 0);
 
 	// and loop through the actual data
-	while($row = mysql_fetch_assoc($RESULT)) {
+	while($row = mysqli_fetch_assoc($RESULT)) {
 	   
 		$line = "";
 		$comma = "";
@@ -57,6 +61,6 @@
 	echo"CSV puissance pc exporté.<br>";
 
 	//on quite la session mysql
-	mysql_free_result($RESULT) ;
-	mysql_close();
+	mysqli_free_result($RESULT) ;
+	mysqli_close($link);
 ?>

@@ -14,8 +14,11 @@
 		// echo"	ETAT_ERREUR, 	// 0<br>    ETAT_OFF, 		// 1<br>	ETAT_ON, 		// 2<br>	ETAT_AUTO		// 3";
 
 		// Connexion à la BDD
-		@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-		@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+		if (!$link) {
+			die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+					. mysqli_connect_error());
+		}
 
 		//si la puissance est fixée pour l'utilisateur
 		if($etat_chauffage_status == 2 && $puissance != ""){
@@ -23,7 +26,7 @@
 			//on met à jour la base avec le mode et la puissance
 			$SQL="UPDATE `domotique`.`chauffage_statut` SET `etat` = '$etat_chauffage_status', `consigne_utilisateur` = '$puissance' WHERE `chauffage_statut`.`id` =1;"; 
 			// on execute la requete
-			$RESULT = @mysql_query($SQL);
+			$RESULT = @mysqli_query($link,$SQL);
 		}
 
 		else{
@@ -31,12 +34,12 @@
 			//on met à jour la base avec le mode 
 			$SQL="UPDATE `domotique`.`chauffage_statut` SET `etat` = '$etat_chauffage_status' WHERE `chauffage_statut`.`id` =1;"; 
 			// on execute la requete
-			$RESULT = @mysql_query($SQL);
+			$RESULT = @mysqli_query($link$SQL);
 		}
 		
 		//Execution de la requete
-		mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
-		mysql_close();
+		mysqli_query($link,$SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysqli_error());
+		mysqli_close($link);
 		
 		include('../php/restore_donnees_instant.php');
 		

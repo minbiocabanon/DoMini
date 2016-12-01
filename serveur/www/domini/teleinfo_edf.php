@@ -7,11 +7,15 @@
 <head>
 	<?php 
 			// On se connecte à la BDD
-			@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-			@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+				$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+			
 			
 			$SQL="SET lc_time_names = 'fr_FR'" ; // Pour afficher date en français dans MySql. 
-			mysql_query($SQL) ;
+			mysqli_query($link, $SQL) ;
 			
 			
 			// requete MySQL pour obtenir les données du compteur
@@ -20,17 +24,17 @@
 				ORDER BY date_time DESC
 				LIMIT 0 , 1"; 
 			// on execute la requete
-			$RESULT = @mysql_query($SQL);
+			$RESULT = @mysqli_query($link, $SQL);
 			// on recupére le resultat
-			$myrow = @mysql_fetch_array($RESULT);
+			$myrow = @mysqli_fetch_array($RESULT);
 			// on stocke la quantité de HP et HC consommés
 			$data_HC = floor($myrow["HC"]/1000);
 			$data_HP = floor($myrow["HP"]/1000);
 			$date = $myrow["DATE"];
 			//echo"NB de pellets en stock : $data_nbpellets[0]";
 			// on clean et on ferme la BDD
-			mysql_free_result($RESULT) ;
-			mysql_close();
+			mysqli_free_result($RESULT) ;
+			mysqli_close($link);
 	?>
 	<title>DoMini - Teleinfo compteur EDF</title>
 	<meta charset="UTF-8">

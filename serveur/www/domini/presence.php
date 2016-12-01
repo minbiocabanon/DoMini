@@ -12,16 +12,20 @@
 		
 		//on change l'état de la vidéo surveillance
 		// Connexion à la BDD
-		@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-		@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+			$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+		
 		$SQL="UPDATE `domotique`.`mode_domotique` SET `videosurveillance` = '1' WHERE `mode_domotique`.`id` =1;"; 
 		//Execution de la requete
-		mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
+		mysqli_query($link,$SQL);
 		
 		$SQL="UPDATE `domotique`.`mode_domotique` SET `mode` = 'AUTO' WHERE `mode_domotique`.`id` =1;"; 	
 		//Execution de la requete
-		mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());		
-		mysql_close();	
+		mysqli_query($link,$SQL);		
+		mysqli_close($link);	
 		
 		//ON ACTIVE LA DETECTION DE MOUVEMENT DE LA CAMERA (CGI VAPIX)
 		file_get_contents('http://root:melisse!@192.168.0.116/axis-cgi/operator/param.cgi?action=update&Event.E0.Enabled=yes');
@@ -34,16 +38,20 @@
 		$msg_class = "alert-danger";
 		//on change l'état de la vidéo surveillance
 		// Connexion à la BDD
-		@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-		@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+			$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+		
 
 		$SQL="UPDATE `domotique`.`mode_domotique` SET `videosurveillance` = '0' WHERE `mode_domotique`.`id` =1;"; 
 	
 		// on execute la requete
-		mysql_query($SQL) or die('Erreur SQL !'.$SQL.'<br>'.mysql_error());
+		mysqli_query($link,$SQL);
 		
 		//Execution de la requete
-		mysql_close();
+		mysqli_close($link);
 		
 		//ON DESACTIVE LA DETECTION DE MOUVEMENT DE LA CAMERA (CGI VAPIX)
 		file_get_contents('http://root:melisse!@192.168.0.116/axis-cgi/operator/param.cgi?action=update&Event.E0.Enabled=no');
@@ -53,23 +61,27 @@
 	//si aucun paramètre
 	else{
 		// Connexion à la BDD
-		@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-		@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+			$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+		
 		//on récupère l'état de la domotique
 		$SQL="	SELECT * FROM `mode_domotique` LIMIT 0 , 1"; 
 	
 		// on execute la requete
-		$RESULT = @mysql_query($SQL);
+		$RESULT = @mysqli_query($link, $SQL);
 		
 		// lecture du resultat de la requete
-		$myrow=@mysql_fetch_array($RESULT);
+		$myrow=@mysqli_fetch_array($RESULT);
 		//on récupère la température précédente
 		$mode = $myrow["mode"];
 		$alarme = $myrow["alarme"];
 		$videosurveillance = $myrow["videosurveillance"];
 		
 		//Execution de la requete
-		mysql_close();
+		mysqli_close($link);
 
 
 		if($alarme == "0"){

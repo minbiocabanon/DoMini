@@ -5,21 +5,25 @@
 	//$IdCell=$_GET["IdCell"];
 	//echo "$IdCell";
 				
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+		$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 	//on va récupérer la consigne de la cellule cliquée
 	$SQL="SELECT `temperature` FROM `calendrier_30min` WHERE `calendrier_30min`.`id` = $IdCell ;";
 	//on envoie la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $SQL);
 	//on récupère le résultat
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	// on extrait le résultat et on le stocke dans une variable
 	$temp_consigne_calendrier = $myrow["temperature"];
 	//echo "$temp_consigne_calendrier";
 	//libération de la variable
-	mysql_free_result($RESULT) ;
+	mysqli_free_result($RESULT) ;
 	//fermeture session MySQL
-	mysql_close();
+	mysqli_close($link);
 	
 	echo "$temp_consigne_calendrier";
 ?>

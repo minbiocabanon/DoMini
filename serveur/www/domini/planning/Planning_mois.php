@@ -163,8 +163,12 @@ class Planning {
 				global $num_semaine, $host, $login, $passe, $bdd;
 				// requete MySQL pour obtenir les données de la BDD
 				//echo" $host, $login, $passe, $bdd \n";
-				@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-				@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+					$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+				
 
                  $daysLine = self::htmlRowOpen;
                  $daysLine .= $this->genererCelluleHTML(self::htmlSpace);
@@ -179,9 +183,9 @@ class Planning {
 							LIMIT 0,1"; 
 							//AND week( date( date ) , 7 ) = $num_semaine
 					//on lance la requete
-					$RESULT = @mysql_query($SQL);
+					$RESULT = @mysqli_query($link, $SQL);
 					// lecture du resultat de la requete
-					$myrow=@mysql_fetch_array($RESULT);
+					$myrow=@mysqli_fetch_array($RESULT);
 					//on récupère la température précédente
 					$date_day_month = $myrow["day_month"];	
 					$date_day_week = $myrow["dayweek"];
@@ -193,9 +197,9 @@ class Planning {
 					
 					 $daysLine .= $this->genererCelluleHTML($date_day_month, '', 'cellDate', $colorcell);
 					 $day++;
-					 mysql_free_result($RESULT) ;
+					 mysqli_free_result($RESULT) ;
                  }
-				 mysql_close();
+				 mysqli_close($link);
                  $daysLine .= self::htmlRowClose;
                  return $daysLine;
          }		 
@@ -205,8 +209,12 @@ class Planning {
 				global $num_semaine, $host, $login, $passe, $bdd;
 				// requete MySQL pour obtenir les données de la BDD
 				//echo" $host, $login, $passe, $bdd \n";
-				@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-				@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+					$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+				
 		 
                  $daysLine = self::htmlRowOpen;
                  $daysLine .= $this->genererCelluleHTML(self::htmlSpace);
@@ -219,9 +227,9 @@ class Planning {
 							AND week(`date` , 7 ) = $num_semaine 
 							LIMIT 0 , 1"; 
 					//on lance la requete
-					$RESULT = @mysql_query($SQL);
+					$RESULT = @mysqli_query($link, $SQL);
 					// lecture du resultat de la requete
-					$myrow=@mysql_fetch_array($RESULT);
+					$myrow=@mysqli_fetch_array($RESULT);
 					$typejour = $myrow["type_jour"];
 					
 					// on récupère les id de début du jour pour AJAX en cas de mis jour par l'utilisateur (click sur cellule)
@@ -233,9 +241,9 @@ class Planning {
 							LIMIT 1"; 
 							//ORDER BY `id` ASC
 					//on lance la requete
-					$RESULT = @mysql_query($SQL);
+					$RESULT = @mysqli_query($link, $SQL);
 					// lecture du resultat de la requete
-					$myrow=@mysql_fetch_array($RESULT);
+					$myrow=@mysqli_fetch_array($RESULT);
 					$id_debut = $myrow["id"];
 					
 					// on récupère les id de fin du jour pour AJAX en cas de mis jour par l'utilisateur (click sur cellule)
@@ -247,9 +255,9 @@ class Planning {
 							ORDER BY `id` DESC
 							LIMIT 1"; 
 					//on lance la requete
-					$RESULT = @mysql_query($SQL);
+					$RESULT = @mysqli_query($link, $SQL);
 					// lecture du resultat de la requete
-					$myrow=@mysql_fetch_array($RESULT);
+					$myrow=@mysqli_fetch_array($RESULT);
 					$id_fin = $myrow["id"];
 
 					// on récupère les id de fin du jour pour AJAX en cas de mis jour par l'utilisateur (click sur cellule)
@@ -258,9 +266,9 @@ class Planning {
 						WHERE WEEKDAY( `date` ) = $day
 						AND week( `date` , 7 ) = $num_semaine"; 
 					//on lance la requete
-					$RESULT = @mysql_query($SQL);
+					$RESULT = @mysqli_query($link, $SQL);
 					// lecture du resultat de la requete
-					$myrow=@mysql_fetch_array($RESULT);
+					$myrow=@mysqli_fetch_array($RESULT);
 					$idjour = $myrow["id"];					
 					
 					// on écrit le code html pour faire une liste déroulante et on ajoute SELECTED sur la bonne option( type de jour défini dans le calendrier)
@@ -276,9 +284,9 @@ class Planning {
 					// on génére la cellule
 					$daysLine .= $this->genererCelluleHTML($contenucell, '', 'cellDate', '');
 					$day++;
-					mysql_free_result($RESULT) ;
+					mysqli_free_result($RESULT) ;
                  }
-				 mysql_close();
+				 mysqli_close($link);
                  $daysLine .= self::htmlRowClose;
                  return $daysLine;
          }

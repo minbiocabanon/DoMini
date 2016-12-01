@@ -15,17 +15,21 @@
 	// ------------------- Données TELEINFO -------------------------------------
 	// requete MySQL pour obtenir les données de la BDD
 	//echo" $host, $login, $passe, $bdd \n";
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+	$link = mysqli_connect$host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	
 	//requete pour récupérer la dernière consommation instantanée
 	$SQL="SELECT date_time AS Heure, puissance, tarif 
 	FROM teleinfo 
 	ORDER BY date_time DESC
 	LIMIT 0,1"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// //lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère l'heure
 	$data_teleinfo_date[] = $myrow["Heure"];
 	echo"<br/>Heure téléinfo = 	$data_teleinfo_date[0] <br>";
@@ -38,9 +42,9 @@
 	FROM teleinfo 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// on récupère le nombre de résultat
-	$numrows = mysql_num_rows($RESULT);
+	$numrows = mysqli_num_rows($RESULT);
 	echo"nb de ligne teleinfo = $numrows <br>";
 	//si le nombre de mesures est >= 10 
 	if($numrows >= 200){
@@ -57,19 +61,16 @@
 
 
 	// ------------------- Données Température intérieure  -------------------------------------
-	// requete MySQL pour obtenir les données de la BDD
-	//echo" $host, $login, $passe, $bdd \n";
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+
 	//requete pour récupérer la dernière consommation instantanée
 	$SQL="SELECT date_time, ana1, ana2 
 	FROM analog2 
 	ORDER BY date_time DESC
 	LIMIT 0,1"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$data_dateint[0] = $myrow["date_time"];
 	$data_tempint[0] = round($myrow["ana1"],2);
@@ -80,9 +81,9 @@
 	FROM analog2 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// on récupère le nombre de résultat
-	$numrows = mysql_num_rows($RESULT);
+	$numrows = mysqli_num_rows($RESULT);
 	echo"nb de ligne Ti = $numrows <br>";
 	//si le nombre de mesures est >= 10 
 	if($numrows >= 10){
@@ -103,10 +104,10 @@
 	WHERE date_time <= NOW( ) 
 	AND date_time >= SUBTIME( NOW( ) ,  '01:00:00' )"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $link,$SQL);
 		
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT);
+	$myrow=@mysqli_fetch_array($RESULT);
 	//on récupère la température précédente
 	$data_tempmoy[0] = $myrow["TempMoy"];
 	$data_hummoy[0] = $myrow["HumMoy"];
@@ -139,9 +140,9 @@
 	ORDER BY date_time ASC
 	LIMIT 0,1"; 
 	// //Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la température relevée il y a 1h
 	$data_temp1h = $myrow["ana1"];
 	//on calcul la pente sur la dernière heure
@@ -149,19 +150,16 @@
 	echo "data_temp1h : $data_temp1h  - data_tempint[0] : $data_tempint[0] -  pente : $data_pentetemp";
 
 	// ------------------- Données Température extérieure  -------------------------------------
-	// requete MySQL pour obtenir les données de la BDD
-	//echo" $host, $login, $passe, $bdd \n";
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+
 	//requete pour récupérer la dernière consommation instantanée
 	$SQL="SELECT date_time, ana1, ana2 
 	FROM analog1 
 	ORDER BY date_time DESC
 	LIMIT 0,1"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link, $link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$data_dateext[0] = $myrow["date_time"];
 	$data_tempext[0] = round($myrow["ana1"],1);
@@ -172,9 +170,9 @@
 	FROM analog1 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )";
 	//Envoie de la requete
-	$RESULT = mysql_query($SQL) or die(mysql_error());	
+	$RESULT = mysqli_query($link,$SQL);	
 	// on récupère le nombre de résultat
-	$numrows = mysql_num_rows($RESULT);
+	$numrows = mysqli_num_rows($RESULT);
 	echo"<br/>nb de ligne Te = $numrows <br>";
 	//si le nombre de mesures est >= 10 
 	if($numrows >= 10){
@@ -197,10 +195,10 @@
 	WHERE date_time <= NOW( ) 
 	AND date_time >= SUBTIME( NOW( ) ,  '01:00:00' )"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT);
+	$myrow=@mysqli_fetch_array($RESULT);
 	//on récupère la température précédente
 	$data_tempmoy[0] = $myrow["TempMoy"];
 	$data_hummoy[0] = $myrow["HumMoy"];
@@ -233,9 +231,9 @@
 	ORDER BY date_time ASC
 	LIMIT 0,1"; 
 	// //Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la température relevée il y a 1h
 	$data_tempext1h = $myrow["ana1"];
 	//on calcul la pente sur la dernière heure
@@ -246,8 +244,7 @@
 	// ------------------- Données Température du Puits Canadien  -------------------------------------
 	// requete MySQL pour obtenir les données de la BDD
 	//echo" $host, $login, $passe, $bdd \n";
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+	@mysqli_connect($host,$login,$passe,$bdd);
 	//requete pour récupérer la dernière consommation instantanée
 	$SQL="SELECT date_time, ana1, ana2 
 	FROM analog3 
@@ -255,9 +252,9 @@
 	ORDER BY date_time DESC
 	LIMIT 0,1"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$data_datePC[0] = $myrow["date_time"];
 	$data_tempPC[0] = round($myrow["ana1"],1);
@@ -269,10 +266,10 @@
 	FROM analog3 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	//on récupère le nombre de résultat
 	//on récupère le nombre de résultat
-	$numrows = mysql_num_rows($RESULT);
+	$numrows = mysqli_num_rows($RESULT);
 	echo"<br/>nb de ligne PC = $numrows <br>";
 	//si le nombre de mesures est >= 10 
 	if($numrows >= 10){
@@ -295,9 +292,9 @@
 	LIMIT 0,1						
 	"; 
 	// //Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$puissance_pc = $myrow["puissance"];
 	
@@ -310,9 +307,9 @@
 	LIMIT 0,1						
 	"; 
 	// //Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$puissance_poele = $myrow["puissance"];
 
@@ -325,9 +322,9 @@
 	LIMIT 0,1						
 	"; 
 	// //Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$vmc_temp_air_neuf = $myrow["temp_air_neuf"];	
 	$vmc_temp_air_ext = $myrow["temp_air_ext"];
@@ -344,9 +341,9 @@
 	LIMIT 0,1						
 	"; 
 	// //Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$vmc_temp_air_bouche = $myrow["temp_air_bouche"];
 
@@ -355,10 +352,10 @@
 	FROM analog4 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	//on récupère le nombre de résultat
 	//on récupère le nombre de résultat
-	$numrows = mysql_num_rows($RESULT);
+	$numrows = mysqli_num_rows($RESULT);
 	echo"<br/>nb de ligne analog4 (air bouche insuflation) = $numrows <br>";
 	//si le nombre de mesures est >= 10 
 	if($numrows >= 10){
@@ -381,9 +378,9 @@
 	LIMIT 0,1						
 	"; 
 	// //Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$temp_garage = $myrow["temp_garage"];
 	
@@ -392,10 +389,10 @@
 	FROM VMC 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	//on récupère le nombre de résultat
 	//on récupère le nombre de résultat
-	$numrows = mysql_num_rows($RESULT);
+	$numrows = mysqli_num_rows($RESULT);
 	echo"<br/>nb de ligne VMC = $numrows <br>";
 	//si le nombre de mesures est >= 10 
 	if($numrows >= 10){
@@ -418,9 +415,9 @@
 	LIMIT 0,1						
 	"; 
 	// //Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$temp_comble = $myrow["temp_comble"];
 	
@@ -429,10 +426,10 @@
 	FROM analog5 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	//on récupère le nombre de résultat
 	//on récupère le nombre de résultat
-	$numrows = mysql_num_rows($RESULT);
+	$numrows = mysqli_num_rows($RESULT);
 	echo"<br/>nb de ligne analog5 = $numrows <br>";
 	//si le nombre de mesures est >= 10 
 	if($numrows >= 2){
@@ -455,9 +452,9 @@
 	LIMIT 0,1						
 	"; 
 	// //Envoie de la requete
-	$RESULT = @mysql_query($SQL);
-	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$RESULT = @mysqli_query($link,$SQL);
+	// lecture du reisultat de la requete
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$flux_solaire = $myrow["flux_solaire"] * $Coef_V_to_W;
 	echo"<br/>flux solaire = $flux_solaire W/m², coef=$Coef_V_to_W";
@@ -470,9 +467,9 @@
 	LIMIT 0,1						
 	"; 
 	// //Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$consigne_pc = $myrow["consigne"];
 	
@@ -520,9 +517,9 @@
 		`icon_led_airneuf` = '$str_ledAirneuf'
 		WHERE `donnees_instant`.`id` =1;";
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	if($myrow=@mysql_fetch_array($RESULT)){
+	if($myrow=@mysqli_fetch_array($RESULT)){
 		echo"</br>Erreur lors de la sauvergarde en BDD";
 	}else{
 		echo"</br>Données sauvées dans la BDD";
@@ -530,6 +527,6 @@
 		
 
 	//on quitte la BDD
-	//mysql_free_result($RESULT);
-	mysql_close();
+	//mysqli_free_result($RESULT);
+	mysqli_close($link);
 ?>

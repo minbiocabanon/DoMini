@@ -3,25 +3,31 @@
 	//--------------------------------------------------
 	//! \file    restore_donnees_instant.php
 	//! \brief	cette page PHP est appelée par la page index pour récupérer rapidement les infos essentielles
-	//! \date     2012-03
+	//! \date     2016-11
 	//! \author   minbiocabanon
 	//--------------------------------------------------
 	
 	// ------------------- recuperation de toutes les donnees instantanees
 	// requete MySQL pour obtenir les données de la BDD
 	//echo" $host, $login, $passe, $bdd \n";
-	@mysql_connect($host,$login,$passe) or die("Impossible de se connecter à la base de données");
-	@mysql_select_db("$bdd") or die("Impossible de se connecter à la base de données");
+	$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+
+	//echo 'Succès... ' . mysqli_get_host_info($link) . "\n";
+	
 	
 	$SQL="SET lc_time_names = 'fr_FR'" ; // Pour afficher date en français dans MySql. 
-	mysql_query($SQL) ;
+	mysqli_query($link,$SQL);
 	
 	//requete pour récupérer la dernière consommation instantanée
 	$SQL="SELECT *, DATE_FORMAT(date_time, '%W %e %M %X - %T') as DATE FROM `donnees_instant`"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// //lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow = mysqli_fetch_array($RESULT); 
 	//on récupère l'heure
 	$data_date[] = $myrow["DATE"];
 	
@@ -90,9 +96,9 @@
 	//requete pour récupérer la dernière valeur du niveau dans le réservoir
 	$SQL="SELECT `nvg`  FROM `pellets_rsv` ORDER BY `date_time` DESC LIMIT 0,1"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	//lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow = @mysqli_fetch_array($RESULT); 
 	//on récupère la mesure
 	$pellets_nvg = $myrow["nvg"];
 	$pellets_nvg = round(100 * ( 45 - $pellets_nvg )/45, 0);
@@ -106,27 +112,27 @@
 	ORDER BY date_time DESC
 	LIMIT 0,1"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow = @mysqli_fetch_array($RESULT); 
 	//on récupère les heures de début et fin
 	$h_demarr = $myrow["heure_debut_consigne"];
 	$h_fin = $myrow["heure_fin_consigne"];
 	$temp_consigne = $myrow["temp_consigne"];
-	mysql_free_result($RESULT);
+	mysqli_free_result($RESULT);
 
 	//requete pour récupérer les états et température du chauffage
 	$SQL="SELECT etat, mode
 	FROM `chauffage_statut`
 	LIMIT 0,1"; 
 	//Envoie de la requete
-	$RESULT = @mysql_query($SQL);
+	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
-	$myrow=@mysql_fetch_array($RESULT); 
+	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
 	$etat[0] = $myrow["etat"];	
 	$mode[0] = $myrow["mode"];	
-	mysql_free_result($RESULT);
+	mysqli_free_result($RESULT);
 	
 	// ETAT_ERREUR, 	//0
     // ETAT_OFF, 		// 1
@@ -197,5 +203,5 @@
 	}
 		
 	//on quitte la BDD
-	mysql_close();
+	mysqli_close($link);
 ?>
