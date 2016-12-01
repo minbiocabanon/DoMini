@@ -1,7 +1,6 @@
 #!/bin/sh
 #include pour les login et mot de passe du FTP. (ce fichier n'est pas sur le dépot SVN pour la confidentialité)
-installpath=../www/domini/script/
-. $installpath/myvar.sh
+. ../www/domini/script/myvar.sh
 
 # on fait un backup de la base domotique
 mysqldump --user=root --password=mysql --opt domotique > backup-domotique.sql
