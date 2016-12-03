@@ -1,4 +1,4 @@
-<?php 
+<?PHP 
 
 	//--------------------------------------------------
 	//! \file    instant_data.php
@@ -14,8 +14,8 @@
 
 	// ------------------- Données TELEINFO -------------------------------------
 	// requete MySQL pour obtenir les données de la BDD
-	//echo" $host, $login, $passe, $bdd \n";
-	$link = mysqli_connect$host,$login,$passe,$bdd);
+	echo " $host, $login, $passe, $bdd \n";
+	$link = mysqli_connect($host,$login,$passe,$bdd);
 	if (!$link) {
 		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
 				. mysqli_connect_error());
@@ -527,6 +527,6 @@
 		
 
 	//on quitte la BDD
-	//mysqli_free_result($RESULT);
+	mysqli_free_result($RESULT);
 	mysqli_close($link);
 ?>
