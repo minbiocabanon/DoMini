@@ -157,7 +157,7 @@
 	ORDER BY date_time DESC
 	LIMIT 0,1"; 
 	//Envoie de la requete
-	$RESULT = @mysqli_query($link, $link,$SQL);
+	$RESULT = mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
@@ -195,7 +195,7 @@
 	WHERE date_time <= NOW( ) 
 	AND date_time >= SUBTIME( NOW( ) ,  '01:00:00' )"; 
 	//Envoie de la requete
-	$RESULT = @mysqli_query($link,$SQL);
+	$RESULT = mysqli_query($link,$SQL);
 	
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT);
