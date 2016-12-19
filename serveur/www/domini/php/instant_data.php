@@ -314,8 +314,10 @@
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
-	$puissance_poele = $myrow["puissance"];
-
+	if($myrow["puissance"] != '')
+		$puissance_poele = $myrow["puissance"];
+	else
+		$puissance_poele = 0 ;
 	
 	// ------------------- Récupère les infos des températures de la VMCDF -------------------------------------
 	//Requete pour récuère les dernières valeurs
@@ -525,7 +527,7 @@
 	echo"</br>requete SQL = $SQL";
 	//Envoie de la requete
     if (!mysqli_query($link,$SQL)) {
-        printf("Erreur : %s\n", mysqli_error($link));
+        printf("</br>Erreur : %s\n", mysqli_error($link));
     }else{
 		echo"</br>Données sauvées dans la BDD";
 	}
