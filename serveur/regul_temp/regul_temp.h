@@ -20,6 +20,7 @@ int trt_mode_chauffe(void);
 int chercher_consigne_3h(void);
 int calcul_consigne_anticipe(void);
 int change_mode(int mode);
+int change_etat(int etat);
 float get_temperature(void);
 float get_consigne(void);
 int get_heure_consigne(void);
@@ -32,6 +33,7 @@ int reset_PID(void);
 int init_PID(float Ci,float mesure);
 int sauve_heure_debut_consigne(unsigned int heure);
 int unixtime_to_date(unsigned int unixstamp);
+int chercher_consigne_now(void);
 
 
 typedef struct stData stData;
