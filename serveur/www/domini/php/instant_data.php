@@ -296,7 +296,10 @@
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
-	$puissance_pc = $myrow["puissance"];
+	if($myrow["puissance"] != '')
+		$puissance_pc = $myrow["puissance"];
+	else
+		$puissance_pc = 0.0 ;
 	
 	
 	// ------------------- Récupère puissance pc actuelle -------------------------------------
@@ -311,8 +314,10 @@
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
-	$puissance_poele = $myrow["puissance"];
-
+	if($myrow["puissance"] != '')
+		$puissance_poele = $myrow["puissance"];
+	else
+		$puissance_poele = 0 ;
 	
 	// ------------------- Récupère les infos des températures de la VMCDF -------------------------------------
 	//Requete pour récuère les dernières valeurs
@@ -471,7 +476,10 @@
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
 	//on récupère la dernière température relevée
-	$consigne_pc = $myrow["consigne"];
+	if( $myrow["consigne"] != '' )
+		$consigne_pc = $myrow["consigne"];
+	else
+		$consigne_pc = 0.0;
 	
 
 	// ------------------- On écrit toutes les données dans une seule table -------------------------------------
@@ -518,15 +526,11 @@
 		WHERE `donnees_instant`.`id` =1;";
 	echo"</br>requete SQL = $SQL";
 	//Envoie de la requete
-	$RESULT = @mysqli_query($link,$SQL);
-	// lecture du resultat de la requete
-	if($myrow=@mysqli_fetch_array($RESULT)){
-		echo"</br>Erreur lors de la sauvergarde en BDD";
-	}else{
+    if (!mysqli_query($link,$SQL)) {
+        printf("</br>Erreur : %s\n", mysqli_error($link));
+    }else{
 		echo"</br>Données sauvées dans la BDD";
 	}
-		
-
 	//on quitte la BDD
 	mysqli_free_result($RESULT);
 	mysqli_close($link);
