@@ -516,6 +516,7 @@
 		`icon_led_combles` = '$str_ledCombles',
 		`icon_led_airneuf` = '$str_ledAirneuf'
 		WHERE `donnees_instant`.`id` =1;";
+	echo"</br>requete SQL = $SQL";
 	//Envoie de la requete
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
