@@ -10,9 +10,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 //#define WITHMYSQL
-#ifdef WITHMYSQL
-  #include <mysql/mysql.h>
-#endif
+#include <mysql/mysql.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <dirent.h> //gestion des repertoires
@@ -238,7 +236,7 @@ int sauve_heure_debut_consigne(unsigned int heure){
 		syslog(LOG_DEBUG, "  Erreur de requete MySQL : %s", mysql_error(conn));
 		return(1);
 	}
-	syslog(LOG_DEBUG, "Heure debut de chauffe ecrit dans la base.", heure);
+	syslog(LOG_DEBUG, "Heure debut de chauffe ecrit dans la base : %d", heure);
 	// s'il n'y a pas d'erreurs, tout est ok, on le dit
 	return(0);
 }
@@ -278,7 +276,7 @@ int unixtime_to_date(unsigned int unixstamp){
 		syslog(LOG_DEBUG, "  Requete MySQL OK");
 		// on retourne la date au format string
 		//printf("\n #### date convertie %s \n\n", row[0]);
-		sprintf(datestring, row[0]);
+		sprintf(datestring, "%s", row[0]);
 		// on libère la requête
 		mysql_free_result(result_);
 		return(1);
@@ -697,7 +695,7 @@ int calcul_consigne_anticipe(void){
 		syslog(LOG_DEBUG, "ERREUR : PAS DE TEMPERATURE INTERIEURE RECUPEREE");
 		// on retourne la consigne par défaut
 		stDonnees.puissance_chauffe = P_POELE_ANTICIPE;
-		syslog(LOG_DEBUG, "  on force la consigne de chauffe a : %d", P_POELE_ANTICIPE);
+		syslog(LOG_DEBUG, "  on force la consigne de chauffe a : %f", P_POELE_ANTICIPE);
 		// on retourne avec une erreur
 		return(1);
 	}
@@ -857,6 +855,7 @@ int chercher_consigne_now(void){
 	// si on passe ici... gros bug, on retourne une erreur
 	return(1);
 }
+
 
 //----------------------------------------------------------------------
 //!\brief           Ecriture du nouvel etat dans la BDD
