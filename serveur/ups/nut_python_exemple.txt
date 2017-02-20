@@ -1,0 +1,165 @@
+import PyNUT
+ups    = PyNUT.PyNUTClient( host='localhost', login='admin', password='adminpass' )
+result = ups.GetRWVars( ups='eaton800' )
+print( result )
+
+
+result = ups.GetUPSCommands( ups='eaton800' )
+
+result = ups.GetUPSList()
+
+result = ups.GetUPSVars( ups='eaton800' )
+
+import PyNUT
+ups    = PyNUT.PyNUTClient( host='localhost', 
+login='admin', 
+password='adminpass' )
+result = ups.GetUPSVars( ups='eaton800' )
+print( result )
+
+
+>>> import PyNUT
+>>> ups = PyNUT.PyNUTClient( host='localhost', login='admin', password='adminpass' )
+>>> parsed_json = json.loads(json.dumps(ups.GetUPSVars( ups='eaton800' )))
+>>> print(parsed_json['battery.charge'])
+100
+>>>
+
+"ups.status": "OL CHRG", 
+"battery.charge": "100", 
+"output.voltage": "230.0", 
+
+{"driver.parameter.pollfreq": "30", "input.transfer.high": "264", "battery.charge": "100", "outlet.switchable": "no", "outlet.desc": "Main Outlet", "outlet.power": "25", "output.frequency.nominal": "50", "outlet.1.desc": "PowerShare Outlet 1", "ups.vendorid": "0463", "input.transfer.low": "161", "ups.timer.shutdown": "0", "output.voltage": "230.0", "battery.type": "PbAc", "outlet.id": "1", "driver.version": "2.7.2", "driver.parameter.pollinterval": "2", "driver.parameter.port": "auto", "outlet.2.id": "3", "ups.status": "OL CHRG", "outlet.2.switchable": "no", "ups.mfr": "EATON", "output.voltage.nominal": "230", "ups.power.nominal": "800", "ups.serial": "AN2E49008", "outlet.2.desc": "PowerShare Outlet 2", "device.type": "ups", "battery.charge.low": "20", "driver.version.internal": "0.38", "driver.version.data": "MGE HID 1.33", "outlet.1.id": "2", "outlet.1.switchable": "no", "ups.beeper.status": "enabled", "ups.load": "15", "driver.name": "usbhid-ups", "ups.model": "Protection Station 800", "outlet.2.status": "on", "device.model": "Protection Station 800", "ups.delay.shutdown": "20", "ups.timer.start": "0", "device.mfr": "EATON", "ups.delay.start": "30", "ups.productid": "ffff", "device.serial": "AN2E49008", "outlet.1.status": "on", "battery.runtime": "1023", "ups.firmware": "1.13", "driver.parameter.vendorid": "0463"}
+
+{"driver.parameter.pollfreq": "30", "input.transfer.high": "264", "battery.charge": "100", "outlet.switchable": "no", "outlet.desc": "Main Outlet", "outlet.power": "25", "output.frequency.nominal": "50", "outlet.1.desc": "PowerShare Outlet 1", "ups.vendorid": "0463", "input.transfer.low": "161", "ups.timer.shutdown": "0", "output.voltage": "230.0", "battery.type": "PbAc", "outlet.id": "1", "driver.version": "2.7.2", "driver.parameter.pollinterval": "2", "driver.parameter.port": "auto", "outlet.2.id": "3", "ups.status": "OL CHRG", "outlet.2.switchable": "no", "ups.mfr": "EATON", "output.voltage.nominal": "230", "ups.power.nominal": "800", "ups.serial": "AN2E49008", "outlet.2.desc": "PowerShare Outlet 2", "device.type": "ups", "battery.charge.low": "20", "driver.version.internal": "0.38", "driver.version.data": "MGE HID 1.33", "outlet.1.id": "2", "outlet.1.switchable": "no", "ups.beeper.status": "enabled", "ups.load": "15", "driver.name": "usbhid-ups", "ups.model": "Protection Station 800", "outlet.2.status": "on", "device.model": "Protection Station 800", "ups.delay.shutdown": "20", "ups.timer.start": "0", "device.mfr": "EATON", "ups.delay.start": "30", "ups.productid": "ffff", "device.serial": "AN2E49008", "outlet.1.status": "on", "battery.runtime": "1082", "ups.firmware": "1.13", "driver.parameter.vendorid": "0463"}
+
+
+{"driver.parameter.pollfreq": "30", "battery.charge": "100", "outlet.switchable": "no", "outlet.desc": "Main Outlet", "outlet.1.desc": "PowerShare Outlet 1", "battery.type": "PbAc", "driver.version": "2.7.2", "ups.timer.shutdown": "0", "ups.mfr": "EATON", "output.voltage.nominal": "230", "battery.charge.low": "20", "driver.version.internal": "0.38", "outlet.1.id": "2", "ups.load": "15", "outlet.2.status": "on", "device.model": "Protection Station 800", "ups.delay.shutdown": "20", "ups.delay.start": "30", "ups.model": "Protection Station 800", "input.transfer.high": "264", "ups.serial": "AN2E49008", "outlet.power": "25", "output.frequency.nominal": "50", "ups.vendorid": "0463", "input.transfer.low": "161", "output.voltage": "230.0", "outlet.id": "1", "driver.parameter.pollinterval": "2", "driver.parameter.port": "auto", "outlet.2.id": "3", "ups.status": "OL CHRG", "outlet.2.switchable": "no", "ups.power.nominal": "800", "outlet.2.desc": "PowerShare Outlet 2", "outlet.1.status": "on", "driver.version.data": "MGE HID 1.33", "outlet.1.switchable": "no", "ups.beeper.status": "enabled", "driver.name": "usbhid-ups", "ups.timer.start": "0", "device.mfr": "EATON", "ups.productid": "ffff", "device.serial": "AN2E49008", "device.type": "ups", "battery.runtime": "1082", "ups.firmware": "1.13", "driver.parameter.vendorid": "0463"}
+
+
+
+
+
+get_time()
+ Date et heure : 2017-02-16 19:12:10
+
+readupsvar()
+ ups status is OB DISCHRG
+ battery charge is 100 %
+ output voltage is 230.0V
+jcaulier@ub1610:~/src/domini/serveur/ups$ python pyUps.py
+Setup
+End Setup
+
+get_time()
+ Date et heure : 2017-02-16 19:12:21
+
+readupsvar()
+ ups status is OB DISCHRG
+ battery charge is 100 %
+ output voltage is 230.0V
+
+ 
+ 
+$ sudo upsc eaton800
+
+battery.charge: 86
+battery.charge.low: 20
+battery.runtime: 734
+battery.type: PbAc
+device.mfr: EATON
+device.model: Protection Station 800
+device.serial: AN2E49008
+device.type: ups
+driver.name: usbhid-ups
+driver.parameter.pollfreq: 30
+driver.parameter.pollinterval: 2
+driver.parameter.port: auto
+driver.parameter.vendorid: 0463
+driver.version: 2.7.2
+driver.version.data: MGE HID 1.33
+driver.version.internal: 0.38
+input.transfer.high: 264
+input.transfer.low: 161
+outlet.1.desc: PowerShare Outlet 1
+outlet.1.id: 2
+outlet.1.status: off
+outlet.1.switchable: no
+outlet.2.desc: PowerShare Outlet 2
+outlet.2.id: 3
+outlet.2.status: off
+outlet.2.switchable: no
+outlet.desc: Main Outlet
+outlet.id: 1
+outlet.power: 25
+outlet.switchable: no
+output.frequency.nominal: 50
+output.voltage: 230.0
+output.voltage.nominal: 230
+ups.beeper.status: enabled
+ups.delay.shutdown: 20
+ups.delay.start: 30
+ups.firmware: 1.13
+ups.load: 30
+ups.mfr: EATON
+ups.model: Protection Station 800
+ups.power.nominal: 800
+ups.productid: ffff
+ups.serial: AN2E49008
+ups.status: OB DISCHRG
+ups.timer.shutdown: 0
+ups.timer.start: 0
+ups.vendorid: 0463
+
+
+
+s$ sudo upsc eaton800
+Init SSL without certificate database
+battery.charge: 71
+battery.charge.low: 20
+battery.runtime: 607
+battery.type: PbAc
+device.mfr: EATON
+device.model: Protection Station 800
+device.serial: AN2E49008
+device.type: ups
+driver.name: usbhid-ups
+driver.parameter.pollfreq: 30
+driver.parameter.pollinterval: 2
+driver.parameter.port: auto
+driver.parameter.vendorid: 0463
+driver.version: 2.7.2
+driver.version.data: MGE HID 1.33
+driver.version.internal: 0.38
+input.transfer.high: 264
+input.transfer.low: 161
+outlet.1.desc: PowerShare Outlet 1
+outlet.1.id: 2
+outlet.1.status: off
+outlet.1.switchable: no
+outlet.2.desc: PowerShare Outlet 2
+outlet.2.id: 3
+outlet.2.status: off
+outlet.2.switchable: no
+outlet.desc: Main Outlet
+outlet.id: 1
+outlet.power: 25
+outlet.switchable: no
+output.frequency.nominal: 50
+output.voltage: 230.0
+output.voltage.nominal: 230
+ups.beeper.status: enabled
+ups.delay.shutdown: 20
+ups.delay.start: 30
+ups.firmware: 1.13
+ups.load: 30
+ups.mfr: EATON
+ups.model: Protection Station 800
+ups.power.nominal: 800
+ups.productid: ffff
+ups.serial: AN2E49008
+ups.status: OB DISCHRG
+ups.timer.shutdown: 0
+ups.timer.start: 0
+ups.vendorid: 0463
+

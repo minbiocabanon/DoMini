@@ -1,7 +1,20 @@
 Ubuntu : gere un onduleur :
 	https://doc.ubuntu-fr.org/nut
+
+# gestion de l'onduleur par python
+le logiciel ups_daemonized.py se lance en fond de tâche. 
+Si besoin de le tuer faire :
+	ps -x
+relever le N° de PID, puis
+	kill -9 [PID]
 	
-# Obtenir la liste des onduleurs déclarés
+Le logiciel pyUps.py fait pareil mais sans daemon.
+
+Dans les deux cas, des logs sont inscrit dans /var/log/syslog
+	
+	
+# gestion de l'onduleur avec des commandes systemes	
+## Obtenir la liste des onduleurs déclarés
 Pour connaitre la liste des onduleurs déclarés sur la machine :
 
 	upsc -L
@@ -10,7 +23,7 @@ Pour connaitre la liste des onduleurs déclarés sur la machine :
 
 	upsc -L nom_de_la_machine_distante
 
-# Connaître l'état d'un onduleur
+## Connaître l'état d'un onduleur
 
 	upsc myups
 	
@@ -23,7 +36,7 @@ Pour connaître un paramètre en particulier, ici le statut de l'onduleur3) :
 upsc myups ups.status
 
 
-# Envoyer une commande à l'onduleur
+## Envoyer une commande à l'onduleur
 Pour connaître la liste des commandes supportées par le pilote et l'onduleur :
 
 	upscmd -l myups@localhost
