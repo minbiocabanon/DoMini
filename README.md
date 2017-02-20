@@ -20,6 +20,17 @@ http://minbiocabanon.free.fr/static_domini/
 Architecture de l'installation :
 ![Domini architecture](/docs/Synoptique_DoMini.png)
 
+#Captures d'écran / Screenshots
+![Domini Ecran accueil](docs/img/screenshot/web_accueil.png)
+
+![Domini Temperatures](docs/img/screenshot/web_temperature.png)
+
+![Domini Consommation electrique live](docs/img/screenshot/web_elec_live.png)
+
+![Domini Consommation electrique mensuelle](docs/img/screenshot/web_elec_mois.png)
+
+![Domini Ensoleillement mensuel](docs/img/screenshot/web_soleil_mois.png)
+
 
 #Pré-requis
 ##Plateforme
@@ -56,11 +67,11 @@ La liste des paquets installés sur ma machine est disponible sur le dépôt :
 Dans les grandes lignes voici ce qui est essentiel pour le projet :
 
 - Serveur web : lighttpd
-- Base de données : MySQL
-- PHP
-- GD (lib graphique pour HTML)
-- serveur FTP : vsftp (pour récupération images des cameras IP)
+- Base de données : MySQL (sudo apt-get install mysql-server) , mot de passe superadmin : mysql
+- PHP (sudo apt-get install php) , à vérifier si DoMini est compatible à php7
+- serveur FTP : vsftp (pour récupération images des cameras IP),
 - GCC (pour compiler les applications faites en C)
+- GD (lib graphique pour HTML) , à confirmer
 *Il existe certainement des dépendances ...*
 
 
@@ -68,26 +79,131 @@ Pour le développement, mise au point ou confort, j'utilise également :
 
 - Samba
 - Webmin
-- Git
+- Git (sudo apt-get install)
 - screen
-
 
 
 #Notes pour l'installation ou la migration vers un nouveau PC
 
+## screen
+commande pour relancer un screen existant
+	screen -r -d -h 10000
+	
+pour avoir une status bar , éditer .screenrc avec ces lignes
+	caption always
+	caption string "%{=b kg} [%n %t] %{=s ky}%W  %= %{=b}%H %{=s}%c "
+
+nécessite un redémarrage du pc (ou du service cron uniquement peut etre)
+	
+
+## GCC 
+Installation :
+	sudo apt install gcc
+Installation lib mysql pour compiler sans erreur
+	sudo apt-get install libmysqlclient-dev 
+
+## Git
+(rappel ici : https://git-scm.com/book/fr/v1/Les-bases-de-Git-D%C3%A9marrer-un-d%C3%A9p%C3%B4t-Git)
+Rapatrier tout le projet
+	se mettre dans ~src/ (ne pas créer de sous repertoire domini)
+	git clone git://github.com/minbiocabanon/DoMini domini
+	
+Paramétrage du git
+	git remote set-url origin https://github.com/minbiocabanon/DoMini
+	git config --global user.email "minbiocabanon@gmail.com"
+	git config --global user.name "minbiocabanon"
+
+## INTERFACE WEB
+Faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini
+
+	ln -s ~/serveur/www/domini /var/www/domini
+
+**ATTENTION** : il ne faut pas avoir créé /var/www/domini avant de créér le lien symbolique
+
+Changer les droits, le propriétaire de /var/www/domini doit etre www-data
+
+	sudo chown -R www-data:www-data domini
+
+### serveur web : lighttpd
+installation :
+	sudo apt-get install vsftpd
+	
+paramétrage lighttpd
+	Changer dans /etc/lighttpd/lighttpd.conf le chemin  par défaut par /var/www/domini
+	redémarre lighttpd : sudo /etc/init.d/lighttpd restart
+	
+	sudo lighty-enable-mod fastcgi 
+	sudo lighty-enable-mod fastcgi-php
+	/etc/init.d/lighttpd force-reload
+
+
+	attention aux droits pour lancer/arrêter lighttpd, il faut être root + admin
+	Un truc : dès qu'on installe des extensions, il faut killer httpd et les fastcgi et les fpm
+	Puis relancer lighttpd	
+
+**ATTENTION** : certaines pages PHP lancent des executables (copiés dans www/domini/bin lors de la compilation). L'executable 'emitter' accède au port série /dev/ttyUSB0 pour transmettre les ordres au Jeelink. Il est possible que l'utilisateur www-data n'est pas la permission pour accéder au port série.
+	
+	#la commande suivante permet de donner accés en lecture/écriture à tous les groupes
+	sudo chmod 666 /dev/ttyUSB0
+
+### Webmin
+Download deb package:
+	wget sourceforge.net/projects/webadmin/files/webmin/1.820/webmin_1.820_all.deb
+Install deb package on ubuntu system :
+	sudo dpkg -i --force-depends webmin_1.820_all.deb
+Install complete depedencies on ubuntu system :
+	sudo apt-get install -f
+
+After installation is completed, open your browser and user this link address https://localhost:10000/ to login webmin
+
+Login as username is your ubuntu accout name and password account
+
+Vous pouvez utiliser votre nom d'utilisateur courant et mot de passe, mais si vous voulez utiliser le compte "root" de webmin, celui-ci sera inaccessible car désactivé sur Ubuntu. Il faut par conséquent le changer en tapant :
+
+	sudo /usr/share/webmin/changepass.pl /etc/webmin root votre_mot_de_passe
+
+	Cette commande ne change pas le mot de passe « root » d'Ubuntu mais seulement celui de Webmin.
+Redémarrer le service webmin :
+	sudo service webmin restart
+
+
+To remove all webmin system :
+	sudo apt-get remove webmin	
+	
+### BOOTSTRAP
+le framework [bootstrap](http://getbootstrap.com/) est utilisé pour la création des pages web.
+Cela permet d'avoir une IHM 'responsive', c'est à dire qui s'adapte en fonction du support (PC, smartphone, tablette...).
+Il existe pleins de plugins pour bootstrap afin de compléter l'ergonomie de l'interface web : boutons, slider, calendrier, curseurs ...
+
+### HIGHSTOCK
+J'ai utilisé [Highstock](http://www.highcharts.com/) pour générer les graphiques. basé sur du javascript, les graphiques sont bien faits et personnalisables à volonté.
+	
 ## BASE DE DONNEES
 la base de données tourne avec MySQL.
 
 Fichier contenant la structure de la base :
 
 	~/serveur/bdd/struct_domotique.sql
+
+créer la base:
+	echo "create database domotique" | mysql -u root -p
 	
 Fichier contenant l'exportation de toutes les données (non disponible sur le dépot git car du domaine privé)
 L'importation de gros fichiers n'est pas possible via phpmyadmin, il faut utiliser mysql en ligne de commande:
 
  	mysql --user=root --password=mysql domotique < 	 ~/serveur/bdd/backup_domotique/backup-domotique.sql
- 
+
+### phpmyadmin
+	apt-get install phpmyadmin
+	mdp : mysql
+	
+	
 ## SYSTEME
+### Couleurs TERM
+Pour avoir la console en couleur
+	export TERM=xterm-color
+	
+
 ### rc.local
 Afin de garantir le fonctionnement de la domotique en cas de redémarrage intempestif du serveur (si pas d'onduleur ou à la reprise du courant lorsque l'onduleur est sec), il convient d'appeler un script 'go.sh' qui contiendra les actions à lancer au démarrage.
 Pour cela, il faut modifier le fichier rc.local en ajoutant ces quelques lignes à la fin du fichier (avant exit 0) :
@@ -104,7 +220,7 @@ Le port ttyUSBx doit être utilisable par l'utilisateur www-data pour l'envoi de
 	ou
 	adduser www-data dialout
 
-Si vous lancer pyReceiver depuis votre compte user, ajoutez votre compte également de la même façon pour avoir le droit d'utiliser le port serie.
+Si vous lancez pyReceiver depuis votre compte user, ajoutez votre compte également de la même façon pour avoir le droit d'utiliser le port serie.
 
 ### Crontab:
 Importer les taches CRON listées dans ce fichier :
@@ -121,9 +237,53 @@ L'utilisateur www-data doit disposer d'un mot de passe pour être compatible ave
 Par défaut www-data ne possède pas de mot de passe. Lui donner "www-data" comme mot de passe à l'aide de la commande :
 
 	sudo passwd www-data
+
+###Connexions réseaux
+
+Pour éviter que le wlan0 ne se déconnecte lorsque eth0 est débranché, dans /etc/network/interfaces , ne conserver 'auto' que devant le wlan0 (si wlan0) doit etre la liaison lan par défaut.
+Configuration WEP pour interface wifi, voir ci-dessous.
+	# cat /etc/network/interfaces
+	
+	# The loopback network interface
+	#auto lo
+	  iface lo inet loopback
+
+	#auto eth0
+	  iface eth0 inet dhcp
+
+	auto wlan0
+	  iface wlan0 inet dhcp
+	   wireless-essid VIRUS
+	   wireless-key s:"0000"
+
+
+	   
+	
+### resolv.conf
+(pour résoudre pb de DNS si votre FAI est mauvais...)
+installer le packet resolvconf
+
+	sudo apt-get install resolvconf
+	
+éditer manuellement le fichier base :
+
+	sudo nano /etc/resolvconf/resolv.conf.d/base
+		
+ajouter ces deux lignes :
+
+	nameserver 208.67.222.222
+	nameserver 208.67.220.220
+
+sauver et relancer l'interface wifi/ethernet
+
+	sudo /etc/init.d/networking restart
 	
 	
-### vsFTP
+### client lftp
+installer un client FTP light pour
+	sudo apt install lftp
+	
+### Serveur vsFTP
 Ce serveur FTP doit être installé si vous avez installé tous les paquets présents dans le fichier ~/serveur/systeme/dpkg.txt
 
 La configuration qui fonctionne (dans mon cas) est celle-ci :
@@ -147,25 +307,6 @@ fichier de configuration /etc/vsftpd.conf :
 	rsa_cert_file=/etc/ssl/certs/vsftpd.pem
 	anon_root=/var/www/	
 
-### resolv.conf
-(pour résoudre pb de DNS si votre FAI est mauvais...)
-installer le packet resolvconf
-
-	sudo apt-get install resolvconf
-	
-éditer manuellement le fichier base :
-
-	sudo nano /etc/resolvconf/resolv.conf.d/base
-		
-ajouter ces deux lignes :
-
-	nameserver 208.67.222.222
-	nameserver 208.67.220.220
-
-sauver et relancer l'interface wifi/ethernet
-
-	sudo /etc/init.d/networking restart
-
 	
 ## Logiciel
  - Modifier le fichier suivant pour y renseigner les identifiants de connexion à la base de données ainsi que le nom de la table:
@@ -174,36 +315,6 @@ sauver et relancer l'interface wifi/ethernet
 	
  - Recompiler tous les logiciels directement sur la cible avec la commande 'make'
  
-## INTERFACE WEB
-Faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini
-
-	ln -s ~/serveur/www/domini /var/www/domini
-
-**ATTENTION** : il ne faut pas avoir créé /var/www/domini avant de créér le lien symbolique
-
-**ATTENTION** : certaines pages PHP lancent des executables (copiés dans www/domini/bin lors de la compilation). L'executable 'emitter' accède au port série /dev/ttyUSB0 pour transmettre les ordres au Jeelink. Il est possible que l'utilisateur www-data n'est pas la permission pour accéder au port série.
-	
-	#la commande suivante permet de donner accés en lecture/écriture à tous les groupes
-	sudo chmod 666 /dev/ttyUSB0
-
-### BOOTSTRAP
-le framework [bootstrap](http://getbootstrap.com/) est utilisé pour la création des pages web.
-Cela permet d'avoir une IHM 'responsive', c'est à dire qui s'adapte en fonction du support (PC, smartphone, tablette...).
-Il existe pleins de plugins pour bootstrap afin de compléter l'ergonomie de l'interface web : boutons, slider, calendrier, curseurs ...
-
-### HIGHSTOCK
-J'ai utilisé [Highstock](http://www.highcharts.com/) pour générer les graphiques. basé sur du javascript, les graphiques sont bien faits et personnalisables à volonté.
-
-### Captures d'écran / Screenshots
-![Domini Ecran accueil](docs/img/screenshot/web_accueil.png)
-
-![Domini Temperatures](docs/img/screenshot/web_temperature.png)
-
-![Domini Consommation electrique live](docs/img/screenshot/web_elec_live.png)
-
-![Domini Consommation electrique mensuelle](docs/img/screenshot/web_elec_mois.png)
-
-![Domini Ensoleillement mensuel](docs/img/screenshot/web_soleil_mois.png)
 
 ### cURL
 
@@ -213,11 +324,11 @@ Installer le paquet cURL pour PHP (optionnel)
 
 # Python
 ## Pyserial
-http://pyserial.sourceforge.net/pyserial.html#from-source-tar-gz-or-checkout
+http://pypi.python.org/pypi/pyserial
 
 télécharger le source, puis
-	tar zxvf pyserial-2.7.tar.gz
-	cd pyserial-2.7
+	tar zxvf pyserial-3.2.1.tar.gz
+	cd pyserial-3.2.1
 	sudo python setup.py install
 	
 lancer Python
@@ -250,7 +361,7 @@ télécharger ez-setup.py ici : https://pypi.python.org/pypi/setuptools
 	sudo python ez_setup.py
 
 Cloner le github pushbullet.py en local 
-	mkdire ~/download/pypushbullet
+	mkdir ~/download/pypushbullet
 	cd ~/download/pypushbullet
 	git clone https://github.com/randomchars/pushbullet.py
 	
@@ -262,7 +373,7 @@ dans le répertoire , lancer :
 ## Gestion onduleur USB (brouillon)
 
 liens utiles
-http://eole.orion.education.fr/oldwiki/index.php/Installation_Onduleur
+
 http://ovanhoof.developpez.com/upsusb/
 
 	$dmesg
