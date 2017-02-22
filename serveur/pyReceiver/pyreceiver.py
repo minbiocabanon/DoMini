@@ -56,6 +56,8 @@ def task_receiver():
 					print " " + query
 					# run MySQL Query
 					cur.execute(query)
+					# Make sure data is committed to the database
+					con.commit()
 					# Close all cursors
 					cur.close()
 					# Close MySQL session
@@ -95,6 +97,8 @@ def task_receiver():
 					print " " + query
 					# run MySQL Query
 					cur.execute(query)
+					# Make sure data is committed to the database
+					con.commit()
 					# Close all cursors
 					cur.close()
 					# Close MySQL session
@@ -132,6 +136,8 @@ def task_receiver():
 					print " " + query
 					# run MySQL Query
 					cur.execute(query)
+					# Make sure data is committed to the database
+					con.commit()
 					# Close all cursors
 					cur.close()
 					# Close MySQL session
@@ -169,6 +175,8 @@ def task_receiver():
 					print " " + query
 					# run MySQL Query
 					cur.execute(query)
+					# Make sure data is committed to the database
+					con.commit()
 					# Close all cursors
 					cur.close()
 					# Close MySQL session
@@ -222,6 +230,8 @@ def task_receiver():
 						print " " + query
 						# run MySQL Query
 						cur.execute(query)
+						# Make sure data is committed to the database
+						con.commit()
 						# Close all cursors
 						cur.close()
 						# Close MySQL session
@@ -282,6 +292,8 @@ def task_receiver():
 						print " " + query
 						# run MySQL Query
 						cur.execute(query)
+						# Make sure data is committed to the database
+						con.commit()
 						# Close all cursors
 						cur.close()
 						# Close MySQL session

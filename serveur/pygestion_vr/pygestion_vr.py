@@ -407,6 +407,8 @@ def manage_vr():
 			query = 'INSERT INTO `domotique`.`voletroulant_log` (`id`, `date_time`, `bureau`, `salon`, `chambreM`, `chambreJF`) VALUES (NULL, NOW(), \'{0}\', \'{1}\', \'{2}\', \'{3}\');'.format(etat_vr_bureau, etat_vr_salon, etat_vr_chm, etat_vr_chjf)
 			# run MySQL Query
 			cur.execute(query)
+			# Make sure data is committed to the database
+			con.commit()
 			# Close all cursors
 			cur.close()
 			# Close MySQL session
@@ -442,6 +444,8 @@ def send_etat_vr():
 		query = 'INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), \'$VRL,{0},{1},{2},{3}\');'.format(etat_vr_bureau, etat_vr_salon, etat_vr_chm, etat_vr_chjf)
 		# run MySQL Query
 		cur.execute(query)
+		# Make sure data is committed to the database
+		con.commit()
 		# Close all cursors
 		cur.close()
 		# Close MySQL session

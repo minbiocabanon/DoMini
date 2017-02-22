@@ -273,6 +273,8 @@ def send_consigne():
 		query = 'INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), \'$BPC,{0},0\');'.format(consignebypass)
 		# run MySQL Query
 		cur.execute(query)
+		# Make sure data is committed to the database
+		con.commit()
 		# Close all cursors
 		cur.close()
 		# Close MySQL session
@@ -304,6 +306,8 @@ def log_donnees():
 		query = 'INSERT INTO `domotique`.`bypass_pc_log` (`id`, `date_time`, `consigne`) VALUES (NULL, NOW(), \'{0}\');'.format(consignebypass)
 		# run MySQL Query
 		cur.execute(query)
+		# Make sure data is committed to the database
+		con.commit()
 		# Close all cursors
 		cur.close()
 		# Close MySQL session
