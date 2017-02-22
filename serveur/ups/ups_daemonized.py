@@ -2,30 +2,31 @@
 import sys
 import syslog
 import time
-import MySQLdb as mdb
 from pushbullet import Pushbullet
-import os
 import PyNUT
 import json
+import MySQLdb as mdb
 
 import daemon
 
 # -- USER variables
 PERIOD_MSG = 10		# in minutes, delay two messages with status info while power outtage
-
+PERIOD_LOG = 10		# in minutes, delay two messages in syslog (debug only)
 # -- Global variables
-ups_status = ""
-battery_charge = 0 
-battery_runtime = 800
-output_voltage = 230
+ups_status = "OL CHG"
+battery_charge = 100 
+battery_runtime = 1024
+output_voltage = 230.0
 SM_state = "POWERON"
 timeout = 0
+timeoutlog = 0
 
 #--- setup ---
 def setup():
 	print ('Setup')
 	syslog.openlog("pyUps")
 	syslog.syslog("Demarrage")
+	timeoutlog = int(time.time())
 	print ('End Setup')
 # -- fin setup --
 
@@ -51,7 +52,7 @@ def check_db():
 		con.close()
 		# add some log
 		logmessage = " OK, Database is running"
-		
+
 	except mdb.Error, e:
 		# Display MySQL errors
 		try:
@@ -64,7 +65,7 @@ def check_db():
 
 	print logmessage
 	syslog.syslog(logmessage)
-			
+
 # -- end check_db() --
 
 def readupsvar():
@@ -94,13 +95,11 @@ def readupsvar():
 		# print debug and log message
 		logmessage = " ups status is " + ups_status + " \n battery charge is " + str(battery_charge) + " % \n output voltage is " + str(output_voltage) + "V \n remaining is " + str(battery_runtime) + " minutes"
 		print logmessage
-		syslog.syslog(logmessage)
 	
 	except:
 		logmessage = " Error while reading or parsing UPS Variables"
 		print logmessage
-		syslog.syslog(logmessage)
-					
+
 # -- end readupsvar() --
 
 def statemachine():
@@ -112,6 +111,7 @@ def statemachine():
 	global battery_charge
 	global battery_runtime	
 	global output_voltage
+	global PERIOD_MSG
 	
 	try:
 		#initialize pushbullet 
@@ -168,7 +168,7 @@ def statemachine():
 	except :
 		logmessage = " Error in state machine (probably error with pushbullet while no internet)"
 		print logmessage
-		syslog.syslog(logmessage)				
+		syslog.syslog(logmessage)
 # -- end statemachine() --
 
 def checkupsstatus():
@@ -181,13 +181,12 @@ def checkupsstatus():
 	try :
 		#initialize pushbullet 
 		pb = Pushbullet('o.OVDjj6Pg0u8OZMKjBVH6QBqToFbhy1ug') 
-		
 		# if 230V is present
 		if ups_status == "OL CHRG":
 			logmessage = " OK, ups is powered"
 			
 		# if power outtage is detected
-		elif ups_status == "OB DISCHRG" :	
+		elif ups_status == "OB DISCHRG" :
 			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n panne de courant !\n Batterie a "+ str(battery_charge) +"%, "+ str(battery_runtime) +" minutes restantes."
 			# send message through pushbullet to user
 			push = pb.push_note("Domini - onduleur", logmessage)
@@ -195,17 +194,71 @@ def checkupsstatus():
 			# status unknow
 			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n etat inconnu : " + str(ups_status)+ ".\n Batterie a "+ str(battery_charge) +"%, "+ str(battery_runtime) +" minutes restantes."
 			# send message through pushbullet to user
-			push = pb.push_note("Domini - onduleur", logmessage)		
+			push = pb.push_note("Domini - onduleur", logmessage)
 		# print message and log it
 		print logmessage
-		syslog.syslog(logmessage)	
+		syslog.syslog(logmessage)
 		
 	except :
 		logmessage = " Error while reading or parsing UPS Variables"
 		print logmessage
-		syslog.syslog(logmessage)		
+		syslog.syslog(logmessage)
 		
-#todo : gerer la reprise pour eviter d'envoyer un message d'alerte trop souvent ?
+# -- end checkupsstatus() --
+		
+def loginfo():
+	print '\nloginfo()'
+	
+	global ups_status
+	global battery_charge
+	global battery_runtime	
+	global output_voltage
+	global timeoutlog
+	global PERIOD_LOG
+	
+	# Log info in syslog
+	try :
+		# check if it is time to send an other status message
+		now = int(time.time())
+		if now > timeoutlog :
+			# prepare a message to send
+			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + " Etat onduleur : " + ups_status + ", Batterie a "+ str(battery_charge) +"%, "+ str(battery_runtime) +" minutes restantes."
+			# log message
+			syslog.syslog(logmessage)
+			# set next time
+			timeoutlog = now + PERIOD_LOG * 60
+			
+			# Log info in database
+			try:
+				# Open MySQL session
+				con = mdb.connect('localhost','root','mysql','domotique')
+				cur = con.cursor()
+				# prepare query
+				#query = "INSERT INTO domotique.ups VALUES (NULL, NOW() , '"+ ups_status +"', '"+ str(battery_charge) +"', '"+ str(battery_runtime) +"', '"+ str(output_voltage) +"');"
+				query = 'INSERT INTO domotique.ups VALUES (NULL, NOW(), \'{0}\', \'{1}\', \'{2}\', \'{3}\');'.format(ups_status, battery_charge, battery_runtime, output_voltage)
+				# run MySQL Query
+				cur.execute(query)
+				# Make sure data is committed to the database
+				con.commit()
+				# Close all cursors
+				cur.close()
+				# Close MySQL session
+				con.close()
+				# say that request is ok
+				logmessage = " Data saved in ups table."
+				syslog.syslog(logmessage)
+			except mdb.Error, e:
+				# Display MySQL errors
+				try:
+					print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				except IndexError:
+					print "MySQL Error: %s" % str(e)			
+			
+	except :
+		logmessage = " Error in loginfo()"
+		syslog.syslog(logmessage)
+		
+# -- end loginfo() --
 	
 
 
@@ -215,7 +268,7 @@ def ups_monitor():
 	while True:
 		readupsvar()
 		statemachine()
-		# loginfo()
+		loginfo()
 		time.sleep(10)
 
 def run():
