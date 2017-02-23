@@ -21,6 +21,8 @@
 	
 	$SQL="SET lc_time_names = 'fr_FR'" ; // Pour afficher date en français dans MySql. 
 	mysqli_query($link,$SQL);
+	$SQL="SET NAMES UTF8" ; // Pour afficher date en français dans MySql. 
+	mysqli_query($link,$SQL);
 	
 	//requete pour récupérer la dernière consommation instantanée
 	$SQL="SELECT *, DATE_FORMAT(date_time, '%W %e %M %X - %T') as DATE FROM `donnees_instant`"; 
@@ -92,6 +94,12 @@
 	
 	//on récupère l'état du bypass de la VMCDF
 	$bypass_VMC = $myrow["bypass_vmcdf"];
+	
+	// on recupère les données de l'onduleur
+	$ups_datetime = $myrow["ups_datetime"];
+	$ups_status = $myrow["ups_status"];
+	$ups_battery_charge = $myrow["ups_battery_charge"];
+	$ups_battery_runtime = $myrow["ups_battery_runtime"];
 
 	//requete pour récupérer la dernière valeur du niveau dans le réservoir
 	$SQL="SELECT `nvg`  FROM `pellets_rsv` ORDER BY `date_time` DESC LIMIT 0,1"; 

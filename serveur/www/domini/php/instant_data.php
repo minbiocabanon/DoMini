@@ -464,7 +464,7 @@
 	$flux_solaire = $myrow["flux_solaire"] * $Coef_V_to_W;
 	echo"<br/>flux solaire = $flux_solaire W/m², coef=$Coef_V_to_W";
 	
-	// ------------------- Récupère de l'état du bypass puits canadien -------------------------------------
+	// ------------------- Récupère l'état du bypass puits canadien -------------------------------------
 	//Requete pour récupérer la valeur 15 minutes auparavent
 	$SQL="SELECT date_time, consigne
 	FROM bypass_pc_log
@@ -480,6 +480,28 @@
 		$consigne_pc = $myrow["consigne"];
 	else
 		$consigne_pc = 0.0;
+
+	// ------------------- Récupère l'état de l'oduleur (ups) -------------------------------------
+	//Requete pour récupérer la dernière valeur
+	$SQL="SELECT `date_time`,`ups_status`,`battery_charge`,`battery_runtime` 
+	FROM `ups` 
+	ORDER BY `date_time` DESC 
+	LIMIT 0,1					
+	"; 
+	// //Envoie de la requete
+	$RESULT = @mysqli_query($link,$SQL);
+	// lecture du resultat de la requete
+	$myrow=@mysqli_fetch_array($RESULT); 
+	//on récupère la dernière température relevée
+	$ups_datetime = $myrow["date_time"];
+	$ups_battery_charge = $myrow["battery_charge"];
+	$ups_battery_runtime = $myrow["battery_runtime"];
+	if( $myrow["ups_status"] == "OB DISCHRG")
+		$ups_status = "DESCHRG";
+	elseif($myrow["ups_status"] == "OL CHRG")
+		$ups_status = "OK";
+	else	
+		$ups_status = "???";
 	
 
 	// ------------------- On écrit toutes les données dans une seule table -------------------------------------
@@ -522,7 +544,11 @@
 		`icon_led_pc` = '$str_ledPC',
 		`icon_led_vmc` = '$str_ledVMC',
 		`icon_led_combles` = '$str_ledCombles',
-		`icon_led_airneuf` = '$str_ledAirneuf'
+		`icon_led_airneuf` = '$str_ledAirneuf',
+		`ups_datetime` = '$ups_datetime',
+		`ups_status` = '$ups_status',
+		`ups_battery_charge` = '$ups_battery_charge',
+		`ups_battery_runtime` = '$ups_battery_runtime'
 		WHERE `donnees_instant`.`id` =1;";
 	echo"</br>requete SQL = $SQL";
 	//Envoie de la requete

@@ -163,7 +163,8 @@
 						<table class="table table-bordered table-striped ">
 							<thead>
 							  <tr>
-								<th width=50%>Conso Elec.</th>
+								<th width=25%>Conso Elec.</th>
+								<th width=25%>Onduleur</th>
 								<th width=50%>Etats capteurs</th>
 							  </tr>
 							</thead>
@@ -171,7 +172,6 @@
 							  <tr>
 								<td>
 									<?PHP
-										echo'<span rel="tooltip" title="'.$data_teleinfo_date[0].'">'.$data_consojour[0].' W  </span><br>';
 										// si on est en heure pleine
 										if($data_tarif[0] == "HP..")
 											// on affiche HP en rouge
@@ -179,7 +179,24 @@
 										else
 											// sinon on affiche HC en vert
 											echo"<span class=\"label label-success\">HC</span>";
+										echo'<br><span rel="tooltip" title="'.$data_teleinfo_date[0].'">'.$data_consojour[0].' W  </span><br>';
 									?>
+								</td>
+								<td>
+									<?PHP
+										// si l'onduleur est relié au secteur
+										if($ups_status == "OK"){
+											// on affiche HP en rouge
+											echo'<span class="label label-success" rel="tooltip" title="'.$ups_datetime.'">'.$ups_status.'</span><br>';
+										// sinon c'est qu'il y a une panne d'elec , warning !
+										}
+										else{
+											// sinon on affiche HC en vert
+											echo'<span class="label label-important" rel="tooltip" title="'.$ups_datetime.'">'.$ups_status.'</span><br>';
+											echo'Temps restant: '.$ups_battery_runtime.'min.';
+										}
+										echo'Charge: '.$ups_battery_charge.'%';
+									?>									
 								</td>
 								<td>
 									<span class="label <?PHP echo"$str_ledTe"; ?>">Ext</span>
