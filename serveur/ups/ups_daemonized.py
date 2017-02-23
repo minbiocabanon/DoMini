@@ -235,7 +235,7 @@ def loginfo():
 				cur = con.cursor()
 				# prepare query
 				#query = "INSERT INTO domotique.ups VALUES (NULL, NOW() , '"+ ups_status +"', '"+ str(battery_charge) +"', '"+ str(battery_runtime) +"', '"+ str(output_voltage) +"');"
-				query = 'INSERT INTO domotique.ups VALUES (NULL, NOW(), \'{0}\', \'{1}\', \'{2}\', \'{3}\');'.format(ups_status, battery_charge, battery_runtime, output_voltage)
+				query = 'INSERT INTO domotique.ups VALUES (NULL, NOW(), \'{0}\', \'{1}\', \'{2}\', \'{3}\',0);'.format(ups_status, battery_charge, battery_runtime, output_voltage)
 				# run MySQL Query
 				cur.execute(query)
 				# Make sure data is committed to the database
