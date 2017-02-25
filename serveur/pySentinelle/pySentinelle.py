@@ -56,15 +56,19 @@ def check_db():
 
 def check_webserver():
 	print '\ncheck_webserver()'
-	code_ws = urllib.urlopen("http://192.168.0.102/index.php").getcode()
-	
-	if( code_ws != '200') :
-		logmessage = " OK, server web is running"
-	else :
-		pb = Pushbullet('o.OVDjj6Pg0u8OZMKjBVH6QBqToFbhy1ug') 
-		logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Domini - Erreur : serveur web est arrete"
-		push = pb.push_note("Domini", logmessage)	
-	
+	try:
+		code_ws = urllib.urlopen("http://localhost/index.php").getcode()
+		
+		if( code_ws != '200') :
+			logmessage = " OK, server web is running"
+		else :
+			pb = Pushbullet('o.OVDjj6Pg0u8OZMKjBVH6QBqToFbhy1ug') 
+			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Domini - Erreur : serveur web est arrete"
+			push = pb.push_note("Domini", logmessage)	
+	except:
+		logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Domini - Erreur : etat serveur web inconnu"
+		push = pb.push_note("Domini", logmessage)
+		
 	print logmessage
 	syslog.syslog(logmessage)	
 					
