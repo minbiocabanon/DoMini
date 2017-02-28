@@ -9,10 +9,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
-//#define WITHMYSQL
-#ifdef WITHMYSQL
 #include <mysql/mysql.h>
-#endif
 #include <unistd.h>
 #include <stdlib.h>
 #include <dirent.h> //gestion des repertoire
@@ -44,10 +41,10 @@ int seq, device_number; //generic data on package
 unsigned long *lengths;
 
 //déclaration de la table sur laquelle on va travailler
-char table[50] = "pyranometre";
+char table[50] = "VMC";
 // déclaration le numéro du mois sur lequel on va travailler
-int mois= 12;
-int annee= 2011;
+int mois= 01;
+int annee= 2017;
 
 // Déclaration du pointeur de structure de type MYSQL
 MYSQL *conn;
