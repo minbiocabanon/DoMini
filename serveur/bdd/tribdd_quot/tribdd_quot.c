@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 //!\file          tribdd_quot.c
-//!\date	01/12/2011
-//!\author    RzBo
+//!\date		12/2016
+//!\author    	minbiocabanon
 //!\brief       Programme qui allège les tables de la BDD -> suppression de vieilles données avec filtrage.
 //!\brief       Tri réalisé quotidiennement
 //----------------------------------------------------------------------
@@ -10,10 +10,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
-//#define WITHMYSQL
-#ifdef WITHMYSQL
 #include <mysql/mysql.h>
-#endif
 #include <unistd.h>
 #include <stdlib.h>
 #include <dirent.h> //gestion des repertoire
