@@ -6,7 +6,7 @@ import time
 import MySQLdb as mdb
 from time import sleep
 
-tables = ["chauffage_log", "voletroulant_log", "bypass_pc_log"]
+tables = ["chauffage_log", "voletroulant_log", "bypass_pc_log", "pellets_rsv", "ups", "internet_connex"]
 NB_JOUR = 15
 
 #--- setup ---
@@ -67,13 +67,26 @@ def clean_table():
 		logmessage = 'Optimisation de la table {0} en cours ...'.format(table)
 		print logmessage
 		syslog.syslog(logmessage)
+				
+	logmessage = "Fin pydel_old_data"
+	print logmessage
+	syslog.syslog(logmessage)
 
+# -- end clean_table --
+
+# -- optimize --
+def optimize()
+	logmessage = 'Optimisation de la table {0} en cours ...'.format(table)
+	print logmessage
+	syslog.syslog(logmessage)
+	for tabname in tables :
+		print ' Table :',tabname
 		try:
 			# Open MySQL session
 			con = mdb.connect('localhost','root','mysql','domotique')
 			cur = con.cursor()
 			# prepare query
-			query = 'OPTIMIZE TABLE `{0}`;'.format(table)
+			query = 'OPTIMIZE TABLE `{0}`;'.format(tabname)
 			# run MySQL Query
 			cur.execute(query)
 			result = cur.fetchone()
@@ -89,16 +102,11 @@ def clean_table():
 				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 			except IndexError:
 				print "MySQL Error: %s" % str(e)
-				
-	logmessage = "Fin pydel_old_data"
-	print logmessage
-	syslog.syslog(logmessage)
-
-# -- end clean_table --
-
+# -- end optimize --
 
 #--- obligatoire pour lancement du code --
 if __name__=="__main__": # set executable code
 	setup()
 	get_time()
 	clean_table()
+	optimize()
