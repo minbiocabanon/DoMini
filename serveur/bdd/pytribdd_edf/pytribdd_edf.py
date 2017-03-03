@@ -14,7 +14,7 @@ NB_JOUR = 3
 #--- setup ---
 def setup():
 	print ('Setup')
-	syslog.openlog("pydel_old_data")
+	syslog.openlog("pytribdd_edf")
 	syslog.syslog("Demarrage")
 	logmessage = " Demarrage pytribdd_edf.py, Programme qui allege la table teleingo en supprimant les donnees anciennes."
 	print logmessage
