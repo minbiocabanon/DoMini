@@ -7,14 +7,13 @@ import MySQLdb as mdb
 from time import sleep
 
 date_arg = dt.datetime(2017, 01, 01, 00, 00)
-#table = ["analog1", "analog2", "analog3", "analog4", "analog5", "analog6", "pyranometre","VMC"]
-table = ["analog1", "analog2", "analog3", "analog4", "analog6", "pyranometre"]
-NB_JOUR = 1
+table = ["analog1", "analog2", "analog3", "analog4", "analog5", "analog6", "pyranometre","VMC"]
+NB_JOUR = 5
 
 #--- setup ---
 def setup():
 	print ('Setup')
-	syslog.openlog("pydel_old_data")
+	syslog.openlog("pytribdd.py")
 	syslog.syslog("Demarrage")
 	logmessage = " Demarrage pytribdd_edf.py, Programme qui allege les tables capteurs en supprimant les donnees anciennes."
 	print logmessage
@@ -51,9 +50,6 @@ def get_time():
 def tag_donnees(table, ordre):
 	global NB_JOUR
 	global date_arg
-	logmessage = "On lance les tags "+ordre+" sur la table"+str(table)
-	print logmessage
-	syslog.syslog(logmessage)
 
 	#convert for bdd syntax purpose
 	if(ordre == "MIN"):
@@ -63,6 +59,8 @@ def tag_donnees(table, ordre):
 
 	# for each table in table
 	for tabname in table :
+		logmessage = "On lance les tags "+ordre+" sur la table"+str(tabname)
+		print logmessage
 		# set variable date_tag with date to start tag operation
 		date_tag = date_arg
 		print ' Table :',tabname
@@ -137,15 +135,13 @@ def tag_donnees(table, ordre):
 def tag_donnees_heure(table):
 	global NB_JOUR
 	global date_arg
-	logmessage = "On lance les tags horaires sur la table"+str(table)
-	print logmessage
-	syslog.syslog(logmessage)
 
 	# for each table in table
 	for tabname in table :
 		# set variable date_tag with date to start tag operation
 		date_tag = date_arg
-		print ' Table :',tabname
+		logmessage = "On lance les tags "+ordre+" sur la table"+str(tabname)
+		print logmessage
 		# while last date is not reached  (max date is now - NB_JOUR , in order to keep all data within NB_JOUR)
 		while ( date_tag.strftime("%Y-%m-%d") <= (dt.datetime.now() - dt.timedelta(days=NB_JOUR)).strftime("%Y-%m-%d")):
 			# for each hour of the day
