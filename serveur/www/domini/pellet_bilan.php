@@ -43,7 +43,7 @@
 				
 				$.each(csv.split('\n'), function(i, line){
 				    if (!comment.test(line)) {
-						alert('line:'+line);
+						//alert('line:'+line);
 				        if (!header) {
 				            header = line;
 				        
