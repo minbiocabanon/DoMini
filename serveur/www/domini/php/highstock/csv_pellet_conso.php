@@ -1,6 +1,6 @@
 <?php // content="text/plain; charset=utf-8"
 	include("../../infos/config.inc.php"); // on inclu le fichier de config
-	$filename = "../../csv/pellet_conso.csv";
+	$filename = "../../csv/pellet_bilan.csv";
 
 	//on prépare l'entete du fichier CSV
 	$fp = fopen($filename, "w");
@@ -27,9 +27,9 @@
 	// requete MySQL pour obtenir les données de pellets pour les 12 derniers mois
 	// pour les 12 derniers mois
 
-	$SQL="SELECT DATE_FORMAT(date_time, '%d-%m-%Y') AS DATE, DATE_FORMAT(date_time, '%H:%i:%s') AS Heure, SUM(`debit`) as Conso 
-			FROM `pellets`
-			GROUP BY YEAR(`date_time`)
+	$SQL="SELECT YEAR(date_time) AS DATE, SUM(`debit`) as Conso 
+			FROM `pellets` 
+			GROUP BY YEAR(`date_time`) 
 			ORDER BY YEAR(`date_time`)"; 
 
 	$RESULT = @mysqli_query($link, $SQL);

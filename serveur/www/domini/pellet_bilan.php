@@ -31,7 +31,7 @@
 		<script type="text/javascript">		
 		
 		$(function() {
-			$.get('./csv/pellet_conso.csv', function(csv, state, xhr) {
+			$.get('./csv/pellet_bilan.csv', function(csv, state, xhr) {
 				
 				// inconsistency
 				if (typeof csv != 'string') {
@@ -43,17 +43,16 @@
 				
 				$.each(csv.split('\n'), function(i, line){
 				    if (!comment.test(line)) {
+						alert('line:'+line);
 				        if (!header) {
 				            header = line;
 				        
 				        } else if (line.length) {
-				            var point = line.split(';'), 
-				            	date = point[0].split('-'),
-				            	time = point[1].split(':');
+				            var point = line.split(';');
 				            
-				            x = Date.UTC(date[2], date[1] - 1, date[0], time[0], time[1]);
+				            x = Date.UTC(point[0], 1, 1, 0, 0);
 				            
-				            conso.push([x, parseInt(point[2])]); 
+				            conso.push([x, parseInt(point[1])]); 
 				        }
 				    }
 				});
