@@ -62,8 +62,8 @@
 			}
 		
 		// requete MySQL pour stocker les nouvelles valeurs
-		$SQL="INSERT INTO pellets VALUES('','$date', $quantite_in, $quantite_out, ($data_nbpellets+$quantite_in-$quantite_out))"; 
-
+		$SQL="INSERT INTO pellets VALUES(NULL,'$date', $quantite_in, $quantite_out, ($data_nbpellets+$quantite_in-$quantite_out))"; 
+		//echo "query SQL: $SQL <br>";
 		//Execution de la requete
 		mysqli_query($link,$SQL);
 		mysqli_close($link);
@@ -83,7 +83,7 @@
 		
 		// on lance le soft qui regénère le fichier CSV
 		exec("cd /var/www/domini/php/highstock/");
-		exec("wget 192.168.0.102:80/php/highstock/csv_pellet.php",$result);
+		exec("wget http://localhost:80/php/highstock/csv_pellet.php",$result);
 		exec("rm /var/www/domini/php/highstock/csv_pellet.php.*");
 		exec("rm /var/www/domini/csv_pellet.php.*");
 	}
