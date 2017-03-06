@@ -292,17 +292,17 @@
 						</thead>
 						<tbody>
 							<tr>
-								<th width=20%>
+								<th>
 									<div  id="btn_chauffage_automan" class="switch switch-small" data-on="success" data-off="danger" data-on-label="Auto" data-off-label="Manuel">
 										<input type="checkbox" id="etat_chauffage_automan" name="chk" <?PHP echo $etat_chauffage_status; ?>/>
 									</div>
 								</th>
-								<th width=20%>
+								<th>
 									<div  id="btn_chauffage_onoff"class="switch switch-small" data-on="success" data-off="danger" data-on-label="Marche" data-off-label="Arrêt">
 										<input type="checkbox" id="etat_chauffage_onoff" name="chk" <?PHP echo $mode_chauffage_status; ?>/>
 									</div>
 								</th>
-								<th width=40%>
+								<th>
 									<div class="input-append input-prepend">
 										<span class="add-on">puissance :</span>
 										<input class="span2" id="appendedPrependedInput" type="text" placeholder="00">
@@ -310,16 +310,14 @@
 										<!--<button id="formulaire_chauffe" class="btn" type="button">Appliquer</button> -->
 									</div>
 								</th>
-								<th colspan="2" width=20%>
+								<th>
 									<input class="btn btn-primary btn-small" id="formulaire_chauffe" type="button" value="Appliquer"/>
 								</th>
 							</tr>	
 						  <tr>
 							<td class="tdhead">Poele</td>
 							<td class="tdhead">Consigne</td>
-							<td class="tdhead">Granulés</td>
-							<td class="tdhead">démarrage</td>
-							<td class="tdhead">fin</td>
+							<td colspan="2" class="tdhead">Granulés</td>
 						  </tr>
 						  <tr>
 							<td>
@@ -328,14 +326,8 @@
 							<td>
 								<?PHP echo $temp_consigne;	?>									
 							</td>
-							<td>
+							<td colspan="2">
 								<?PHP echo $pellets_nvg.' %' ; ?>
-							</td>
-							<td>
-								<?PHP //echo $h_demarr;	?>
-							</td>
-							<td>
-								<?PHP //echo $h_fin;	?>
 							</td>
 						  </tr>
 						</tbody>
