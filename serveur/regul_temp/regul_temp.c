@@ -423,7 +423,6 @@ int get_mode(void){
 		
 	// pour forcer l'affichage du debug
 	fflush(stdout);
-
 }
 
 //----------------------------------------------------------------------
@@ -437,7 +436,7 @@ int get_h_dem(void){
 		syslog(LOG_DEBUG, " ---recup de l'heure de démarrage");
 		// Preparation de la requete MySQL
 		// on ne récupère que les infos du jour en cours
-		sprintf(query, "SELECT UNIX_TIMESTAMP( `heure_demarrage` ) FROM `chauffage_log` ORDER BY `date_time` DESC Limit 1,1");
+		sprintf(query, "SELECT UNIX_TIMESTAMP( `heure_demarrage` ) FROM `chauffage_log` ORDER BY `date_time` DESC Limit 0,1");
 
 		// envoi de la requete
 		// printf("\nEnvoi de la requete : %s", query);
@@ -1287,6 +1286,7 @@ int log_donnees(void){
 	// Preparation de la requete MySQL
 	// on ne stocke que les données de la structure
 	sprintf(query, "INSERT INTO `domotique`.`chauffage_log` (`id` ,`date_time` ,`etat` ,`etat_prec` ,`mode` ,`mode_prec` ,`consigne_utilisateur`, `heure_debut_consigne`, `heure_fin_consigne`,`heure_demarrage`, `temp_int`, `temp_consigne`, `delta_time` ,`puissance` )VALUES (NULL , FROM_UNIXTIME(%d) ,'%d' ,'%d', '%d', '%d', '%d', FROM_UNIXTIME(%d), FROM_UNIXTIME(%d), FROM_UNIXTIME(%d), '%.2f', '%.2f', '%d', '%d');", stDonnees.seconds, stDonnees.etat, stDonnees.etat_prec, stDonnees.mode, stDonnees.mode_prec, stDonnees.consigne_utilisateur, stDonnees.heure_debut_consigne, stDonnees.heure_fin_consigne, stDonnees.heure_demarrage,stDonnees.temperature_int, stDonnees.temperature_consigne, stDonnees.delta_time, stDonnees.puissance_chauffe);	// envoi de la requete
+	//sprintf(query, "INSERT INTO `domotique`.`chauffage_log` (`id` ,`date_time` ,`etat` ,`etat_prec` ,`mode` ,`mode_prec` ,`consigne_utilisateur`, `heure_debut_consigne`, `heure_fin_consigne`,`heure_demarrage`, `temp_int`, `temp_consigne`, `delta_time` ,`puissance` )VALUES (NULL , FROM_UNIXTIME(%d) ,'%d' ,'%d', '%d', '%d', '%d', NULL, NULL, NULL, '%.2f', '%.2f', '%d', '%d');", stDonnees.seconds, stDonnees.etat, stDonnees.etat_prec, stDonnees.mode, stDonnees.mode_prec, stDonnees.consigne_utilisateur, stDonnees.temperature_int, stDonnees.temperature_consigne, stDonnees.delta_time, stDonnees.puissance_chauffe);	// envoi de la requete
 	//printf("\nEnvoi de la requete : %s", query);
 	if (mysql_query(conn, query)) {
 		// si la requete echoue on retourne 1
@@ -1386,6 +1386,7 @@ int main() {
 		trt_ETAT_AUTO();
 		break;
 	}	
+	
 				      
 	//avant de sortir, on log les données de la structure stDonnees pour la mise au pointeur
 	if(log_donnees() == 1) {
