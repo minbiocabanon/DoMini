@@ -26,9 +26,11 @@
 	$comma = "";
 	$fp = fopen($filename, "w");
 
-	foreach($row as $name => $value) {
-		$line .= $comma .  str_replace('"', '""', $name) ;
-		$comma = ";";
+	if (is_array($row)){
+		foreach($row as $name => $value) {
+			$line .= $comma .  str_replace('"', '""', $name) ;
+			$comma = ";";
+		}
 	}
 	$line .= "\n";
 	fputs($fp, $line);
