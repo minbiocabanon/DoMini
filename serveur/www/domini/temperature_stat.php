@@ -37,16 +37,16 @@
 						},
 						title: { text: null }
 						,
-						colors: [
-						   '#2f7ed8', // 2011
-						   '#c42525', // 2012 
-						   '#8bbc21', // 2013 
-						   '#9FF000', // 2014
-						   '#2f7ed8', // 2011 moyenne 
-						   '#c42525', // 2012 moyenne 
-						   '#8bbc21', // 2013 moyenne 
-						   '#9FF000'  // 2014 moyenne
-						],
+						// colors: [
+						   // '#2f7ed8', // 2011
+						   // '#c42525', // 2012 
+						   // '#8bbc21', // 2013 
+						   // '#9FF000', // 2014
+						   // '#2f7ed8', // 2011 moyenne 
+						   // '#c42525', // 2012 moyenne 
+						   // '#8bbc21', // 2013 moyenne 
+						   // '#9FF000'  // 2014 moyenne
+						// ],
 						legend:
 						{
 							verticalAlign: 'top',
