@@ -322,7 +322,7 @@ def manage_vr():
 			# si on est en ETE
 			else :
 				#on regarde si le flux actuel est < au maxi demande en ete
-				if flux_solaire < flux_solaire_trig :
+				if fPyraMoy < flux_solaire_trig :
 					flag_flux = 1
 				else :
 					flag_flux = 0
@@ -344,6 +344,10 @@ def manage_vr():
 			# run MySQL Query
 			cur.execute(query)
 			vr_states = cur.fetchone()
+			#debug
+			logmessage = " Query = " + query
+			print logmessage
+			syslog.syslog(logmessage)
 			# Close all cursors
 			cur.close()
 			# Close MySQL session
