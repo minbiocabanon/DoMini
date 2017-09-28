@@ -5,7 +5,8 @@
 	
 	
 	$form_envoi = isset($_POST['envoi']) ? $_POST['envoi'] : 'NOK';
-	$form_etat_alarme = $_POST['form_etat_alarme'] ;
+	//$form_etat_alarme = $_POST['form_etat_alarme'] ;
+	$form_etat_alarme = isset($_POST['form_etat_alarme']) ? $_POST['form_etat_alarme'] : '';
 	$form_alarm_mode = isset($_POST['alarm_mode']) ? $_POST['alarm_mode'] : '';
 
 	// echo "form_envoi = $form_envoi<br>";
