@@ -1,7 +1,7 @@
 #!/bin/sh
 
-echo "pinging 192.168.0.2 ..."
-ping -c4 192.168.0.2 > /dev/null
+echo "pinging 192.168.0.1 ..."
+ping -c4 192.168.0.1 > /dev/null
 
 if [ $? != 0 ] 
 then
