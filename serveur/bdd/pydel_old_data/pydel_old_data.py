@@ -75,7 +75,7 @@ def clean_table():
 # -- end clean_table --
 
 # -- optimize --
-def optimize()
+def optimize():
 	logmessage = 'Optimisation de la table {0} en cours ...'.format(table)
 	print logmessage
 	syslog.syslog(logmessage)
