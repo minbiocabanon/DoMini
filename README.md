@@ -85,6 +85,14 @@ Pour le développement, mise au point ou confort, j'utilise également :
 
 #Notes pour l'installation ou la migration vers un nouveau PC
 
+## pb de boot sur ub1610 (perte de config?)
+	si au reboot : Reboot and select proper boot device or Insert Boot Media in selected boot device and press any key
+	vérifier la config dans le bios ,
+	n'autoriser le boot que sur le disque SSD interne (pas sur le samsung de 256Go)
+	désactiver les boot2, boot3 etc... ne conserver que le boot0 sur le disque flash interne
+
+
+
 ## screen
 commande pour relancer un screen existant
 	screen -r -d -h 10000
@@ -213,6 +221,20 @@ Pour cela, il faut modifier le fichier rc.local en ajoutant ces quelques lignes 
 	echo "running go.sh"
 	/home/julien/src/domini/serveur/go.sh
 
+
+Ubuntu utilise maintenant systemd et rc.local est maintenant considéré comme un service, qui est arrêté par défaut.
+
+Il est possible de l’activer avec la commande 
+	sudo systemctl enable rc-local.service
+Il est nécessaire ensuite de redémarrer.
+
+Pour le désactiver : 
+	sudo systemctl disable rc-local.service
+
+Pour voir si il est activé :
+	systemctl list-unit-files | grep rc
+	
+	
 ### Accès au portCOM/USB
 Le port ttyUSBx doit être utilisable par l'utilisateur www-data pour l'envoi de message directement depuis l'interface web.
 
@@ -372,9 +394,11 @@ dans le répertoire , lancer :
 
 ## Gestion onduleur USB (brouillon)
 
+Voir dans le repertoire domini/serveur/ups pour plus d'info (readme.md)
+
 liens utiles
 
-http://ovanhoof.developpez.com/upsusb/
+https://doc.ubuntu-fr.org/nut
 
 	$dmesg
 	[ 4877.404023] usb 2-2: new low-speed USB device number 2 using uhci_hcd
@@ -384,3 +408,54 @@ http://ovanhoof.developpez.com/upsusb/
 	[ 4879.510667] usb 2-2: Manufacturer: EATON
 	[ 4879.510670] usb 2-2: SerialNumber: AN2E49008
 	[ 4881.710163] generic-usb 0003:0463:FFFF.0004: hiddev0,hidraw2: USB HID v10.10 Device [EATON Protection Station] on usb-0000:00:1d.0-2/input0
+
+##ddns
+pour faire un ddns avec no-ip
+	sudo curl -O https://www.noip.com/client/linux/noip-duc-linux.tar.gz
+	sudo tar xzf noip-duc-linux.tar.gz
+	cd noip-2.1.9-1/
+	sudo make
+	sudo make install
+	#lancer le processus en fond de tâche
+	sudo /usr/local/bin/noip2  #fonctionne pour le premier lancement
+	sudo /usr/local/bin/noip2  -C #pour configurer un autre compte , il faudra arrêter le noip2
+	
+	
+	# pour avoir le status du noip2 en cours :
+	$sudo /usr/local/bin/noip2 -S
+	1 noip2 process active.
+
+	Process 26079, started as noip2, (version 2.1.9)
+	Using configuration from /usr/local/etc/no-ip2.conf
+	Last IP Address set 46.22.90.241
+	Account ridezebigone@gmail.com
+	configured for:
+			host  kitemeteo.ddns.net
+	Updating every 30 minutes via /dev/wlan0 with NAT enabled.
+	
+	# configuration pour 2 comptes
+	$sudo /usr/local/bin/noip2 -C
+
+	Auto configuration for Linux client of no-ip.com.
+
+	Please enter the login/email string for no-ip.com  ridezebigone@gmail.com
+	Please enter the password for user 'ridezebigone@gmail.com'  ************
+
+	2 hosts are registered to this account.
+	Do you wish to have them all updated?[N] (y/N)  y
+	Please enter an update interval:[30]  30
+	Do you wish to run something at successful update?[N] (y/N)  N
+
+	New configuration file '/usr/local/etc/no-ip2.conf' created.
+
+	# verification de l'activation des deux comptes no-ip
+	$sudo /usr/local/bin/noip2 -S
+	No noip2 processes active.
+
+	Configuration data from /usr/local/etc/no-ip2.conf.
+	Account ridezebigone@gmail.com
+	configured for:
+			host  kitemeteo.ddns.net
+			host  mydomini.ddns.net
+	Updating every 30 minutes via /dev/wlan0 with NAT enabled.
+
