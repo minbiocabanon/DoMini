@@ -303,7 +303,7 @@ fichier de configuration /etc/vsftpd.conf :
 	chown_username=ftp
 	ftpd_banner=Welcome to blah FTP service.
 	secure_chroot_dir=/var/run/vsftpd
-	pam_service_name=vsftpd
+	pam_service_name=ftp			# BIEN VERIFIER CETTE LIGNE, sinon pb de login avec www-data pour les webcams
 	rsa_cert_file=/etc/ssl/certs/vsftpd.pem
 	anon_root=/var/www/	
 
