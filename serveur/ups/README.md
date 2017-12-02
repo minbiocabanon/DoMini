@@ -1,5 +1,8 @@
 Ubuntu : gere un onduleur :
 	https://doc.ubuntu-fr.org/nut
+	
+# (§4.3 du site ubuntu )pour lancer les pilotes des onduleurs manuellement
+	upsdrvctl start	
 
 # gestion de l'onduleur par python
 le logiciel ups_daemonized.py se lance en fond de tâche. 
@@ -25,7 +28,7 @@ Pour connaitre la liste des onduleurs déclarés sur la machine :
 
 ## Connaître l'état d'un onduleur
 
-	upsc myups
+	upsc eaton800
 	
 ou si l'onduleur est sur une machine distante :
 
