@@ -10,10 +10,7 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <stdio.h>
-//#define WITHMYSQL
-#ifdef WITHMYSQL
-  #include <mysql/mysql.h>
-#endif
+#include <mysql/mysql.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <dirent.h> //gestion des repertoire
@@ -254,11 +251,11 @@ int planning_vierge(unsigned int annee){
 	unsigned int crenau_30min = 1;
 	//Pour chaque jour de l'année
 	// on fait nNbJour * 48 , car il y 48 créneaux de 30 minutes par jour.
-	printf("\nCreation de la table planning vierge... patientez");
+	printf("\nCreation de la table planning vierge... patientez\n");
 	fflush(stdout);
 	for(crenau_30min = 1; crenau_30min < (nNbJour * 48); crenau_30min++){
 		// Preparation de la requete MySQL
-		sprintf(query, "INSERT INTO `domotique`.`calendrier_30min` (`id`, `date`, `heure_debut`, `heure_fin`, `temperature`, `priorite`) VALUES (NULL , FROM_UNIXTIME(%d,'%%Y-%%m-%%d'), FROM_UNIXTIME(%d,'%%H:%%i:%%s'), FROM_UNIXTIME(%d ,'%%H:%%i:%%s'), '', '');", nIndexTemps, nIndexTemps, nIndexTemps_fin);
+		sprintf(query, "INSERT INTO `domotique`.`calendrier_30min` (`id`, `date`, `heure_debut`, `heure_fin`, `temperature`, `priorite`) VALUES (NULL , FROM_UNIXTIME(%d,'%%Y-%%m-%%d'), FROM_UNIXTIME(%d,'%%H:%%i:%%s'), FROM_UNIXTIME(%d ,'%%H:%%i:%%s'), 0.0, 0);", nIndexTemps, nIndexTemps, nIndexTemps_fin);
 		
 		// envoi de la requete
 		//printf("\nEnvoi de la requete : %s", query);

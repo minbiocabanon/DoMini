@@ -100,7 +100,7 @@
 							{type: 'month',count: 1,text: '1m'},
 							{type: 'year',count: 1,text: '1a'},
 							{type: 'all',text: 'Tout'}],
-							selected: 4
+							selected: 5
 						},
 				    
 					//title: { text: 'Temperature' },

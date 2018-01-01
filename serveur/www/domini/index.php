@@ -138,10 +138,10 @@
 							<tbody>
 							  <tr>
 								<td>
-								<a href="camera.php"><img src="webcam/ext_tn.jpg" alt="ext"  width="110"></a>
-								<a href="camera.php"><img src="webcam/porche_tn.jpg" alt="porche" width="110"></a>
-								<a href="camera.php"><img src="webcam/sejour_tn.jpg" alt="sejour" width="110"></a>
-								<a href="camera.php"><img src="webcam/garage_tn.jpg" alt="garage" width="110"></a>
+								<a href="camera.php"><img src="webcam/ext_tn.jpg?<?PHP echo time()?>" alt="ext"  width="110"></a> 
+								<a href="camera.php"><img src="webcam/porche_tn.jpg?<?PHP echo time()?>" alt="porche" width="110"></a>
+								<a href="camera.php"><img src="webcam/sejour_tn.jpg?<?PHP echo time()?>" alt="sejour" width="110"></a>
+								<a href="camera.php"><img src="webcam/garage_tn.jpg?<?PHP echo time()?>" alt="garage" width="110"></a>
 								</td>
 							  </tr>
 							  </tbody>

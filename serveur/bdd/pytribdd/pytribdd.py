@@ -15,7 +15,7 @@ def setup():
 	print ('Setup')
 	syslog.openlog("pytribdd.py")
 	syslog.syslog("Demarrage")
-	logmessage = " Demarrage pytribdd_edf.py, Programme qui allege les tables capteurs en supprimant les donnees anciennes."
+	logmessage = " Demarrage pytribdd.py, Programme qui allege les tables capteurs en supprimant les donnees anciennes."
 	print logmessage
 	syslog.syslog(logmessage)
 	
@@ -26,10 +26,14 @@ def setup():
 		date_arg = dt.datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
 	else:
 		# no args , so set default date to Day-NB_JOUR
-		print " Pas de date en argument"
+		logmessage =  " Pas de date en argument"
+		print logmessage
+		syslog.syslog(logmessage)
 		date_arg = dt.datetime.now() - dt.timedelta(days=NB_JOUR)
 
-	print " datetime date_arg:",date_arg	
+	logmessage =  " datetime date_arg:" + str(date_arg)
+	print logmessage
+	syslog.syslog(logmessage)	
 	print ('End Setup')
 # -- fin setup --
 
@@ -140,7 +144,7 @@ def tag_donnees_heure(table):
 	for tabname in table :
 		# set variable date_tag with date to start tag operation
 		date_tag = date_arg
-		logmessage = "On lance les tags "+ordre+" sur la table"+str(tabname)
+		logmessage = "On lance les tags sur la table "+str(tabname)
 		print logmessage
 		# while last date is not reached  (max date is now - NB_JOUR , in order to keep all data within NB_JOUR)
 		while ( date_tag.strftime("%Y-%m-%d") <= (dt.datetime.now() - dt.timedelta(days=NB_JOUR)).strftime("%Y-%m-%d")):

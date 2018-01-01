@@ -1077,17 +1077,18 @@ int get_heure_consigne(void){
 	if (row = mysql_fetch_row(result)){
 		//on converti la chaine en float
 		heure_consigne = atoi(row[0]);
+		// on ligère la mémoire , à faire absolument ici pour pouvoir faire des requete mysql dans unixtime_to_date
+		mysql_free_result(result);
+		// on converti l'unixtime en date 
 		unixtime_to_date(heure_consigne);
 		syslog(LOG_DEBUG, "heure de consigne recuperee (UNIX time):%d - %s", heure_consigne, datestring);
 	}else{
+		// on ligère la mémoire
+		mysql_free_result(result);
 		// euh... je réfléchis
 		syslog(LOG_DEBUG, "ERREUR : PAS D'HEURE DE CONSIGNE TROUVEE");
 		heure_consigne = 0; 
 	}
-
-	// on ligère la mémoire
-	mysql_free_result(result);
-	
 	return(heure_consigne);
 }
 

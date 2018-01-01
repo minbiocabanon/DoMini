@@ -1,4 +1,3 @@
 PROG=planning
 $(PROG):$(PROG).c
-	gcc -I"../include" -lmysqlclient -lz -DWITHMYSQL -D_DEBUG_ -o $(PROG) $(PROG).c
-	cp $(PROG) ~/bin
+	gcc -o $(PROG) $(PROG).c  `mysql_config --cflags --libs` -I"../include"
