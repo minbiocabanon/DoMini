@@ -1,9 +1,9 @@
 <?php
 $redimOK = fctredimimage(640,480,'','sejour.jpg','','sejour_full.jpg');
-if ($redimOK == 1) { echo 'Redimensionnement sejour OK !<br>'; } else { echo 'Redimensionnement sejour NNNNNNOK !<br>'; }
+if ($redimOK == 1) { echo 'Redimensionnement sejour_full OK !<br>'; } else { echo 'Redimensionnement sejour_full NNNNNNOK !<br>'; }
 
 $redimOK = fctredimimage(640,480,'','garage.jpg','','garage_full.jpg');
-if ($redimOK == 1) { echo 'Redimensionnement garage OK !<br>'; } else { echo 'Redimensionnement sejour NNNNNNOK !<br>'; }
+if ($redimOK == 1) { echo 'Redimensionnement garage_full OK !<br>'; } else { echo 'Redimensionnement garage_full NNNNNNOK !<br>'; }
 
 
 $redimOK = fctredimimage(150,110,'','garage_tn.jpg','','garage.jpg');
@@ -15,6 +15,8 @@ if ($redimOK == 1) { echo 'Redimensionnement ext OK !<br>'; } else { echo 'Redim
 $redimOK = fctredimimage(150,110,'','porche_tn.jpg','','porche.jpg');
 if ($redimOK == 1) { echo 'Redimensionnement porche OK !<br>'; } else { echo 'Redimensionnement porche NNNNNNOK !<br>'; }
 
+$redimOK = fctredimimage(150,110,'','porche2_tn.jpg','','porche2.jpg');
+if ($redimOK == 1) { echo 'Redimensionnement porche2 OK !<br>'; } else { echo 'Redimensionnement porche NNNNNNOK !<br>'; }
 
 
 // © Jérome Réaux : http://j-reaux.developpez.com - http://www.jerome-reaux-creations.fr
