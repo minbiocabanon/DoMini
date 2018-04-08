@@ -49,7 +49,7 @@
 							  <!-- Carousel items -->
 							  <div class="carousel-inner">
 								<div class="item active">
-									<img src="./webcam/ext.jpg" alt="" >
+									<img src="./webcam/ext.jpg?<?PHP echo time()?>" alt="" >
 									<div class="carousel-caption">
 									  <h4>Jardin</h4>
 									 <p><?PHP
@@ -62,7 +62,7 @@
 									</div>
 								</div>
 								<div class="item">
-									<img src="./webcam/porche.jpg" alt="">
+									<img src="./webcam/porche.jpg?<?PHP echo time()?>" alt="">
 									<div class="carousel-caption">
 									  <h4>Allee</h4>
 									 <p><?PHP
@@ -75,7 +75,7 @@
 									</div>								
 								</div>
 								<div class="item">
-									<img src="./webcam/sejour.jpg" alt="">
+									<img src="./webcam/sejour.jpg?<?PHP echo time()?>" alt="">
 									<div class="carousel-caption">
 									  <h4>Salon</h4>
 									  <p>
@@ -89,7 +89,7 @@
 									</div>								
 								</div>
 								<div class="item">
-									<img src="./webcam/garage.jpg" alt="">
+									<img src="./webcam/garage.jpg?<?PHP echo time()?>" alt="">
 									<div class="carousel-caption">
 									  <h4>Garage</h4>
 									  <p>
