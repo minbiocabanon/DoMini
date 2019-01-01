@@ -68,10 +68,11 @@ def tag_donnees(table, ordre):
 			con = mdb.connect('localhost','root','mysql','domotique')
 			cur = con.cursor()
 			# prepare query
-			query = 'SELECT id FROM {0} WHERE date_format( date_time, \'%Y-%d-%m\' ) = date_format( \'{1}\', \'%Y-%d-%m\' ) ORDER BY `date_time` {2} LIMIT 0 , 1'.format(table, date_tag.strftime("%Y-%m-%d"),ordre)
+			query = 'SELECT id FROM {0} WHERE (date_format( date_time, \'%Y-%d-%m\' ) = date_format( \'{1}\', \'%Y-%d-%m\' )) AND (`tag` = 0) ORDER BY `date_time` {2} LIMIT 0 , 1'.format(table, date_tag.strftime("%Y-%m-%d"),ordre)
 			# run MySQL Query
 			cur.execute(query)
 			result = cur.fetchone()
+			nbrow = cur.rowcount
 			# Close all cursors
 			cur.close()
 			# Close MySQL session
@@ -88,25 +89,29 @@ def tag_donnees(table, ordre):
 				print " MySQL Error: %s" % str(e)	
 		
 		try:
+			# test if query has return something, if = 0 there is no line to tag so do nothing
+			if(nbrow != 0):
 			#for the line return, get ID of the table
-			ID = int(result[0])
-			logmessage = "  ID obtenu : " + str(ID)
-			print logmessage
-			syslog.syslog(logmessage)
-			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
-			cur = con.cursor()
-			# prepare query
-			query = 'UPDATE `domotique`.`{0}` SET `tag` = \'1\' WHERE `{1}`.`id` ={2};'.format(table, table,ID)
-			# run MySQL Query
-			cur.execute(query)
-			result = cur.fetchone()
-			# Close all cursors
-			cur.close()
-			# Close MySQL session
-			con.close()
-			
-			logmessage = "  Ligne "+ str(ID) +" taggee"
+				ID = int(result[0])
+				logmessage = "  ID obtenu : " + str(ID)
+				print logmessage
+				syslog.syslog(logmessage)
+				# Open MySQL session
+				con = mdb.connect('localhost','root','mysql','domotique')
+				cur = con.cursor()
+				# prepare query
+				query = 'UPDATE `domotique`.`{0}` SET `tag` = \'1\' WHERE `{1}`.`id` ={2};'.format(table, table,ID)
+				# run MySQL Query
+				cur.execute(query)
+				result = cur.fetchone()
+				# Close all cursors
+				cur.close()
+				# Close MySQL session
+				con.close()
+				logmessage = "  Ligne "+ str(ID) +" taggee"
+			else:
+				logmessage = "  Pas de donnees a tagger"
+
 			print logmessage
 			syslog.syslog(logmessage)
 			
