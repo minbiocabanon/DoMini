@@ -64,7 +64,7 @@ def clean_table():
 			except IndexError:
 				print "MySQL Error: %s" % str(e)	
 
-		logmessage = 'Optimisation de la table {0} en cours ...'.format(table)
+		logmessage = "Donnees de la table "+str(table)+" < "+str(NB_JOUR)+" jours supprimes ..."
 		print logmessage
 		syslog.syslog(logmessage)
 				
@@ -76,12 +76,11 @@ def clean_table():
 
 # -- optimize --
 def optimize():
-	logmessage = 'Optimisation de la table {0} en cours ...'.format(table)
-	print logmessage
-	syslog.syslog(logmessage)
 	for tabname in tables :
-		print ' Table :',tabname
 		try:
+			logmessage = "Optimisation de la table "+str(tabname)+" en cours ..."
+			print logmessage
+			syslog.syslog(logmessage)
 			# Open MySQL session
 			con = mdb.connect('localhost','root','mysql','domotique')
 			cur = con.cursor()
