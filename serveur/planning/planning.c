@@ -156,6 +156,31 @@ int vider_table_jour(void){
 }
 
 //----------------------------------------------------------------------
+//!\brief         On supprime de la table 'calendrier' les infos de l'annee precedente
+//!\return        1 si erreur, 0 sinon
+//----------------------------------------------------------------------
+int supprimer_calendrier_prec(void){
+
+	// Preparation de la requete MySQL
+	// on supprimer de la table 'calendrier' toutes les infos de l'annee precedente, sinon les id ne vont pas être alignés (id = 1 -> debut de l'annee)
+	sprintf(query, "DELETE FROM `calendrier` where YEAR(`date`) = %d", (stJourTraite.annee_planning - 1));
+
+	// envoi de la requete
+	printf("\nEnvoi de la requete : %s", query);
+	if (mysql_query(conn, query)) {
+	// si la requete echoue on retourne 1
+	fprintf(stderr, "%s\n", mysql_error(conn));
+	return(1);
+	}
+
+	// on libère la requête
+	mysql_free_result(result);
+
+	fflush(stdout);
+	return(0);
+}
+
+//----------------------------------------------------------------------
 //!\brief          On calcul avec une requete MySQL le nombre de jour qui compose l'année à venir
 //!\param[in]  		Anne pour laquelle effectuer la requete
 //!\return        retour dans variable globale nNbJour
@@ -287,6 +312,7 @@ int affectation_jour_planning(void){
 	
 		//récupérer le type de jour et saison
 		recup_info_jour(stJourTraite.nIdJour);	
+		
 		//A partir de la saison , on récupére la température de chauffe
 		read_consigne_chauffe(stJourTraite.inf_saison);
 		
@@ -306,7 +332,7 @@ int affectation_jour_planning(void){
 		}
 
 		// la requête s'est bien passée, on rend le jeu de résultats disponible via le pointeur result
-		printf("\nRecuperation des donnees");
+		printf("\nRecuperation des donnees pour le type de jour");
 		result = mysql_store_result(conn);
 		
 		while ((row = mysql_fetch_row(result))) {
@@ -329,7 +355,7 @@ int affectation_jour_planning(void){
 			sprintf(query, "SELECT `id` FROM `calendrier_30min` WHERE `date` = FROM_UNIXTIME( %d, '%%Y-%%m-%%d' ) AND `heure_debut` >= '%s' AND `heure_fin` <= '%s' AND addtime( `date` , `heure_fin` ) > addtime( `date` , `heure_debut` );", stJourTraite.nUnixTime, stJourTraite.stheure_debut, stJourTraite.stheure_fin);
 			
 			// envoi de la requete
-			//printf("\nEnvoi de la requete : %s", query);
+			printf("\nEnvoi de la requete : %s", query);
 			if (mysql_query(conn, query)) {
 				// si la requete echoue on retourne 1
 				fprintf(stderr, "%s\n", mysql_error(conn));
@@ -337,7 +363,7 @@ int affectation_jour_planning(void){
 			}
 			
 			// la requête s'est bien passée, on rend le jeu de résultats disponible via le pointeur result2
-			//printf("\nRecuperation des donnees");
+			printf("\nRecuperation de l'id pour le creneau");
 			result2 = mysql_store_result(conn);
 			
 			unsigned int nIdCreneau = 0;
@@ -347,7 +373,7 @@ int affectation_jour_planning(void){
 				nIdCreneau = atoi(row2[0]);				
 				// send SQL query 
 				sprintf(query, "UPDATE `domotique`.`calendrier_30min` SET `temperature` = '%.1f', `priorite` = '%d' WHERE `calendrier_30min`.`id` = %d;", stJourTraite.fconsigne_temperature, nPrio, nIdCreneau);
-
+				printf("\n\nMise à jour de la temperature pour l'id : %s", query);
 				if (mysql_query(conn, query)) {
 					fprintf(stderr, "%s\n", mysql_error(conn));
 					return(1);
@@ -518,10 +544,20 @@ int main(int argc, char *argv[]) {
 	//on commence par vider la table , l'année précédent étant passé, place à l'aveniiiiiiiiiiir
 	// requete de la mort qui vide la une table : TRUNCATE TABLE `calendrier_30min`
 	if(vider_table_jour() == 1) {
-	// erreur sur la recuperation des messages
-	// prévoir un msg de log vers un fichier de log
+		// erreur sur la recuperation des messages
+		printf("\nERREUR dans la fonction qui vide la table du jour \n\n");
+		// prévoir un msg de log vers un fichier de log
 	exit(1);
 	}
+
+	// requete qui supprime de la table 'calendrier' les infos de l'annee precedente
+	if(supprimer_calendrier_prec() == 1) {
+		// erreur sur la recuperation des messages
+		printf("\nERREUR dans la fonction qui supprime les infos de l'année %d \n\n", (stJourTraite.annee_planning - 1));
+		// prévoir un msg de log vers un fichier de log
+	exit(1);
+	}	
+	
 
 	//on calcule le nombre de jour pour l'année à venir
 	if(calcul_nb_jour(stJourTraite.annee_planning) == 1) {
