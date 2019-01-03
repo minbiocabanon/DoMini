@@ -238,13 +238,16 @@ def supp_donnees_tag(table):
 			# run MySQL Query
 			cur.execute(query)
 			result = cur.fetchone()
+			nbrow = cur.rowcount
 			# Close all cursors
 			cur.close()
 			# Close MySQL session
 			con.close()
-			print '   suppression ligne non taggee ok.'
-			# increment date_tag + 1 day
-			date_tag = date_tag + dt.timedelta(days=1)
+			logmessage = "   suppression de "+str(nbrow)+" ligne(s) non taggee(s) ok."
+			print logmessage
+			syslog.syslog(logmessage)
+			# # increment date_tag + 1 day
+			# date_tag = date_tag + dt.timedelta(days=1)
 			sys.stdout.flush()
 		except mdb.Error, e:
 			# create variable
