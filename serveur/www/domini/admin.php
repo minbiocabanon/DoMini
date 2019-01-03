@@ -32,11 +32,11 @@
 					<div class="span6">
 						<?php
 						$search = array(
-							'receiver:',
+							'pyReceiver:',
 							'[INFO]',
 						);
 						$replace = array(
-							'<span class="log-warning">receiver:</span>',
+							'<span class="log-warning">pyReceiver:</span>',
 							'<span class="log-info">[INFO]</span>',
 						);
 						 
