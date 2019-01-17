@@ -13,6 +13,7 @@ import daemon
 PERIOD_MSG = 10		# in minutes, delay two messages with status info while power outtage
 PERIOD_LOG = 10		# in minutes, delay two messages in syslog (debug only)
 # -- Global variables
+ACCESS_TOKEN = 'o.lMLyP43FEWjOhJqVDN5NimjD0TyjC0UH'
 ups_status = "OL CHG"
 battery_charge = 100 
 battery_runtime = 1024
@@ -58,7 +59,8 @@ def check_db():
 		try:
 			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + " DoMini - Error : Database is NOT running"
-			pb = Pushbullet('o.OVDjj6Pg0u8OZMKjBVH6QBqToFbhy1ug') 
+			global ACCESS_TOKEN
+			pb = Pushbullet(ACCESS_TOKEN)
 			push = pb.push_note("Domini", logmessage)	
 		except IndexError:
 			print "MySQL Error: %s" % str(e)
@@ -114,9 +116,7 @@ def statemachine():
 	global PERIOD_MSG
 	
 	try:
-		#initialize pushbullet 
-		pb = Pushbullet('o.OVDjj6Pg0u8OZMKjBVH6QBqToFbhy1ug') 
-		
+		global ACCESS_TOKEN
 		# Select state of state machine
 		# state POWERON
 		if SM_state == "POWERON" :
@@ -133,6 +133,8 @@ def statemachine():
 				print logmessage
 				syslog.syslog(logmessage)
 				# send message through pushbullet to user
+				#initialize pushbullet 
+				pb = Pushbullet(ACCESS_TOKEN)
 				push = pb.push_note("Domini - onduleur", logmessage)
 				
 		
@@ -149,6 +151,7 @@ def statemachine():
 				print logmessage
 				syslog.syslog(logmessage)
 				# send message through pushbullet to user
+				pb = Pushbullet(ACCESS_TOKEN)
 				push = pb.push_note("Domini - onduleur", logmessage)
 			elif ups_status == "OB DISCHRG":
 				# power outtage is still present ... wait until power recovers and send every xx minutes a status message to user
@@ -158,6 +161,7 @@ def statemachine():
 					# prepare a message to send
 					logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n panne de courant !\n Batterie a "+ str(battery_charge) +"%, "+ str(battery_runtime) +" minutes restantes."
 					# send message through pushbullet to user
+					pb = Pushbullet(ACCESS_TOKEN)
 					push = pb.push_note("Domini - onduleur", logmessage)
 					# print message and log it
 					print logmessage
@@ -166,7 +170,7 @@ def statemachine():
 					timeout = now + PERIOD_MSG * 60
 	
 	except :
-		logmessage = " Error in state machine (probably error with pushbullet while no internet)"
+		logmessage = " Error in state machine (probably error with pushbullet while no internet or more 500 pushes per month)"
 		print logmessage
 		syslog.syslog(logmessage)
 # -- end statemachine() --
@@ -180,7 +184,7 @@ def checkupsstatus():
 	global output_voltage
 	try :
 		#initialize pushbullet 
-		pb = Pushbullet('o.OVDjj6Pg0u8OZMKjBVH6QBqToFbhy1ug') 
+		global ACCESS_TOKEN
 		# if 230V is present
 		if ups_status == "OL CHRG":
 			logmessage = " OK, ups is powered"
@@ -189,11 +193,13 @@ def checkupsstatus():
 		elif ups_status == "OB DISCHRG" :
 			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n panne de courant !\n Batterie a "+ str(battery_charge) +"%, "+ str(battery_runtime) +" minutes restantes."
 			# send message through pushbullet to user
+			pb = Pushbullet(ACCESS_TOKEN)	
 			push = pb.push_note("Domini - onduleur", logmessage)
 		else :
 			# status unknow
 			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n etat inconnu : " + str(ups_status)+ ".\n Batterie a "+ str(battery_charge) +"%, "+ str(battery_runtime) +" minutes restantes."
 			# send message through pushbullet to user
+			pb = Pushbullet(ACCESS_TOKEN)
 			push = pb.push_note("Domini - onduleur", logmessage)
 		# print message and log it
 		print logmessage
