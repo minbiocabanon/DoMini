@@ -7,6 +7,7 @@ from pushbullet import Pushbullet
 import urllib
 import os
 
+ACCESS_TOKEN = 'o.lMLyP43FEWjOhJqVDN5NimjD0TyjC0UH'
 
 #--- setup ---
 def setup():
@@ -44,7 +45,8 @@ def check_db():
 		try:
 			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + " DoMini - Error : Database is NOT running"
-			pb = Pushbullet('o.OVDjj6Pg0u8OZMKjBVH6QBqToFbhy1ug') 
+			global ACCESS_TOKEN
+			pb = Pushbullet(ACCESS_TOKEN)
 			push = pb.push_note("Domini", logmessage)	
 		except IndexError:
 			print "MySQL Error: %s" % str(e)
@@ -62,7 +64,8 @@ def check_webserver():
 		if( code_ws != '200') :
 			logmessage = " OK, server web is running"
 		else :
-			pb = Pushbullet('o.OVDjj6Pg0u8OZMKjBVH6QBqToFbhy1ug') 
+			global ACCESS_TOKEN
+			pb = Pushbullet(ACCESS_TOKEN)
 			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Domini - Erreur : serveur web est arrete"
 			push = pb.push_note("Domini", logmessage)	
 	except:
@@ -83,7 +86,8 @@ def check_receiver():
 	if proccount > 0:
 		logmessage = " OK, pyreceiver is running"
 	else :
-		pb = Pushbullet('o.OVDjj6Pg0u8OZMKjBVH6QBqToFbhy1ug') 
+		global ACCESS_TOKEN
+		pb = Pushbullet(ACCESS_TOKEN)
 		logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Domini - Erreur : pyreceiver est arrete"
 		push = pb.push_note("Domini", logmessage)
 		

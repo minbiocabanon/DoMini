@@ -44,7 +44,7 @@
 				</div>
 				
 				<div class="row-fluid">
-					<div class="span6">
+					<div class="span10">
 						<div id="myCarousel" class="carousel slide">
 							  <!-- Carousel items -->
 							  <div class="carousel-inner">

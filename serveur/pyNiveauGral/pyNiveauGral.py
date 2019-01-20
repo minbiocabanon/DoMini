@@ -6,6 +6,8 @@ import MySQLdb as mdb
 from pushbullet import Pushbullet
 
 # -- Global variables
+ACCESS_TOKEN = 'o.lMLyP43FEWjOhJqVDN5NimjD0TyjC0UH'
+
 date_niveaugral = 0
 niveaugral = 0
 NIVEAU_MINI = 33
@@ -85,7 +87,8 @@ def check_niveaugral():
 		logmessage = ' NIVEAU DE GRANULES TROP BAS ! ({0} cm)'.format(niveaugral)
 		print logmessage
 		syslog.syslog(logmessage)
-		pb = Pushbullet('o.OVDjj6Pg0u8OZMKjBVH6QBqToFbhy1ug')
+		global ACCESS_TOKEN
+		pb = Pushbullet(ACCESS_TOKEN)
 		msg_pb = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Attention, niveau de granules bas \n" + str(date_niveaugral) + " = " + str(niveaugral) + "cm"
 		push = pb.push_note("Domini", msg_pb)		
 	else :
