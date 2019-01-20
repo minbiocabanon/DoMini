@@ -21,6 +21,10 @@
 				// echo "<br>porche exec";
 				exec("rm /var/www/domini/webcam/porche/*.jpg");
 				break;
+			case "kiwi":
+				// echo "<br>kiwi exec";
+				exec("rm /var/www/domini/webcam/kiwi/*.jpg");
+				break;
 			default:
 				break;		
 		}
@@ -79,7 +83,15 @@
 							<input type="submit" name="bteffacer" value="Effacer"/>
 						</form>
 						<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/garage'); ?>
-				</div>				
+				</div>
+				<div class="row-fluid">
+					<h2>KIWI</h2>
+						<form method="POST" action="camera_gal.php" name="formulaire">
+							<input type="hidden" name="gal" value="kiwi">
+							<input type="submit" name="bteffacer" value="Effacer"/>
+						</form>
+						<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/kiwi'); ?>
+				</div>					
 				<div class="row-fluid">			
 					<h2>JARDIN</h2>
 					<form method="POST" action="camera_gal.php" name="formulaire">
