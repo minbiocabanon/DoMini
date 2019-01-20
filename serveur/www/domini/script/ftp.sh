@@ -40,9 +40,7 @@ rm -f  /tmp/cache_wget/teleinfo_edf.php
 rm -f  /tmp/cache_wget/voletroulant.php
 rm -f  /tmp/cache_wget/pellet.php
 rm -f  /tmp/cache_wget/chauffage_config.php
-rm -f  /tmp/cache_wget/conf_externe.php
 rm -f  /tmp/cache_wget/ventilation_flux.php
-rm -f  /tmp/cache_wget/webcam.php
 rm -f  /tmp/cache_wget/map_tondeuse.php
 rm -f  /tmp/cache_wget/planning.php
 rm -f  /tmp/cache_wget/reseau.php
@@ -55,9 +53,7 @@ curl -O http://0.0.0.0:80/teleinfo_edf.php
 curl -O http://0.0.0.0:80/voletroulant.php
 curl -O http://0.0.0.0:80/pellet.php
 curl -O http://0.0.0.0:80/chauffage_config.php
-curl -O http://0.0.0.0:80/conf_externe.php
 curl -O http://0.0.0.0:80/ventilation_flux.php
-curl -O http://0.0.0.0:80/webcam.php
 curl -O http://0.0.0.0:80/map_tondeuse.php
 curl -O http://0.0.0.0:80/planning.php
 curl -O http://0.0.0.0:80/temperature_stat.php
