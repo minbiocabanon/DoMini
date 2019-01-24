@@ -104,7 +104,7 @@ def tag_donnees(table, ordre):
 					#for the line return, get ID of the tabname
 					ID = int(result[0])
 					#logmessage = "  ID obtenu : " + str(ID)
-					print logmessage
+					#print logmessage
 					# Open MySQL session
 					con = mdb.connect('localhost','root','mysql','domotique')
 					cur = con.cursor()
