@@ -85,6 +85,14 @@
 						<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/garage'); ?>
 				</div>
 				<div class="row-fluid">
+					<h2>SEJOUR</h2>
+						<form method="POST" action="camera_gal.php" name="formulaire">
+							<input type="hidden" name="gal" value="garage">
+							<input type="submit" name="bteffacer" value="Effacer"/>
+						</form>
+						<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/sejour/C2_00626E624D38/snap'); ?>
+				</div>
+				<div class="row-fluid">
 					<h2>KIWI</h2>
 						<form method="POST" action="camera_gal.php" name="formulaire">
 							<input type="hidden" name="gal" value="kiwi">
@@ -98,7 +106,7 @@
 						<input type="hidden" name="gal" value="jardin">
 						<input type="submit" name="bteffacer" value="Effacer"/>
 					</form>
-					<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/ext'); ?>
+					<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/jardin'); ?>
 				</div>
 				<div class="row-fluid">
 					<h2>PORCHE</h2>				
