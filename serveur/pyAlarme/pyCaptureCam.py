@@ -21,6 +21,7 @@ ACCESS_TOKEN = 'o.lMLyP43FEWjOhJqVDN5NimjD0TyjC0UH'
 SM_state = "SM_MODE"
 timeoutbdd = 0
 timeoutcapture = 0
+timeoutnotification = 0
 
 # ipcam
 IP_garage = "192.168.0.119:554"
@@ -156,7 +157,7 @@ def tag_line(table, id):
 
 # -- sendnotifpir --
 #send message through pushbullet to user
-def sendnotifpir(timeout):
+def sendnotifpir():
 	global timeoutnotification
 	
 	now = int(time.time())
@@ -297,60 +298,60 @@ def statemachine():
 			#default value
 			etat_PIR = 0
 	
-		try:
+		# try:
 			# test if query has return something, if = 0 there is no line to tag so do nothing
-			if (nbrow != 0):
-				# get info from query result
-				id = result[0]
-				datetime_pir = result[1]
-				datetime_now = result[2]
-				entete = result[3]
-				etat_PIR = result[4]
-				logmessage = "  id: "+ str(id) +", datetime_pir: " +  str(datetime_pir) + ", entete: " + str(entete) + ", etat_PIR: " + str(etat_PIR)
+		if (nbrow != 0):
+			# get info from query result
+			id = result[0]
+			datetime_pir = result[1]
+			datetime_now = result[2]
+			entete = result[3]
+			etat_PIR = result[4]
+			logmessage = "  id: "+ str(id) +", datetime_pir: " +  str(datetime_pir) + ", entete: " + str(entete) + ", etat_PIR: " + str(etat_PIR)
+			print logmessage
+			#syslog.syslog(logmessage)
+			#logmessage = "  datetime_now - datetime_pir : "+ str(datetime_now - datetime_pir)
+			#print logmessage
+			# if alarm newer than 10 minutes
+			if ( (datetime_now - datetime_pir) < 600 ) :
+				# PIR detection has to be considered
+				logmessage = "  datetime_now - datetime_pir : "+ str(datetime_now - datetime_pir)
 				print logmessage
-				#syslog.syslog(logmessage)
-				#logmessage = "  datetime_now - datetime_pir : "+ str(datetime_now - datetime_pir)
-				#print logmessage
-				# if alarm newer than 10 minutes
-				if ( (datetime_now - datetime_pir) < 600 ) :
-					# PIR detection has to be considered
-					logmessage = "  datetime_now - datetime_pir : "+ str(datetime_now - datetime_pir)
+				if etat_PIR == 1 :
+					SM_state = "SM_CAPTURE"
+					# launch timeoutcapture
+					timeoutcapture = int(time.time()) + TIMEOUT_CAPTURE
+
+					# prepare a message to send
+					logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + " detection presence PIR !!!!"
+					# print message and log it
 					print logmessage
-					if etat_PIR == 1 :
-						SM_state = "SM_CAPTURE"
-						# launch timeoutcapture
-						timeoutcapture = int(time.time()) + TIMEOUT_CAPTURE
+					#syslog.syslog(logmessage)
+					
+					# send notification
+					sendnotifpir()
 
-						# prepare a message to send
-						logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + " detection presence PIR !!!!"
-						# print message and log it
-						print logmessage
-						#syslog.syslog(logmessage)
-						
-						# send notification
-						sendnotifpir()
-
-						# tag the line and do nothing
-						tag_line(tabname, id)
-					else:
-						SM_state = "SM_WAIT"				
-						# relaunch timeoutbdd
-						timeoutbdd = int(time.time()) + PERIOD_BDD						
-				else :
-					# alarm older than 10 minutes are not considered
 					# tag the line and do nothing
 					tag_line(tabname, id)
-					logmessage = "  Detection PIR > 600 secondes, pas de capture"
-			else:
-				logmessage = "  Pas de donnees a tagger"
-				SM_state = "SM_WAIT"
-							
-			print logmessage
-			sys.stdout.flush()
+				else:
+					SM_state = "SM_WAIT"				
+					# relaunch timeoutbdd
+					timeoutbdd = int(time.time()) + PERIOD_BDD						
+			else :
+				# alarm older than 10 minutes are not considered
+				# tag the line and do nothing
+				tag_line(tabname, id)
+				logmessage = "  Detection PIR > 600 secondes, pas de capture"
+		else:
+			logmessage = "  Pas de donnees a tagger"
+			SM_state = "SM_WAIT"
+						
+		print logmessage
+		sys.stdout.flush()
 			
-		except :
-			logmessage = "  Erreur dans le traitement des donnees etat_PIR"	
-			print logmessage			
+		# except :
+			# logmessage = "  Erreur dans le traitement des donnees etat_PIR"	
+			# print logmessage			
 		
 		
 
