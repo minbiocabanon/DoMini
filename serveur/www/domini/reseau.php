@@ -96,6 +96,15 @@
 							<td>Rpi WiFi Web</td>
 							<td><a href="192.168.0.122:80">192.168.0.122:22</a></td>
 							<td><a href="domini.dlinkddns.com:50123">domini.dlinkddns.com:50123</a></td>
+						  </tr>
+						  <tr>
+							<td>my IP</td>
+							<?PHP
+								$myip = file_get_contents('http://ipinfo.io/ip/');
+								//echo $myip;
+							?>
+							<td><a href="<?PHP echo $myip ?>"><?PHP echo $myip ?></a></td>
+							<td></td>
 						  </tr>							  
 						</tbody>
 					  </table>
