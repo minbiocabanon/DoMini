@@ -2,32 +2,19 @@
 	include("infos/config.inc.php"); // on inclu le fichier de config
 	@include("php/restore_donnees_instant.php");
 	
+	//on récupère ce qui est passé en paramètre dans la barre d'adresse
 	$galtoerase = isset($_POST['gal']) ? $_POST['gal'] : '';
-	
+	$nom_cam = $_GET['cam'];
+	if($nom_cam == ""){
+		// on choisi d'afficher le graphe avec toutes les températures (cas par défaut)
+		$nom_cam = "garage";
+	}	
+	//echo 'nom_cam='.$nom_cam;
 	// echo 'galtoerase='.$galtoerase;
 	
-	if($galtoerase == "garage" || $galtoerase == "jardin" || $galtoerase == "porche"){
-	
-		switch($galtoerase){
-			case "garage":
-				// echo "<br>garage exec";
-				exec("rm /var/www/domini/webcam/garage/*.jpg");
-				break;
-			case "jardin":
-				// echo "<br>jardin exec";
-				exec("rm /var/www/domini/webcam/ext/*.jpg");
-				break;
-			case "porche":
-				// echo "<br>porche exec";
-				exec("rm /var/www/domini/webcam/porche/*.jpg");
-				break;
-			case "kiwi":
-				// echo "<br>kiwi exec";
-				exec("rm /var/www/domini/webcam/kiwi/*.jpg");
-				break;
-			default:
-				break;		
-		}
+	if($galtoerase == "garage" || $galtoerase == "jardin" || $galtoerase == "porche" || $galtoerase == "kiwi" || $galtoerase == "sejour"){
+		$command = "rm /var/www/domini/webcam/".$galtoerase."/*.jpg";
+		exec($command);
 	}
 ?>
 <!DOCTYPE html>
@@ -71,51 +58,21 @@
 				  <div class="navbar-inner">
 					<a class="brand" href="#">Cameras</a>
 					<ul class="nav">
-					  <li><a href="camera.php">Live</a></li>
-					  <li class="active"><a href="camera_gal.php">Galerie</a></li>
+					  <li <?PHP if($nom_cam == "garage"){echo 'class="active"';} ?>><a href="camera_gal.php?cam=garage">garage</a></li>
+					  <li <?PHP if($nom_cam == "jardin"){echo 'class="active"';} ?>><a href="camera_gal.php?cam=jardin">jardin</a></li>
+					  <li <?PHP if($nom_cam == "porche"){echo 'class="active"';} ?>><a href="camera_gal.php?cam=porche">porche</a></li>
+					  <li <?PHP if($nom_cam == "sejour"){echo 'class="sejour"';} ?>><a href="camera_gal.php?cam=sejour">sejour</a></li>
 					</ul>
 				  </div>
 				</div>	
 				<div class="row-fluid">
-					<h2>GARAGE</h2>
-						<form method="POST" action="camera_gal.php" name="formulaire">
-							<input type="hidden" name="gal" value="garage">
+						<form method="POST" action="camera_gal.php<?PHP echo '?cam='.$nom_cam; ?>" name="formulaire">
+							<input type="hidden" name="gal" value="<?PHP echo $nom_cam;?>">
 							<input type="submit" name="bteffacer" value="Effacer"/>
 						</form>
-						<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/garage'); ?>
+						<?php include_once('webcam/resources/UberGallery.php'); $rep = 'webcam/'.$nom_cam.'' ; $gallery = UberGallery::init()->createGallery($rep); ?>
 				</div>
-				<div class="row-fluid">
-					<h2>SEJOUR</h2>
-						<form method="POST" action="camera_gal.php" name="formulaire">
-							<input type="hidden" name="gal" value="garage">
-							<input type="submit" name="bteffacer" value="Effacer"/>
-						</form>
-						<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/sejour/C2_00626E624D38/snap'); ?>
-				</div>
-				<div class="row-fluid">
-					<h2>KIWI</h2>
-						<form method="POST" action="camera_gal.php" name="formulaire">
-							<input type="hidden" name="gal" value="kiwi">
-							<input type="submit" name="bteffacer" value="Effacer"/>
-						</form>
-						<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/kiwi'); ?>
-				</div>					
-				<div class="row-fluid">			
-					<h2>JARDIN</h2>
-					<form method="POST" action="camera_gal.php" name="formulaire">
-						<input type="hidden" name="gal" value="jardin">
-						<input type="submit" name="bteffacer" value="Effacer"/>
-					</form>
-					<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/jardin'); ?>
-				</div>
-				<div class="row-fluid">
-					<h2>PORCHE</h2>				
-					<form method="POST" action="camera_gal.php" name="formulaire">
-						<input type="hidden" name="gal" value="porche">
-						<input type="submit" name="bteffacer" value="Effacer"/>
-					</form>					
-					<?php include_once('webcam/resources/UberGallery.php'); $gallery = UberGallery::init()->createGallery('webcam/porche'); ?>			
-				</div>
+				
 			</div><!-- /container -->
 		</div><!-- /wrap -->
   </body>
