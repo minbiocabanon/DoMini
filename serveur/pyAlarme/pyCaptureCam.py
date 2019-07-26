@@ -18,9 +18,10 @@ TIMEOUT_NOTIF = 60*5		# in secondes, delay between two pushbullet notification (
 # -- Global variables
 tabname = "alarme_pir"
 ACCESS_TOKEN = 'o.lMLyP43FEWjOhJqVDN5NimjD0TyjC0UH'
-SM_state = "SM_MODE"
+SM_state = "SM_ALARMOFF"
 timeoutbdd = 0
 timeoutcapture = 0
+timeoutnotification = 0
 
 # ipcam
 IP_garage = "192.168.0.119:554"
@@ -29,7 +30,7 @@ IP_porche = "192.168.0.129:554"
 IP_sejour = "192.168.0.130:88"
 
 class capturecam(Thread):
-	#Thread charge de faire des captures d'images d'un webcam
+	#Thread charge de faire des captures d'images d'une webcam
 	def __init__(self, ipcam):
 		Thread.__init__(self)
 		self.ipcam = ipcam
@@ -38,66 +39,76 @@ class capturecam(Thread):
 	#Code a executer pendant l'execution du thread.
 
 		global timeoutcapture
-	
-		# update time and timeout , note that timeoutcapture is a global variable that can be modified in statemachine (when PIR sensor detection occurs)
-		now = int(time.time())
-		timeoutcapture = int(time.time()) + int(TIMEOUT_CAPTURE)
-		# loop capture intil timeout
-		FNULL = open(os.devnull, 'w')
-		while now < timeoutcapture :
+		#set flagCaptureDone to false
+		flagCaptureDone = False
 		
-			# each can IP cam can be different, so command are specific
-			if self.ipcam == IP_garage :
-				dir = "../www/domini/webcam/garage/"+ time.strftime('%Y%m%d%H%M%S') +"_garage.jpg"
-				commandargs = [
-					'/usr/local/bin/ffmpeg',
-					'-y',
-					'-rtsp_transport','tcp',
-					'-i', "rtsp://"+ str(self.ipcam) +"/live0.264",
-					'-f', 'singlejpeg',
-					'-vframes', '1',
-					str(dir)
-				]
-				
-			elif  str(self.ipcam) == IP_jardin:
-				dir = "../www/domini/webcam/jardin/"+ time.strftime('%Y%m%d%H%M%S') +"_jardin.jpg"
-				commandargs = [
-					'/usr/local/bin/ffmpeg',
-					'-y',
-					'-rtsp_transport','tcp',
-					'-i', "rtsp://"+ str(self.ipcam) +"/live0.264",
-					'-f', 'singlejpeg',
-					'-vframes', '1',
-					str(dir)
-				]
-				
-			elif  str(self.ipcam) == IP_porche:
-				dir = "../www/domini/webcam/porche/"+ time.strftime('%Y%m%d%H%M%S') +"_porche.jpg"
-				commandargs = [
-					'/usr/local/bin/ffmpeg',
-					'-y',
-					'-rtsp_transport','tcp',
-					'-i', "rtsp://"+ str(self.ipcam) +"/live0.264",
-					'-f', 'singlejpeg',
-					'-vframes', '1',
-					str(dir)
-				]
-
-			elif str(self.ipcam) == IP_sejour :
-				dir = "../www/domini/webcam/sejour/C2_00626E624D38/snap/"+ time.strftime('%Y%m%d%H%M%S') +"_sejour.jpg"
-				commandargs = [
-					'curl',
-					'--silent',
-					'--url',"http://"+ str(self.ipcam) +"/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=user&pwd=userFoscamC2",
-					'--output', str(dir)
-				]
-				
-			subprocess.call(commandargs, stdout=FNULL, stderr=subprocess.STDOUT)
-			#subprocess.call(commandargs, stdout=None, stderr=subprocess.STDOUT)
-			time.sleep(PERIOD_CAPTURE)
+		#infinite loop
+		while True :
+			# update time and timeout , note that timeoutcapture is a global variable that can be modified in statemachine (when PIR sensor detection occurs)
 			now = int(time.time())
-		
-		print "  Fin capture "+str(self.ipcam)
+			# loop capture intil timeout
+			if now < timeoutcapture :
+			
+				# each can IP cam can be different, so command are specific
+				if self.ipcam == IP_garage :
+					dir = "../www/domini/webcam/garage/"+ time.strftime('%Y%m%d%H%M%S') +"_garage.jpg"
+					commandargs = [
+						'/usr/local/bin/ffmpeg',
+						'-y',
+						'-rtsp_transport','tcp',
+						'-i', "rtsp://"+ str(self.ipcam) +"/live0.264",
+						'-f', 'singlejpeg',
+						'-vframes', '1',
+						str(dir)
+					]
+					
+				elif  str(self.ipcam) == IP_jardin:
+					dir = "../www/domini/webcam/jardin/"+ time.strftime('%Y%m%d%H%M%S') +"_jardin.jpg"
+					commandargs = [
+						'/usr/local/bin/ffmpeg',
+						'-y',
+						'-rtsp_transport','tcp',
+						'-i', "rtsp://"+ str(self.ipcam) +"/live0.264",
+						'-f', 'singlejpeg',
+						'-vframes', '1',
+						str(dir)
+					]
+					
+				elif  str(self.ipcam) == IP_porche:
+					dir = "../www/domini/webcam/porche/"+ time.strftime('%Y%m%d%H%M%S') +"_porche.jpg"
+					commandargs = [
+						'/usr/local/bin/ffmpeg',
+						'-y',
+						'-rtsp_transport','tcp',
+						'-i', "rtsp://"+ str(self.ipcam) +"/live0.264",
+						'-f', 'singlejpeg',
+						'-vframes', '1',
+						str(dir)
+					]
+
+				elif str(self.ipcam) == IP_sejour :
+					dir = "../www/domini/webcam/sejour/"+ time.strftime('%Y%m%d%H%M%S') +"_sejour.jpg"
+					commandargs = [
+						'curl',
+						'--silent',
+						'--url',"http://"+ str(self.ipcam) +"/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=user&pwd=userFoscamC2",
+						'--output', str(dir)
+					]
+				
+				print "  [thread]Capture "+str(self.ipcam)
+				FNULL = open(os.devnull, 'w')	
+				subprocess.call(commandargs, stdout=FNULL, stderr=subprocess.STDOUT)
+				#subprocess.call(commandargs, stdout=None, stderr=subprocess.STDOUT)
+				time.sleep(PERIOD_CAPTURE)
+				now = int(time.time())
+				flagCaptureDone = True
+			
+			elif flagCaptureDone == True :
+				print "  [thread]Fin capture "+str(self.ipcam)
+				flagCaptureDone = False
+			
+			time.sleep(0.1)
+			
 # -- fin class capturecam --
 		
 		
@@ -114,6 +125,17 @@ def setup():
 	syslog.openlog("pyCaptureCam")
 	syslog.syslog("Demarrage")
 	timeoutbdd = int(time.time())
+	
+	print ('Lancement des threads capturecam')
+	global capturecam_sejour
+	global capturecam_garage
+	global capturecam_porche
+	global capturecam_jardin
+	capturecam_sejour.start()
+	capturecam_garage.start()
+	capturecam_porche.start()
+	capturecam_jardin.start()
+	
 	print ('End Setup')
 # -- fin setup --
 
@@ -154,9 +176,37 @@ def tag_line(table, id):
 			print "MySQL Error: %s" % str(e)
 # -- fin tag_line --
 
+# -- tag_line --
+# -- when alarme is OFF, clear all PIR detection 
+def tag_all_line(table):
+	try :
+		# Open MySQL session
+		con = mdb.connect('localhost','root','mysql','domotique')
+		cur = con.cursor()
+		# prepare query to set all tag field to 1
+		query = 'UPDATE `domotique`.`{0}` SET `tag` = 1 WHERE `tag` = 0;'.format(table) 
+		#print query
+		# run MySQL Query
+		cur.execute(query)
+		# Close all cursors
+		cur.close()
+		#commit change
+		con.commit()
+		# Close MySQL session
+		con.close()
+		logmessage = "  Toutes les Lignes ont ete taggees !"
+		print logmessage
+	except mdb.Error, e:
+		# Display MySQL errors
+		try:
+			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+		except IndexError:
+			print "MySQL Error: %s" % str(e)
+# -- fin tag_line --
+
 # -- sendnotifpir --
 #send message through pushbullet to user
-def sendnotifpir(timeout):
+def sendnotifpir():
 	global timeoutnotification
 	
 	now = int(time.time())
@@ -201,9 +251,9 @@ def statemachine():
 	
 	# Select state of state machine
 
-	# state SM_MODE
-	if SM_state == "SM_MODE" :
-		print "SM_MODE"
+	# state SM_ALARMOFF
+	if SM_state == "SM_ALARMOFF" :
+		print "SM_ALARMOFF"
 		# check if alarme is activated or not
 		try:
 			# Open MySQL session
@@ -227,7 +277,7 @@ def statemachine():
 				print "MySQL Error: %s" % str(e)
 			#default value
 			alarme_statut = "ERROR"
-	
+
 		try:
 			# test if query has return something, if = 0 there is no line to tag so do nothing
 			if (nbrow != 0):
@@ -243,11 +293,11 @@ def statemachine():
 					SM_state = "SM_WAIT"					
 				
 				elif alarme_statut == "OFF" :
-					# stay in SM_MODE
-					SM_state = "SM_MODE"										
-				
-				#elif alarme_statut == "PERIM"
-				
+					# stay in SM_ALARMOFF
+					SM_state = "SM_ALARMOFF"										
+					# tag all PIR detection
+					tag_all_line(tabname);
+							
 				elif alarme_statut == "ERROR" :
 					Error_loop()
 			else:
@@ -255,10 +305,8 @@ def statemachine():
 		except :
 			logmessage = "  Erreur dans le traitement des donnees alarme_statut"	
 			print logmessage
-		
-		# sleep few seconds
-		#time.sleep(2)
-		
+
+
 	# state SM_WAIT
 	if SM_state == "SM_WAIT" :
 		print "SM_WAIT"
@@ -297,60 +345,59 @@ def statemachine():
 			#default value
 			etat_PIR = 0
 	
-		try:
+		# try:
 			# test if query has return something, if = 0 there is no line to tag so do nothing
-			if (nbrow != 0):
-				# get info from query result
-				id = result[0]
-				datetime_pir = result[1]
-				datetime_now = result[2]
-				entete = result[3]
-				etat_PIR = result[4]
-				logmessage = "  id: "+ str(id) +", datetime_pir: " +  str(datetime_pir) + ", entete: " + str(entete) + ", etat_PIR: " + str(etat_PIR)
+		if (nbrow != 0):
+			# get info from query result
+			id = result[0]
+			datetime_pir = result[1]
+			datetime_now = result[2]
+			entete = result[3]
+			etat_PIR = result[4]
+			logmessage = "  id: "+ str(id) +", datetime_pir: " +  str(datetime_pir) + ", entete: " + str(entete) + ", etat_PIR: " + str(etat_PIR)
+			print logmessage
+			#syslog.syslog(logmessage)
+			#logmessage = "  datetime_now - datetime_pir : "+ str(datetime_now - datetime_pir)
+			#print logmessage
+			# if alarm newer than 10 minutes
+			if ( (datetime_now - datetime_pir) < 600 ) :
+				# PIR detection has to be considered
+				logmessage = "  datetime_now - datetime_pir : "+ str(datetime_now - datetime_pir)
 				print logmessage
-				#syslog.syslog(logmessage)
-				#logmessage = "  datetime_now - datetime_pir : "+ str(datetime_now - datetime_pir)
-				#print logmessage
-				# if alarm newer than 10 minutes
-				if ( (datetime_now - datetime_pir) < 600 ) :
-					# PIR detection has to be considered
-					logmessage = "  datetime_now - datetime_pir : "+ str(datetime_now - datetime_pir)
+				if etat_PIR == 1 :
+					# switch to SM_CAPTURE
+					SM_state = "SM_CAPTURE"
+
+					# prepare a message to send
+					logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + " detection presence PIR !!!!"
+					# print message and log it
 					print logmessage
-					if etat_PIR == 1 :
-						SM_state = "SM_CAPTURE"
-						# launch timeoutcapture
-						timeoutcapture = int(time.time()) + TIMEOUT_CAPTURE
+					#syslog.syslog(logmessage)
+					
+					# send notification
+					sendnotifpir()
 
-						# prepare a message to send
-						logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + " detection presence PIR !!!!"
-						# print message and log it
-						print logmessage
-						#syslog.syslog(logmessage)
-						
-						# send notification
-						sendnotifpir()
-
-						# tag the line and do nothing
-						tag_line(tabname, id)
-					else:
-						SM_state = "SM_WAIT"				
-						# relaunch timeoutbdd
-						timeoutbdd = int(time.time()) + PERIOD_BDD						
-				else :
-					# alarm older than 10 minutes are not considered
 					# tag the line and do nothing
 					tag_line(tabname, id)
-					logmessage = "  Detection PIR > 600 secondes, pas de capture"
-			else:
-				logmessage = "  Pas de donnees a tagger"
-				SM_state = "SM_WAIT"
-							
-			print logmessage
-			sys.stdout.flush()
+				else:
+					SM_state = "SM_WAIT"
+					# relaunch timeoutbdd
+					timeoutbdd = int(time.time()) + PERIOD_BDD						
+			else :
+				# alarm older than 10 minutes are not considered
+				# tag the line and do nothing
+				tag_line(tabname, id)
+				logmessage = "  Detection PIR > 600 secondes, pas de capture"
+		else:
+			logmessage = "  Pas de donnees a tagger"
+			SM_state = "SM_ALARMOFF"
+						
+		print logmessage
+		sys.stdout.flush()
 			
-		except :
-			logmessage = "  Erreur dans le traitement des donnees etat_PIR"	
-			print logmessage			
+		# except :
+			# logmessage = "  Erreur dans le traitement des donnees etat_PIR"	
+			# print logmessage			
 		
 		
 
@@ -358,50 +405,11 @@ def statemachine():
 	# state SM_CAPTURE
 	elif SM_state == "SM_CAPTURE" :
 		print "SM_CAPTURE"
-		# check if timeout capture has expired
-		now = int(time.time())
-		if now > timeoutcapture :
-			# timeoutcapture expired, return to SM_GETPIR to check if there is an other PIR detection (don't loose time witch SM_WAIT)
-			SM_state = "SM_GETPIR"
-			print "  Fin capture."
-		else:
-			# update timeoutcapture , if thread are running they will continue to capture images
-			timeoutcapture = int(time.time()) + TIMEOUT_CAPTURE
-		
-			print "    Capture en cours..."
-			# lancement des thread de capture des cameras
-			# Creation et lancement des threads
-			# on verifie qu'il sont bien finis avant 
-			if capturecam_sejour.is_alive() == False :
-				capturecam_sejour.start()
-			else:
-				print "     __ capturecam_sejour deja actif __"
-			
-			if capturecam_garage.is_alive() == False :
-				capturecam_garage.start()
-			else:
-				print "     __ capturecam_garage deja actif __"
-				
-			if capturecam_porche.is_alive() == False :
-				capturecam_porche.start()
-			else:
-				print "     __ capturecam_porche deja actif __"
-				
-			if capturecam_jardin.is_alive() == False :
-				capturecam_jardin.start()
-			else:
-				print "     __ capturecam_jardin deja actif __"
-				
-			print "    Threads capturecam actifs."
-
-			# Attend que les threads se terminent
-			# capturecam_sejour.join()
-			# capturecam_garage.join()
-			# capturecam_porche.join()
-			# capturecam_jardin.join()
-			
-			#force SM_state to SM_GETPIR
-			SM_state = "SM_GETPIR"
+		# update timeoutcapture , if thread are running they will continue to capture images
+		timeoutcapture = int(time.time()) + TIMEOUT_CAPTURE
+		print "    Capture en cours..."
+		#force SM_state to SM_GETPIR
+		SM_state = "SM_GETPIR"
 
 # -- end statemachine() --
 

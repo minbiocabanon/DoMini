@@ -65,6 +65,7 @@ def tag_donnees(table, ordre):
 	for tabname in table :
 		logmessage = "On lance les tags "+ordre+" sur la table"+str(tabname)
 		print logmessage
+		syslog.syslog(logmessage)
 		# set variable date_tag with date to start tag operation
 		date_tag = date_arg
 		print ' Table :',tabname
@@ -122,6 +123,7 @@ def tag_donnees(table, ordre):
 					logmessage = "  Pas de donnees a tagger"	
 								
 				print logmessage
+				#syslog.syslog(logmessage)
 				sys.stdout.flush()
 				
 			except mdb.Error, e:
@@ -144,8 +146,9 @@ def tag_donnees_heure(table):
 	for tabname in table :
 		# set variable date_tag with date to start tag operation
 		date_tag = date_arg
-		logmessage = "On lance les tags sur la table "+str(tabname)
+		logmessage = "On lance les tags horaires sur la table "+str(tabname)
 		print logmessage
+		#syslog.syslog(logmessage)
 		# while last date is not reached  (max date is now - NB_JOUR , in order to keep all data within NB_JOUR)
 		while ( date_tag.strftime("%Y-%m-%d") <= (dt.datetime.now() - dt.timedelta(days=NB_JOUR)).strftime("%Y-%m-%d")):
 			# for each hour of the day
@@ -181,7 +184,7 @@ def tag_donnees_heure(table):
 						#for the line return, get ID of the tabname
 						ID = int(result[0])
 						# logmessage = "  ID obtenu : " + str(ID)
-						print logmessage
+						#print logmessage
 						# Open MySQL session
 						con = mdb.connect('localhost','root','mysql','domotique')
 						cur = con.cursor()
@@ -199,7 +202,8 @@ def tag_donnees_heure(table):
 					else:
 						logmessage = "  Pas de donnees a tagger"
 					
-					print logmessage						
+					print logmessage
+					#syslog.syslog(logmessage)
 					sys.stdout.flush()
 					
 				except mdb.Error, e:
@@ -209,7 +213,7 @@ def tag_donnees_heure(table):
 					try:
 						print " MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 					except IndexError:
-						print " MySQL Error: %s" % str(e)		
+						print " MySQL Error: %s" % str(e)
 			# increment date_tag + 1 day
 			date_tag = date_tag + dt.timedelta(days=1)
 # -- end tag_donnees_heure --
@@ -234,11 +238,15 @@ def supp_donnees_tag(table):
 			cur = con.cursor()
 			# prepare query
 			# select * from table between `lowerdate` and `upperdate`
-			query = 'DELETE FROM `domotique`.`{0}` WHERE ( UNIX_TIMESTAMP(`date_time`) BETWEEN UNIX_TIMESTAMP( \'{1}\') AND UNIX_TIMESTAMP( SUBDATE(NOW(), INTERVAL {2} DAY)) ) AND `{3}`.`tag` =0'.format(tabname, date_tag.strftime("%Y-%m-%d"), NB_JOUR, tabname)
+			query = 'DELETE FROM `domotique`.`{0}` WHERE ( UNIX_TIMESTAMP(`date_time`) BETWEEN UNIX_TIMESTAMP( \'{1}\') AND UNIX_TIMESTAMP( SUBDATE(NOW(), INTERVAL {2} DAY)) ) AND `{3}`.`tag`=0'.format(tabname, date_tag.strftime("%Y-%m-%d"), NB_JOUR, tabname)
+			logmessage = "  requete : " + str(query)
+			print logmessage
+			syslog.syslog(logmessage)
 			# run MySQL Query
 			cur.execute(query)
 			result = cur.fetchone()
 			nbrow = cur.rowcount
+			con.commit()
 			# Close all cursors
 			cur.close()
 			# Close MySQL session

@@ -194,6 +194,45 @@ def task_receiver():
 				print logmessage
 				syslog.syslog(logmessage)
 
+		elif line.startswith( '$PIR' ) :
+			# exemple : $PIR,1\r\n
+			try :
+				# display date/time
+				print time.strftime("\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Y-%m-%d %H:%M:%S")
+				# Parse data in the message
+				header, etat = line.strip().split(',')
+				# log this data
+				table = "alarme_pir"
+				print header, etat
+				# Send data in MySQL
+				try:
+					# Open MySQL session
+					con = mdb.connect('localhost','root','mysql','domotique')
+					cur = con.cursor()
+					# prepare query
+					query = 'INSERT INTO domotique.{0} VALUES(NULL, NOW(), \'{1}\', {2}, 0)'.format( table, header, int(etat) )
+					print " " + query
+					# run MySQL Query
+					cur.execute(query)
+					# Make sure data is committed to the database
+					con.commit()
+					# Close all cursors
+					cur.close()
+					# Close MySQL session
+					con.close()
+					# Print some debug
+					print "  Traitement msg "+ table +"  -> enreg. dans base de donnees"
+				except mdb.Error, e:
+					# Display MySQL errors
+					try:
+						print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+					except IndexError:
+						print "MySQL Error: %s" % str(e)
+			except :
+				logmessage = " ERROR while parsing message $PIR : " + line
+				print logmessage
+				syslog.syslog(logmessage)				
+				
 		elif line.startswith( '$POL' ) or line.startswith( '!POL' ):
 			# exemple : $POL,MOD,0\r\n
 			# exemple : $POL,SAC,1\r\n

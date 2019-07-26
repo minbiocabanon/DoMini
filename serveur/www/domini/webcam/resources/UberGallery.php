@@ -19,7 +19,7 @@
 class UberGallery {
 
     // Define application version
-    const VERSION = '2.4.5';
+    const VERSION = '2.4.5 - Domini Rev.';
 
     // Reserve some variables
     protected $_config     = array();
@@ -151,8 +151,11 @@ class UberGallery {
      */
     public function createGallery($directory, $relText = 'colorbox') {
 
+		// trick for multigallery (minbiocabanon)
+		$cam_name = str_replace("webcam/", "", $directory);
+	
         // Get the gallery data array and set the template path
-        $galleryArray = $this->readImageDirectory($directory);
+        $galleryArray = $this->readImageDirectory($directory, $cam_name);
         $templatePath = $this->_appDir . '/templates/defaultGallery.php';
 
         // Set the relative text attribute
@@ -173,7 +176,7 @@ class UberGallery {
      * @return array File listing and statistics for specified directory
      * @access public
      */
-    public function readImageDirectory($directory) {
+    public function readImageDirectory($directory, $cam_name) {
 
         // Set relative image directory
         $this->setRelativeImageDirectory($directory);
@@ -206,7 +209,7 @@ class UberGallery {
             $galleryArray['stats'] = $this->_readGalleryStats($this->_readDirectory($directory, false));
 
             // Add gallery paginator to the gallery array
-            $galleryArray['paginator'] = $this->_getPaginatorArray($galleryArray['stats']['current_page'], $galleryArray['stats']['total_pages']);
+            $galleryArray['paginator'] = $this->_getPaginatorArray($galleryArray['stats']['current_page'], $galleryArray['stats']['total_pages'], $cam_name);
 
             // Save the sorted array
             if ($this->_config['cache_expire'] > 0) {
@@ -877,7 +880,7 @@ class UberGallery {
      * @return array Array for building the paginator
      * @access private
      */
-    private function _getPaginatorArray($currentPage, $totalPages) {
+    private function _getPaginatorArray($currentPage, $totalPages, $cam_name) {
 
         // Set some variables
         $range     = ceil($this->_config['threshold'] / 2) - 1;
@@ -927,7 +930,7 @@ class UberGallery {
             $paginatorArray[] = array(
                 'text'  => '&lt;',
                 'class' => 'active',
-                'href'  => '?page=' . ($currentPage - 1)
+                'href'  => '?cam='. $cam_name .'&page=' . ($currentPage - 1)
             );
 
         }
@@ -937,7 +940,7 @@ class UberGallery {
             $paginatorArray[] = array(
                 'text'  => '...',
                 'class' => 'more',
-                'href'  => '?page=' . ($currentPage - $range - 1)
+                'href'  => '?cam='. $cam_name .'&page=' . ($currentPage - $range - 1)
             );
         }
 
@@ -956,7 +959,7 @@ class UberGallery {
                 $paginatorArray[] = array(
                     'text'  => $i,
                     'class' => 'active',
-                    'href'  => '?page=' . $i
+                    'href'  => '?cam='. $cam_name .'&page=' . $i
                 );
 
             }
@@ -968,7 +971,7 @@ class UberGallery {
             $paginatorArray[] = array(
                 'text'  => '...',
                 'class' => 'more',
-                'href'  => '?page=' . ($currentPage + $range + 1)
+                'href'  => '?cam='. $cam_name .'&page=' . ($currentPage + $range + 1)
             );
         }
 
@@ -985,7 +988,7 @@ class UberGallery {
             $paginatorArray[] = array(
                 'text'  => '&gt;',
                 'class' => 'active',
-                'href'  => '?page=' . ($currentPage + 1)
+                'href'  => '?cam='. $cam_name .'&page=' . ($currentPage + 1)
             );
 
         }
