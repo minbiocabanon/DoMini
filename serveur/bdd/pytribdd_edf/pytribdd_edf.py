@@ -150,6 +150,7 @@ def supp_donnees_tag(table):
 			# run MySQL Query
 			cur.execute(query)
 			result = cur.fetchone()
+			con.commit()
 			# Close all cursors
 			cur.close()
 			# Close MySQL session
