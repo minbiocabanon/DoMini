@@ -61,7 +61,8 @@
 					  <li <?PHP if($nom_cam == "garage"){echo 'class="active"';} ?>><a href="camera_gal.php?cam=garage">garage</a></li>
 					  <li <?PHP if($nom_cam == "jardin"){echo 'class="active"';} ?>><a href="camera_gal.php?cam=jardin">jardin</a></li>
 					  <li <?PHP if($nom_cam == "porche"){echo 'class="active"';} ?>><a href="camera_gal.php?cam=porche">porche</a></li>
-					  <li <?PHP if($nom_cam == "sejour"){echo 'class="sejour"';} ?>><a href="camera_gal.php?cam=sejour">sejour</a></li>
+					  <li <?PHP if($nom_cam == "sejour"){echo 'class="active"';} ?>><a href="camera_gal.php?cam=sejour">sejour</a></li>
+					  <li <?PHP if($nom_cam == "kiwi"){echo 'class="active"';} ?>><a href="camera_gal.php?cam=kiwi">kiwi</a></li>
 					</ul>
 				  </div>
 				</div>	

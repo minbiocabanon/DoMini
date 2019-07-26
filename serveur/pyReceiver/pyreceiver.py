@@ -448,6 +448,7 @@ def task_emitter():
 				query = 'DELETE FROM `domotique`.`tx_msg_radio` WHERE `tx_msg_radio`.`id` = {0};'.format(message[0])
 				# run MySQL Query
 				cur.execute(query)
+				con.commit()
 				# Close all cursors
 				cur.close()
 				# Close MySQL session

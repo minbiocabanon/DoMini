@@ -1,11 +1,22 @@
 ﻿<?PHP
 	include("./infos/config.inc.php"); // on inclu le fichier de config
 	@include("php/restore_donnees_instant.php");
-
 	
+	// ------------------- recuperation des donnees statut de l'alarme
+	// requete MySQL pour obtenir les données de la BDD
+	// echo" $host, $login, $passe, $bdd \n";
+	$link = mysqli_connect($host,$login,$passe,$bdd);
+	if (!$link) {
+		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
+				. mysqli_connect_error());
+	}
+	//echo 'Succès... ' . mysqli_get_host_info($link) . "\n";
+	$SQL="SET lc_time_names = 'fr_FR'" ; // Pour afficher date en français dans MySql. 
+	mysqli_query($link,$SQL);
+	$SQL="SET NAMES UTF8" ; // Pour afficher date en français dans MySql. 
+	mysqli_query($link,$SQL);
 	
 	$form_envoi = isset($_POST['envoi']) ? $_POST['envoi'] : 'NOK';
-	//$form_etat_alarme = $_POST['form_etat_alarme'] ;
 	$form_etat_alarme = isset($_POST['form_etat_alarme']) ? $_POST['form_etat_alarme'] : '';
 	$form_alarm_mode = isset($_POST['alarm_mode']) ? $_POST['alarm_mode'] : '';
 
@@ -14,66 +25,40 @@
 	// echo "form_alarm_mode = $form_alarm_mode<br>";
 	
 	if($form_envoi == "OK"){
-		if($form_etat_alarme == "on"){
-			// echo 'lock<br>';
-			file_get_contents('http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=6');
-		}
-		else{
-			// echo 'unlock<br>';
-			file_get_contents('http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=7');
-		}
-		
-		if($form_alarm_mode == "Total"){
-			file_get_contents('http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=12');
-		}
-		elseif($form_alarm_mode == "Périmétrie"){
-			file_get_contents('http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=13');
-		}
+			// conversion variable
+		if( $form_etat_alarme == "on")
+				$form_etat_alarme = "ON";
+			else
+				$form_etat_alarme = "OFF";
+		//requete pour récupérer la dernière consommation instantanée
+		$SQL="UPDATE `alarme_statut` SET `mode` = '".$form_etat_alarme."' WHERE `alarme_statut`.`id` = 1;"; 
+		//Envoie de la requete
+		$RESULT = @mysqli_query($link,$SQL);
+
+		// pensez à ajouter dans la meme requete le mode  TOTAL ou PERIMETRIE
 	}	
 	
-	/*   
-		(ACTIF) curl 'http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=3'
-			0 : cadenas ouvert, alarme pas active
-			1 : cadenas fermé, alarme active			
-		
-		(MODE) curl 'http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=8'
-			TOTAL
-			PERIMETRIE
-			...
-			
-		(Force mode TOTAL) curl 'http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=12'
-		(Force mode PERIMETRIE) curl 'http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=13'
-		
-		(LOCK) curl 'http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=6'
-		
-		(UNLOCK) curl 'http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=7'
-		
-		(STATUS) curl 'http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=4'
-			0 : OK
-			1 : intrusion !
-
-		(STATUS CAPTEUR) curl 'http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=1'
-			0 : fenetre fermée
-			1 : fenetre ouverte
 	
-	*/
-	
-	//si on vient de saisir des infos passées en paramètre de l'adresse
+	//requete pour récupérer la dernière consommation instantanée
+	$SQL="SELECT `id`,`mode` FROM `alarme_statut`"; 
+	//Envoie de la requete
+	$RESULT = @mysqli_query($link,$SQL);
+	// //lecture du resultat de la requete
+	$myrow = mysqli_fetch_array($RESULT); 
+	//on récupère l'heure
+	$etat_alarme = $myrow["mode"];
 
-	function ConvertVar($variable, $vartrue, $varfalse){
-		if( $variable == 1)
-			return $vartrue;
+	// echo "<br>";
+	// echo "etat_alarme = $etat_alarme<br>";
+	
+	// conversion variable
+	if( $etat_alarme == "ON" || $etat_alarme == "on")
+			$etat_alarme = "checked";
 		else
-			return $varfalse;
-	}
-	
-	$alarm_mode = file_get_contents('http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=8');
-	
-	$etat_alarme = ConvertVar( file_get_contents('http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=3'), "checked", "");
-
-	
-	$etat_entrée = ConvertVar(file_get_contents('http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=1') , "glyphicon-remove" ,"glyphicon-ok");
-	
+			$etat_alarme = "";
+				
+	$alarm_mode = 'TOTAL';
+	$etat_entrée = "glyphicon-ok";
 	
 	// echo "<br>";
 	// echo "alarm_mode = $alarm_mode<br>";
@@ -125,7 +110,7 @@
 							<tbody>
 								<tr>
 									<td colspan="6">
-										<div  id="btn_chauffage_automan" class="switch switch-medium" data-on="success" data-off="danger" data-on-label="ARMé" data-off-label="Ouvert">
+										<div  id="btn_etat_alarme" class="switch switch-medium" data-on="success" data-off="danger" data-on-label="ARMé" data-off-label="Ouvert">
 											<input type="checkbox" name="form_etat_alarme" value="on" <?PHP echo $etat_alarme; ?> />
 										</div>
 									</td>
@@ -133,7 +118,8 @@
 										<div >
 											Statut : 
 											<?PHP
-												$alarm_status = file_get_contents('http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=4');
+												//$alarm_status = file_get_contents('http://192.168.0.122/jeedom/core/api/jeeApi.php?apikey=i790jec51h53tkdhq3uw&type=cmd&id=4');
+												$alarm_status = 0;
 												if($alarm_status == 0){
 													echo '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>';
 												}
