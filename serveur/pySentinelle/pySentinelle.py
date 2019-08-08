@@ -96,6 +96,25 @@ def check_receiver():
 					
 # -- end check_receiver() --
 
+def check_ups():
+	print '\ncheck_ups()'
+	processname = 'ups_daemonized.py'
+	tmp = os.popen("ps -Af | grep '.py'").read()
+	proccount = tmp.count(processname)
+
+	if proccount > 0:
+		logmessage = " OK, ups_daemonized is running"
+	else :
+		global ACCESS_TOKEN
+		pb = Pushbullet(ACCESS_TOKEN)
+		logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Domini - Erreur : ups_daemonized est arrete"
+		push = pb.push_note("Domini", logmessage)
+		
+	print logmessage
+	syslog.syslog(logmessage)	
+					
+# -- end check_receiver() --
+
 #--- obligatoire pour lancement du code --
 if __name__=="__main__": # set executable code
 	setup() 	# setup() function call
@@ -103,3 +122,4 @@ if __name__=="__main__": # set executable code
 	check_webserver()
 	check_db()
 	check_receiver()
+	check_ups()
