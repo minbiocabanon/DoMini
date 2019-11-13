@@ -4,7 +4,6 @@ import syslog
 
 import time
 import MySQLdb as mdb
-from time import sleep
 
 tables = ["chauffage_log", "voletroulant_log", "bypass_pc_log", "pellets_rsv", "ups", "internet_connex"]
 NB_JOUR = 15
@@ -50,21 +49,25 @@ def clean_table():
 			query = 'DELETE FROM `domotique`.`{0}` WHERE `date_time` < DATE_SUB(CURDATE(), interval {1} DAY);'.format(table, NB_JOUR)
 			# run MySQL Query
 			cur.execute(query)
-			result = cur.fetchone()
+			#result = cur.fetchone()
 			con.commit()
-			# Close all cursors
-			cur.close()
-			# Close MySQL session
-			con.close()
+			
 		except mdb.Error, e:
 			# create variable
-			result = 0
+			#result = 0
 			# Display MySQL errors
 			try:
 				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 			except IndexError:
 				print "MySQL Error: %s" % str(e)	
 
+		finally:
+			# closing database connection.
+			# Close all cursors
+			cur.close()
+			# Close MySQL session
+			con.close()			
+				
 		logmessage = "Donnees de la table "+str(table)+" < "+str(NB_JOUR)+" jours supprimes ..."
 		print logmessage
 		syslog.syslog(logmessage)
@@ -89,19 +92,22 @@ def optimize():
 			query = 'OPTIMIZE TABLE `{0}`;'.format(tabname)
 			# run MySQL Query
 			cur.execute(query)
-			result = cur.fetchone()
-			# Close all cursors
-			cur.close()
-			# Close MySQL session
-			con.close()
+			#result = cur.fetchone()
+
 		except mdb.Error, e:
 			# create variable
-			result = 0
+			#result = 0
 			# Display MySQL errors
 			try:
 				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 			except IndexError:
 				print "MySQL Error: %s" % str(e)
+		finally:
+			# closing database connection.
+			# Close all cursors
+			cur.close()
+			# Close MySQL session
+			con.close()
 # -- end optimize --
 
 #--- obligatoire pour lancement du code --

@@ -12,6 +12,7 @@ date_niveaugral = 0
 niveaugral = 0
 NIVEAU_MINI = 33
 
+
 #--- setup ---
 def setup():
 	print ('Setup')
@@ -82,7 +83,7 @@ def check_niveaugral():
 	syslog.syslog(logmessage)
 	
 	# requete pour lire la table contenant les logs de niveau de granules
-	if (niveaugral >= NIVEAU_MINI):
+	if (niveaugral <= NIVEAU_MINI):
 		# add some log
 		logmessage = ' NIVEAU DE GRANULES TROP BAS ! ({0} cm)'.format(niveaugral)
 		print logmessage

@@ -8,15 +8,17 @@
 	//--------------------------------------------------
 	
 	// ------------------- recuperation de toutes les donnees instantanees
+	
+	// include("../infos/config.inc.php"); // on inclu le fichier de config
 	// requete MySQL pour obtenir les données de la BDD
-	//echo" $host, $login, $passe, $bdd \n";
+	// echo" $host, $login, $passe, $bdd \r\n";
 	$link = mysqli_connect($host,$login,$passe,$bdd);
 	if (!$link) {
 		die('Erreur de connexion (' . mysqli_connect_errno() . ') '
 				. mysqli_connect_error());
 	}
 
-	//echo 'Succès... ' . mysqli_get_host_info($link) . "\n";
+	// echo 'Succès... ' . mysqli_get_host_info($link) . "\n";
 	
 	
 	$SQL="SET lc_time_names = 'fr_FR'" ; // Pour afficher date en français dans MySql. 
@@ -26,10 +28,14 @@
 	
 	//requete pour récupérer la dernière consommation instantanée
 	$SQL="SELECT *, DATE_FORMAT(date_time, '%W %e %M %X - %T') as DATE FROM `donnees_instant`"; 
+	//debug
+	// echo 'requete sql : '.$SQL.'\r\n';
 	//Envoie de la requete
 	$RESULT = @mysqli_query($link,$SQL);
 	// //lecture du resultat de la requete
 	$myrow = mysqli_fetch_array($RESULT); 
+	// debug
+	// echo 'myrow : '.$myrow["DATE"].' \r\n';
 	//on récupère l'heure
 	$data_date[] = $myrow["DATE"];
 	
