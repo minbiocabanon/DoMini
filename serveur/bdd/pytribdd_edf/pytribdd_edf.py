@@ -149,12 +149,19 @@ def supp_donnees_tag(table):
 			query = 'DELETE FROM `domotique`.`{0}` WHERE date_format( date_time, \'%Y-%d-%m\' ) = date_format( \'{1}\', \'%Y-%d-%m\') AND `{2}`.`tag` =0;'.format(table, date_tag.strftime("%Y-%m-%d"), table)
 			# run MySQL Query
 			cur.execute(query)
-			result = cur.fetchone()
-			con.commit()
+			#result = cur.fetchone()
+			nbrow = cur.rowcount
+			
+			logmessage = "   suppression de "+str(nbrow)+" ligne(s) non taggee(s) ok."
+			print logmessage
+			syslog.syslog(logmessage)
+			
 			# Close all cursors
 			cur.close()
+			con.commit()
 			# Close MySQL session
 			con.close()
+						
 			# increment date_tag + 1 day
 			date_tag = date_tag + dt.timedelta(days=1)
 		except mdb.Error, e:

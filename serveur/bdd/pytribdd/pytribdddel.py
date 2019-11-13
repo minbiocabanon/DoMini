@@ -12,9 +12,9 @@ NB_JOUR = 5
 #--- setup ---
 def setup():
 	print ('Setup')
-	syslog.openlog("pytribdd.py")
+	syslog.openlog("pytribdddel.py")
 	syslog.syslog("Demarrage")
-	logmessage = " Demarrage pytribdd.py, Programme qui allege les tables capteurs en supprimant les donnees anciennes."
+	logmessage = " Demarrage pytribdddel.py, Programme qui allege les tables capteurs en supprimant les donnees anciennes."
 	print logmessage
 	syslog.syslog(logmessage)
 	
@@ -299,13 +299,13 @@ def optimize():
 def clean_table():
 
 	# tag MIN value of the day
-	tag_donnees(table, "MIN")
+	#tag_donnees(table, "MIN")
 
 	# tag MAX value of the day
-	tag_donnees(table, "MAX")
+	#tag_donnees(table, "MAX")
 	
 	# tag last HP/HC of the day
-	tag_donnees_heure(table)
+	#tag_donnees_heure(table)
 	
 	# delete all data not tagged during the selected day
 	supp_donnees_tag(table)
@@ -320,6 +320,6 @@ if __name__=="__main__": # set executable code
 	clean_table()
 	optimize()
 	
-	logmessage = "Fin pytribdd"
+	logmessage = "Fin pytribdddel"
 	print logmessage
 	syslog.syslog(logmessage)
