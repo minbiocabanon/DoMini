@@ -311,7 +311,7 @@ def manage_vr():
 			
 		# on positionne les flags selon la saison et le flux solaire seuil
 		# si on a calcule un flux solaire coherent
-		if fPyraMoy > 0.0 :
+		if fPyraMoy >= 0.0 :
 			# si on est en hiver ou en inter saison
 			if saison == "H" or saison == "A" :
 				# on regarde si le flux actuel est > au mini demande en hiver
@@ -329,7 +329,9 @@ def manage_vr():
 		else :
 			# on force l'etat en 'immobile'
 			etat_vr_bureau = etat_vr_chjf = etat_vr_chm = etat_vr_salon = 3
-			logmessage = " Etat des VR force a immobile (3) car fPyraMoy = " + fPyraMoy
+			# on force le flag a 0 pour la suite du programme
+			flag_flux = 0
+			logmessage = " Etat des VR force a immobile (3) car fPyraMoy = " + str(fPyraMoy)
 			print logmessage
 			syslog.syslog(logmessage)
 
