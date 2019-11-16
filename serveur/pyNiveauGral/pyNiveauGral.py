@@ -83,7 +83,9 @@ def check_niveaugral():
 	syslog.syslog(logmessage)
 	
 	# requete pour lire la table contenant les logs de niveau de granules
-	if (niveaugral <= NIVEAU_MINI):
+	# attention : on mesure la profondeur du reservoir. la quantite de granule est donc la profondeur max du reservoir - la mesure (niveaugral)
+	# on compare donc la profondeur a la profondeur MINI correspondant a un niveau de granule bas.
+	if (niveaugral >= NIVEAU_MINI):
 		# add some log
 		logmessage = ' NIVEAU DE GRANULES TROP BAS ! ({0} cm)'.format(niveaugral)
 		print logmessage
