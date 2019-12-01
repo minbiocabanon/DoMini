@@ -134,7 +134,7 @@ int envoie_msg_poele(int consigne_p){
 	}
 	
 	syslog(LOG_DEBUG, "  Message envoye au poele : !POL,%s,%d",poele_ON_OFF, consigne_p);
-	
+	printf("  Message envoye au poele : !POL,%s,%d",poele_ON_OFF, consigne_p);
 	// printf("\nMessage ecrit dans la pile");
 	// s'il n'y a pas d'erreurs, tout est ok, on le dit
 	return(0);
