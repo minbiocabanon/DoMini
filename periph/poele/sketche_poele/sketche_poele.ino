@@ -51,6 +51,9 @@ char stNum[] = "POL";
 #define ACK_TIME 5000
 #define NB_ATTEMPTS_ACK 3
 
+#define	TIMEOUT_RADIO	900000
+unsigned long TimeOutRadio;	
+
 #define DELAY_APPUI_TOUCHE 200	//en milliseconde
 
 #define NB_BLIP_LED	500			//nb de cycle à attendre entr 2 clignotements de la led status
@@ -91,25 +94,26 @@ enum SOUSMENU{
 
 
 //prototype fonctions
-int Trt_msg_POL(char *message);
-int TrtReceptRadio(void);
-int Trt_consigne(int consigne);
-int standby_poele(void);
-int sousmenu_goto(int index_sousmenu);
-int menu_goto(int index_menu);
-int set_puissance(int puissance);
-int appui_bouton(int bouton);
+byte Trt_msg_POL(char *message);
+byte TrtReceptRadio(void);
+byte Trt_consigne(int consigne);
+byte standby_poele(void);
+byte sousmenu_goto(int index_sousmenu);
+byte menu_goto(int index_menu);
+byte set_puissance(int puissance);
+byte appui_bouton(int bouton);
 void TimerMinute(void);
+void TimeoutRadiofunc(void);
 void NiveauGranules(void);
-int scan_bouton(void);
-int Trt_bouton(int bouton);
+byte scan_bouton(void);
+void Trt_bouton(int bouton);
 void tache_gestion_IHM(void);
 void tache_mesure_niveau_granule(void);
 void tache_gestion_radio(void);
 void tache_gestion_puissance(void);
 void it_bouton(void);
 static byte waitForAck(void);
-int send_data_radio(void);
+void send_data_radio(void);
 void clignote_led(void);
 void recalage_zero(void);
 void CheckTimer(void);
@@ -127,20 +131,21 @@ boolean bflag_consigne_en_attente = false;
 boolean bflag_recalage_0 = false;
 boolean bflag_mesure_niveau = false;
 boolean bflag_envoie_niveau = false;
+boolean bflag_timeoutradio = false;
 
 // etat du poele et consigne de chauffe
-int etat_poele; 		// 0 (OFF) ou 1 (ON)
-int consigne_poele;		// 0 à 100 (%)
-int pos_sousmenu = 0; 	// position dans le sousmenu
-int pos_menu = 0; 		// position dans le menu
-int pos_puissance = 0;	//  index sur la puissance du poele
+byte etat_poele; 		// 0 (OFF) ou 1 (ON)
+byte consigne_poele;		// 0 à 100 (%)
+byte pos_sousmenu = 0; 	// position dans le sousmenu
+byte pos_menu = 0; 		// position dans le menu
+byte pos_puissance = 0;	//  index sur la puissance du poele
 
-int btn_it = 0;			// variable qui contient le N° de la patte ayant provoque l'IT
-int nb_appuis = 0;		// variable pour DEBUG
+byte btn_it = 0;			// variable qui contient le N° de la patte ayant provoque l'IT
+byte nb_appuis = 0;		// variable pour DEBUG
 int nblipled = 0;
-int nNbConsigneCpt = 0; // variable pour compter le nombre de consignes appliquée afin de faire un recalage à 0 au bout de NBCONSIGNE_RAZ
+byte nNbConsigneCpt = 0; // variable pour compter le nombre de consignes appliquée afin de faire un recalage à 0 au bout de NBCONSIGNE_RAZ
 
-int nb_sac_pellets = 0;	// variable pour le nombre de sacs
+byte nb_sac_pellets = 0;	// variable pour le nombre de sacs
 int niveau_granule = 0;	// variable pour le niveau du reservoir a granules
 
 //chaine pour l'émission RF12
@@ -208,7 +213,7 @@ void recalage_zero(void){
 //!\brief           Gestion de la réception des messages depuis la radio
 //!\return        1 sir message reçu = VRL sinon 0
 //----------------------------------------------------------------------
-int TrtReceptRadio(void){
+byte TrtReceptRadio(void){
 
 	 // si on a reçu un message valide
 	if (rf12_recvDone() && rf12_crc == 0){
@@ -222,7 +227,11 @@ int TrtReceptRadio(void){
 		// Serial.println("\n Message recu");
 		// Serial.print(buffer_recept_rf12);
 		// Serial.println("<");
-		//on verifie que l'entet du message est la bonne, en théorie c'est toujours le cas si on utilise les ID radio
+		
+		//on réarme le timer pour le timeout radio
+		TimeOutRadio = millis();
+		
+		//on verifie que l'entete du message est la bonne, en théorie c'est toujours le cas si on utilise les ID radio
 		if( buffer_recept_rf12[1] == 'P' && buffer_recept_rf12[2] == 'O' && buffer_recept_rf12[3] == 'L'){
 			//on affiche le message reçu
 			//Serial.println(buffer_recept_rf12);
@@ -249,7 +258,7 @@ int TrtReceptRadio(void){
 //!\param[in]     buffer radio reçu
 //!\return        retourne 1 si le message est $POL, 0,XXX  sinon
 //---------------------------------------------------------------------- 
-int Trt_msg_POL(char *message){
+byte Trt_msg_POL(char *message){
 
  	//Déclaration des variables
 	char *entete, *i;
@@ -301,7 +310,7 @@ int Trt_msg_POL(char *message){
 //!\param[in]     consigne en %
 //!\return        retourne 1 si OK
 //---------------------------------------------------------------------- 
-int Trt_consigne(int consigne){
+byte Trt_consigne(int consigne){
 		
 	Serial.print("\nOn se repositionne au menu principal ");
 	//on se place dans le menu PRINCIPAL
@@ -324,7 +333,7 @@ int Trt_consigne(int consigne){
 //!\param[in]     index du sousmenu dans lequel on veut aller
 //!\return        retourne 1 si OK
 //---------------------------------------------------------------------- 
-int sousmenu_goto(int index_sousmenu){
+byte sousmenu_goto(int index_sousmenu){
 
 	//tant que la position du sous menu est différent de la position souhaitée
 	while(pos_sousmenu != index_sousmenu){
@@ -346,7 +355,7 @@ int sousmenu_goto(int index_sousmenu){
 //!\param[in]     index du menu dans lequel on veut aller
 //!\return        retourne 1 si OK
 //---------------------------------------------------------------------- 
-int menu_goto(int index_menu){
+byte menu_goto(int index_menu){
 
 	//tant que la position du menu est différent de la position souhaitée
 	while(pos_menu != index_menu){
@@ -370,7 +379,7 @@ int menu_goto(int index_menu){
 //!\param[in]    	puissance en %
 //!\return		retourne 1 si OK
 //---------------------------------------------------------------------- 
-int set_puissance(int puissance){
+byte set_puissance(int puissance){
 
 	// Pour éviter la désynchronisation, toutes les N consignes, on fait un recalage à zero
 	nNbConsigneCpt++;
@@ -425,7 +434,7 @@ int set_puissance(int puissance){
 //!\param[in]     Bouton à appuyer
 //!\return        retourne 1 si OK
 //---------------------------------------------------------------------- 
-int appui_bouton(int bouton){
+byte appui_bouton(int bouton){
 
 	// on inhibe l'interruption pour ne pas se prendre une iT qd on va piloter une sortie
 	//noInterrupts();
@@ -462,7 +471,7 @@ int appui_bouton(int bouton){
 //!\brief           Passe le poele en mode standay
 //!\return        retourne 1 si le message est $POL, 0 sinon
 //---------------------------------------------------------------------- 
-int standby_poele(void){
+byte standby_poele(void){
 
 	Serial.print("\nOn attend la fin du timer ");
 
@@ -487,7 +496,7 @@ int standby_poele(void){
 //!\brief           Scrute chaque entrée pour savoir quel est le bouton enfonce
 //!\return        retourne le N° (DIGITAL) du bouton appuye
 //---------------------------------------------------------------------- 
-int scan_bouton(void){
+byte scan_bouton(void){
 
 	int btn = 0;
 	
@@ -521,7 +530,7 @@ int scan_bouton(void){
 //!\param[in]     bouton a appuyer
 //!\return        ?
 //---------------------------------------------------------------------- 
-int Trt_bouton(int bouton){
+void Trt_bouton(int bouton){
 
 	switch(bouton){
 	
@@ -631,7 +640,7 @@ static byte waitForAck() {
 //!\return		?
 //---------------------------------------------------------------------- 
 //int send_data_radio(char *message){
-int send_data_radio(void){
+void send_data_radio(void){
 	int nAttempt = 1;
 	bool flag_ACK_received = false;		
 
@@ -786,6 +795,21 @@ void tache_gestion_radio(void){
 		// on reset le flag
 		bflag_mode_manuel = false;
 	}
+	
+	// si le timeout a expire , il faut reinitialiser la radio 
+	if(bflag_timeoutradio == true){
+		Serial.print("\n Timeout radio !!! \n");
+		bflag_timeoutradio = false;
+		
+		//initialisation du module radio RF12
+		rf12_initialize(1, RF12_868MHZ, 33);
+		// Reconfig du baudrate : 1200 bauds
+		rf12_control(0xC6A3);	
+		Serial.print("\nInit Radio : \n 1200 bauds\n");
+		
+		//on lance le timer pour le timeout radio
+		TimeOutRadio = millis();
+	}
 }
 
 //----------------------------------------------------------------------
@@ -888,6 +912,17 @@ void TimerMinute(void) {
 	}
 }
 
+
+//----------------------------------------------------------------------
+//!\brief           scheduler()
+//----------------------------------------------------------------------
+void Scheduler() {
+
+	if( (millis() - TimeOutRadio) > TIMEOUT_RADIO){
+		bflag_timeoutradio = true; 
+	}	
+}
+
 //----------------------------------------------------------------------
 //!\brief           Interruption lors d'un appui sur un bouton
 //----------------------------------------------------------------------
@@ -973,4 +1008,7 @@ void loop(){
 	delay(10);
 	
 	t.update();
+	
+	Scheduler();
+
 }
