@@ -10,7 +10,7 @@
 #include <JeeLib.h>
 #include <Timer.h>
 #include <Ultrasonic.h>
-#include "RunningMedian.h"
+//#include "RunningMedian.h"
 
 #define version "JeeNode Poele"
 char stNum[] = "POL";
@@ -60,7 +60,7 @@ unsigned long TimeOutRadio;
 #define NBCONSIGNE_RAZ 3		// nb de consigne à appliquer entre 2 recalage_zero
 
 // reservoir pellets
-#define NB_SAMPLE_US 50	
+#define NB_SAMPLE_US 25	
 #define MAX_MESURE_US 45		// profondeur maxi du reservoir en cm
 #define MIN_MESURE_US 0			// profondeur mini du reservoir en cm
 
@@ -154,7 +154,7 @@ char payload[16] = "$POL,XXX,N**";
 
 Timer t;
 Ultrasonic ultrasonic(16);	// Entrée captant l'info ultrason  AIO de P3 - DIGITAL 16
-RunningMedian samples = RunningMedian(NB_SAMPLE_US);
+// RunningMedian samples = RunningMedian(NB_SAMPLE_US);
 
 //----------------------------------------------------------------------
 //!\brief           Test du timer , écrit du debug sur la console
@@ -812,44 +812,44 @@ void tache_gestion_radio(void){
 	}
 }
 
-//----------------------------------------------------------------------
-//!\brief           Tache de fond qui mesure le niveau du reserver a granules
-//---------------------------------------------------------------------- 
-void tache_mesure_niveau_granule(){
-	// si le timer a claque
-	if( bflag_mesure_niveau == true){
-		//on realise la mesure
-		unsigned int x = -1;
-		unsigned int i = 0;
-		//on fait plusieurs mesures
-		for( i = 0; i < NB_SAMPLE_US; i++){
-			ultrasonic.MeasureInCentimeters();
-			//on ajoute la mesure dans une table
-			samples.add(ultrasonic.RangeInCentimeters);
-			delay(10);
-		}
-		//on calcule la valeur mediane, ce qui éliminera les mesures incohérentes
-		x = samples.getMedian();
+// //----------------------------------------------------------------------
+// //!\brief           Tache de fond qui mesure le niveau du reserver a granules
+// //---------------------------------------------------------------------- 
+// void tache_mesure_niveau_granule(){
+	// // si le timer a claque
+	// if( bflag_mesure_niveau == true){
+		// //on realise la mesure
+		// unsigned int x = -1;
+		// unsigned int i = 0;
+		// //on fait plusieurs mesures
+		// for( i = 0; i < NB_SAMPLE_US; i++){
+			// ultrasonic.MeasureInCentimeters();
+			// //on ajoute la mesure dans une table
+			// samples.add(ultrasonic.RangeInCentimeters);
+			// delay(10);
+		// }
+		// //on calcule la valeur mediane, ce qui éliminera les mesures incohérentes
+		// x = samples.getMedian();
 		
-		//si la mesure est cohérente
-		if(x > MIN_MESURE_US && x <= MAX_MESURE_US ){
-			// on prepare le flag pour envoyer la mesure par radio
-			bflag_envoie_niveau = true;
-			niveau_granule = x;
-			// on affiche du debug
-			Serial.print("Niveau granule : mesure ultrason (cm) = ");
-			Serial.println(niveau_granule);
-		}
-		else{
-			// on affiche du debug
-			Serial.print("Niveau granule : Erreur sur la mesure ");
-			//sinon on force a false
-			bflag_envoie_niveau = false;
-		}
-		// on reset le flag 
-		bflag_mesure_niveau = false;	
-	}
-}
+		// //si la mesure est cohérente
+		// if(x > MIN_MESURE_US && x <= MAX_MESURE_US ){
+			// // on prepare le flag pour envoyer la mesure par radio
+			// bflag_envoie_niveau = true;
+			// niveau_granule = x;
+			// // on affiche du debug
+			// Serial.print("Niveau granule : mesure ultrason (cm) = ");
+			// Serial.println(niveau_granule);
+		// }
+		// else{
+			// // on affiche du debug
+			// Serial.print("Niveau granule : Erreur sur la mesure ");
+			// //sinon on force a false
+			// bflag_envoie_niveau = false;
+		// }
+		// // on reset le flag 
+		// bflag_mesure_niveau = false;	
+	// }
+// }
 
 //----------------------------------------------------------------------
 //!\brief           Tache de fond qui gère la puissance appliquée au poele
@@ -1001,7 +1001,7 @@ void loop(){
 	
 	tache_gestion_radio();
 	
-	tache_mesure_niveau_granule();
+	//tache_mesure_niveau_granule();
 	
 	status();
 	
