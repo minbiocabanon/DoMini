@@ -3,7 +3,7 @@ cd /var/www/domini/php/
 # calcul de la puissance du puits canadien
 # suppression fichier temporaire
 curl 0.0.0.0:80/php/puissance_pc_calc.php
-curl 0.0.0.0:80/php/test_internet.php
+
 
 #lancement des page PHP qui vont generer les graphs
 cd /var/www/domini/php/highstock/
@@ -23,8 +23,7 @@ curl 0.0.0.0:80/php/highstock/csv_temp_comble.php
 curl 0.0.0.0:80/php/highstock/csv_temp_vmc_ext.php
 # Génére le CSV avec les info de conso électrique instantannée
 curl 0.0.0.0:80/php/highstock/csv_teleinfo_live.php
-# Génére le CSV avec les info de connexion internet
-curl 0.0.0.0:80/php/highstock/csv_test_internet.php
+
 
 
 
