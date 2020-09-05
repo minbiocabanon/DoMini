@@ -6,7 +6,7 @@ import time
 import MySQLdb as mdb
 
 tables = ["chauffage_log", "voletroulant_log", "bypass_pc_log", "pellets_rsv", "ups", "internet_connex"]
-NB_JOUR = 15
+NB_JOUR = 180
 
 #--- setup ---
 def setup():
