@@ -51,6 +51,11 @@
 							<td><a href="http://domini.dlinkddns.com:50112">http://domini.dlinkddns.com:50112</a></td>
 						  </tr>
 						  <tr>
+							<td>Revotech (garage)</td>
+							<td><a href="http://192.168.0.119:80">192.168.0.119:80</a></td>
+							<td><a href="http://domini.dlinkddns.com:50114">http://domini.dlinkddns.com:50112</a></td>
+						  </tr>
+						  <tr>
 							<td>Revotech (porche)</td>
 							<td><a href="http://192.168.0.129:80">http://192.168.0.129:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50113">http://domini.dlinkddns.com:50113</a></td>
