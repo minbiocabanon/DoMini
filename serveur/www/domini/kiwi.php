@@ -40,7 +40,7 @@
 				  <div class="navbar-inner">
 					<a class="brand" href="#">Cameras</a>
 					<ul class="nav">
-					  <li class="active"><a href="camera.php">Live</a></li>
+					  <li class="active"><a href="kiwi.php">Live</a></li>
 					</ul>
 				  </div>
 				</div>
