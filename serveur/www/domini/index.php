@@ -1,6 +1,6 @@
 ﻿<?PHP
 	include("./infos/config.inc.php"); // on inclu le fichier de config
-	@include("./php/restore_donnees_instant.php");
+	include("./php/restore_donnees_instant.php");
 	include("./php/voletroulant.inc.php"); // fonction de conversion des etat des VR
 	//include("php/voletroulant_etat.inc.php"); // récupére l'état des VR
 	include("./php/voletroulant_tab.php");
