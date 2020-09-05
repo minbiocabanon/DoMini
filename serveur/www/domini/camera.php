@@ -100,7 +100,22 @@
 										}
 									  ?>
 									  </p>
+									</div>
+								</div>
+								<div class="item">
+									<img src="./webcam/garage_kiwi.jpg?<?PHP echo time()?>" alt="">
+									<div class="carousel-caption">
+									  <h4>Garage2</h4>
+									  <p>
+									 <?PHP
+										$filename_cam5 = './webcam/garage_kiwi.jpg';
+										if(file_exists($filename_cam5)){
+											echo date("Y-m-d H:i:s",  filemtime($filename_cam5));
+										}
+									  ?>
+									  </p>
 									</div>								
+																	
 								</div>								
 							  </div>
 							  
