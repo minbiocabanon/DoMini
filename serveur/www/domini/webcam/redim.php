@@ -2,8 +2,8 @@
 $redimOK = fctredimimage(1200,800,'','sejour.jpg','','sejour_full.jpg');
 if ($redimOK == 1) { echo 'Redimensionnement sejour_full OK !<br>'; } else { echo 'Redimensionnement sejour_full NNNNNNOK !<br>'; }
 
-// $redimOK = fctredimimage(1200,800,'','garage.jpg','','garage_full.jpg');
-// if ($redimOK == 1) { echo 'Redimensionnement garage_full OK !<br>'; } else { echo 'Redimensionnement garage_full NNNNNNOK !<br>'; }
+$redimOK = fctredimimage(1200,800,'','garage_kiwi.jpg','','garage_full.jpg');
+if ($redimOK == 1) { echo 'Redimensionnement garage_full OK !<br>'; } else { echo 'Redimensionnement garage_full NNNNNNOK !<br>'; }
 
 
 $redimOK = fctredimimage(150,110,'','garage_tn.jpg','','garage.jpg');
