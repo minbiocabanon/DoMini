@@ -44,6 +44,28 @@
 			
 		// pour tous les mois
 		for($m=1 ; $m <= $mois ; $m++){
+			// LINKY : Septembre 2020 , installation LINKY qui a remis à O le compteur HC/HP : ajout d'un offset avec les valeurs HC/HP du précédent compteur
+			if($annee == 2020 && $m == 9){
+				// requete MySQL pour obtenir les HP et HC avant la pose du linky
+				$SQL="SELECT `linky_hc`,`linky_hp` FROM `linky_offset`";
+				// echo "<br>requete SQL : $SQL<br>";
+				$RESULT = @mysqli_query($link, $SQL);	
+				// on recupére le resultat
+				$myrow = @mysqli_fetch_array($RESULT);
+				// on stocke la quantité de HP et HC consommés (en kWh)
+				$linky_offset_HC = $myrow["linky_hc"] ;
+				$linky_offset_HP = $myrow["linky_hp"] ;
+
+				// on clean et on ferme la BDD
+				mysqli_free_result($RESULT) ;				
+			}
+			else{
+				$linky_offset_HC = 0;
+				$linky_offset_HP = 0;
+			}
+			
+			
+			
 			// requete MySQL pour obtenir les HP et HC du mois
 			$SQL="SELECT DATE_FORMAT(date_time, '%d-%m-%Y') AS DATE, HC, HP
 					FROM  `teleinfo` 
@@ -79,8 +101,8 @@
 					// echo "$data_date - $data_HC_fin , $data_HP_fin <br>";
 
 					// On calcul la conso mensuelle
-					$data_consomoisHC = $data_HC_fin - $data_HC_deb ;
-					$data_consomoisHP = $data_HP_fin - $data_HP_deb ;
+					$data_consomoisHC = $data_HC_fin - $data_HC_deb + $linky_offset_HC;
+					$data_consomoisHP = $data_HP_fin - $data_HP_deb + $linky_offset_HP;
 					
 					// On converti en euros
 					$data_consomoisHC = round($tarif_HC * $data_consomoisHC , 2);
