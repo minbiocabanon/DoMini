@@ -3,9 +3,10 @@ import sys
 import syslog
 import time
 from pushbullet import Pushbullet
-import PyNUT
+#import PyNUT
+from nut2 import PyNUTClient
 import json
-import MySQLdb as mdb
+import mariadb as mdb
 
 import daemon
 
@@ -33,20 +34,20 @@ def setup():
 
 # -- get all about time and date --
 def get_time():
-	print '\nget_time()'
+	print('\nget_time()')
 	# display date/time
 	logmessage = time.strftime(" Date et heure : %Y-%m-%d %H:%M:%S")
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 # -- end get_time --
 
 # -- test si le server web tourne --
 def check_db():
-	print '\ncheck_db()'
+	print('\ncheck_db()')
 	# requete pour tester si la bdd tourne
 	try:
 		# Open MySQL session
-		con = mdb.connect('localhost','root','mysql','domotique')
+		con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 		# If connection fail, see except process hereafter
 		#else 
 		# Close MySQL session
@@ -54,24 +55,24 @@ def check_db():
 		# add some log
 		logmessage = " OK, Database is running"
 
-	except mdb.Error, e:
+	except mdb.Error as e:
 		# Display MySQL errors
 		try:
-			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+			print("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
 			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + " DoMini - Error : Database is NOT running"
 			global ACCESS_TOKEN
 			pb = Pushbullet(ACCESS_TOKEN)
 			push = pb.push_note("Domini", logmessage)	
 		except IndexError:
-			print "MySQL Error: %s" % str(e)
+			print("MySQL Error: %s" % str(e))
 
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 
 # -- end check_db() --
 
 def readupsvar():
-	print '\nreadupsvar()'
+	print('\nreadupsvar()')
 	
 	global ups_status
 	global battery_charge
@@ -80,9 +81,11 @@ def readupsvar():
 	
 	try:
 		# connect to UPS service
-		ups = PyNUT.PyNUTClient( host='localhost', login='admin', password='adminpass' )
+		# ups = PyNUT.PyNUTClient( host='localhost', login='admin', password='adminpass' )
+		ups = PyNUTClient()
 		# read all info from ups
-		UPSvars = ups.GetUPSVars( ups='eaton800' )
+		# UPSvars = ups.GetUPSVars( ups='eaton800' )
+		UPSvars = ups.list_vars("eaton800")
 		# convert it in JSON format (easier to parse with JSON module)
 		UPSVarsJSON = json.dumps(UPSvars)
 		# parse JSON info
@@ -96,16 +99,16 @@ def readupsvar():
 		
 		# print debug and log message
 		logmessage = " ups status is " + ups_status + " \n battery charge is " + str(battery_charge) + " % \n output voltage is " + str(output_voltage) + "V \n remaining is " + str(battery_runtime) + " minutes"
-		print logmessage
+		print(logmessage)
 	
 	except:
 		logmessage = " Error while reading or parsing UPS Variables"
-		print logmessage
+		print(logmessage)
 
 # -- end readupsvar() --
 
 def statemachine():
-	print '\nstatemachine()'
+	print('\nstatemachine()')
 	
 	global SM_state
 	global timeout
@@ -120,7 +123,7 @@ def statemachine():
 		# Select state of state machine
 		# state POWERON
 		if SM_state == "POWERON" :
-			print "POWERON \n"
+			print("POWERON \n")
 			# if 230V is not present
 			if ups_status == "OB DISCHRG":
 				# change state to power outtage state
@@ -130,7 +133,7 @@ def statemachine():
 				# prepare a message to send
 				logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n panne de courant !\n Batterie a "+ str(battery_charge) +"%, "+ str(battery_runtime) +" minutes restantes."
 				# print message and log it
-				print logmessage
+				print(logmessage)
 				syslog.syslog(logmessage)
 				# send message through pushbullet to user
 				#initialize pushbullet 
@@ -140,7 +143,7 @@ def statemachine():
 		
 		# state POWEROUTTAGE
 		elif SM_state == "POWEROUTTAGE" :
-			print "POWEROUTTAGE \n"
+			print("POWEROUTTAGE \n")
 			# if 230V is present
 			if ups_status == "OL CHRG":
 				# change state to power on state
@@ -148,7 +151,7 @@ def statemachine():
 				# prepare a message to send
 				logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Electricite revenue !\n Batterie a "+ str(battery_charge) +"%, "
 				# print message and log it
-				print logmessage
+				print(logmessage)
 				syslog.syslog(logmessage)
 				# send message through pushbullet to user
 				pb = Pushbullet(ACCESS_TOKEN)
@@ -164,19 +167,19 @@ def statemachine():
 					pb = Pushbullet(ACCESS_TOKEN)
 					push = pb.push_note("Domini - onduleur", logmessage)
 					# print message and log it
-					print logmessage
+					print(logmessage)
 					syslog.syslog(logmessage)
 					# set next time
 					timeout = now + PERIOD_MSG * 60
 	
 	except :
 		logmessage = " Error in state machine (probably error with pushbullet while no internet or more 500 pushes per month)"
-		print logmessage
+		print(logmessage)
 		syslog.syslog(logmessage)
 # -- end statemachine() --
 
 def checkupsstatus():
-	print '\ncheckupsstatus()'
+	print('\ncheckupsstatus()')
 	
 	global ups_status
 	global battery_charge
@@ -202,18 +205,18 @@ def checkupsstatus():
 			pb = Pushbullet(ACCESS_TOKEN)
 			push = pb.push_note("Domini - onduleur", logmessage)
 		# print message and log it
-		print logmessage
+		print(logmessage)
 		syslog.syslog(logmessage)
 		
 	except :
 		logmessage = " Error while reading or parsing UPS Variables"
-		print logmessage
+		print(logmessage)
 		syslog.syslog(logmessage)
 		
 # -- end checkupsstatus() --
 		
 def loginfo():
-	print '\nloginfo()'
+	print('\nloginfo()')
 	
 	global ups_status
 	global battery_charge
@@ -237,7 +240,7 @@ def loginfo():
 			# Log info in database
 			try:
 				# Open MySQL session
-				con = mdb.connect('localhost','root','mysql','domotique')
+				con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 				cur = con.cursor()
 				# prepare query
 				#query = "INSERT INTO domotique.ups VALUES (NULL, NOW() , '"+ ups_status +"', '"+ str(battery_charge) +"', '"+ str(battery_runtime) +"', '"+ str(output_voltage) +"');"
@@ -253,12 +256,12 @@ def loginfo():
 				# say that request is ok
 				logmessage = " Data saved in ups table."
 				syslog.syslog(logmessage)
-			except mdb.Error, e:
+			except mdb.Error as e:
 				# Display MySQL errors
 				try:
-					print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+					print("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
 				except IndexError:
-					print "MySQL Error: %s" % str(e)			
+					print("MySQL Error: %s" % str(e))			
 			
 	except :
 		logmessage = " Error in loginfo()"

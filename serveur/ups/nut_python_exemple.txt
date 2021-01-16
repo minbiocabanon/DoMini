@@ -1,5 +1,103 @@
+----------------------------
+ub2004 avec python3
+
+jcaulier@ub2004:~/src/domini/serveur/ups$ pip3 install nut2
+Collecting nut2
+  Downloading nut2-2.1.1.tar.gz (19 kB)
+Building wheels for collected packages: nut2
+  Building wheel for nut2 (setup.py) ... done
+  Created wheel for nut2: filename=nut2-2.1.1-py3-none-any.whl size=18232 sha256=99cb847688970752c4219eda8a1aaa60f9ca1a429a743a464ce84b97e296ab3c
+  Stored in directory: /home/jcaulier/.cache/pip/wheels/60/72/38/36e181d0677901e4890c631b265ab450be61e2b6b3c32632b1
+Successfully built nut2
+Installing collected packages: nut2
+Successfully installed nut2-2.1.1
+jcaulier@ub2004:~/src/domini/serveur/ups$ python3
+Python 3.8.5 (default, Jul 28 2020, 12:59:40)
+[GCC 9.3.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from nut2 import PyNUTClient
+>>> client = PyNUTClient()
+>>> client.help()
+'Commands: HELP VER GET LIST SET INSTCMD LOGIN LOGOUT USERNAME PASSWORD STARTTLS\n'
+
+
+>>> client.list_ups()
+{'eaton800': 'UPS Eaton 800'}
+
+
+>>> client.list_vars("eaton800")
+{'battery.charge': '100', 
+'battery.charge.low': '20', 
+'battery.runtime': '1082', 
+'battery.type': 'PbAc', 
+'device.mfr': 'EATON', 
+'device.model': 'Protection Station 800', 
+'device.serial': 'AN2E49008', 
+'device.type': 'ups', 
+'driver.name': 'usbhid-ups', 
+'driver.parameter.pollfreq': '30', 
+'driver.parameter.pollinterval': '2', 
+'driver.parameter.port': 'auto', 
+'driver.parameter.synchronous': 'no', 
+'driver.parameter.vendorid': '0463', 
+'driver.version': '2.7.4', 
+'driver.version.data': 'MGE HID 1.40', 
+'driver.version.internal': '0.41', 
+'input.transfer.high': '264', 
+'input.transfer.low': '161', 
+'outlet.1.desc': 'PowerShare Outlet 1', 
+'outlet.1.id': '2', 
+'outlet.1.status': 'on', 
+'outlet.1.switchable': 'no', 
+'outlet.2.desc': 'PowerShare Outlet 2', 
+'outlet.2.id': '3', 
+'outlet.2.status': 'on', 
+'outlet.2.switchable': 'no', 
+'outlet.desc': 'Main Outlet', 
+'outlet.id': '1', 
+'outlet.power': '25', 
+'outlet.switchable': 'no', 
+'output.frequency.nominal': '50', 
+'output.voltage': '230.0', 
+'output.voltage.nominal': '230', 
+'ups.beeper.status': 'enabled', 
+'ups.delay.shutdown': '20', 
+'ups.delay.start': '30', 
+'ups.firmware': '1.13', 
+'ups.load': '15', 
+'ups.mfr': 'EATON', 
+'ups.model': 'Protection Station 800', 
+'ups.power.nominal': '800', 
+'ups.productid': 'ffff', 
+'ups.serial': 'AN2E49008', 
+'ups.status': 'OL', 
+'ups.timer.shutdown': '0', 
+'ups.timer.start': '0', 
+'ups.vendorid': '0463'}
+>>>
+
+
+## installation module python-daemon pour python3 
+
+jcaulier@ub2004:~/src/domini/serveur/ups$ pip3 install python-daemon
+Collecting python-daemon
+  Downloading python_daemon-2.2.4-py2.py3-none-any.whl (35 kB)
+Collecting lockfile>=0.10
+  Downloading lockfile-0.12.2-py2.py3-none-any.whl (13 kB)
+Requirement already satisfied: setuptools in /usr/lib/python3/dist-packages (from python-daemon) (45.2.0)
+Collecting docutils
+  Downloading docutils-0.16-py2.py3-none-any.whl (548 kB)
+     |¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦| 548 kB 1.3 MB/s
+Installing collected packages: lockfile, docutils, python-daemon
+Successfully installed docutils-0.16 lockfile-0.12.2 python-daemon-2.2.4
+
+
+
+
+----------------------------
+
 import PyNUT
-ups    = PyNUT.PyNUTClient( host='localhost', login='admin', password='adminpass' )
+ups    = PyNUT.PyNUTClient( host='localhost', login='admin', password='adminpass' )
 result = ups.GetRWVars( ups='eaton800' )
 print( result )
 
