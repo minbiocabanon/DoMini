@@ -31,7 +31,6 @@
 	$myrow=@mysqli_fetch_array($RESULT);
 	$mois_prec[] = $myrow["MOIS_PREC"];
 	$annee[] = $myrow["ANNEE"];
-	$mois_prec[0] = 9;
 	echo"mois_prec: $mois_prec[0] <br/> annee :$annee[0] <br/>";
 	
 	$n=0;
