@@ -500,6 +500,8 @@
 		$ups_status = "DESCHRG";
 	elseif($myrow["ups_status"] == "OL CHRG")
 		$ups_status = "OK";
+	elseif($myrow["ups_status"] == "OL")
+		$ups_status = "OK";
 	else	
 		$ups_status = "???";
 	
