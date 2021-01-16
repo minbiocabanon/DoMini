@@ -107,7 +107,7 @@
 		
 		//on force le lancement de deux logiciels pour que l'action sur les VR soit immédiate
 		// on lance le soft qui rempli la table d'état des VR
-		exec("python /var/www/domini/bin/pygestion_vr.py",$result);
+		exec("python3 /var/www/domini/bin/pygestion_vr.py",$result);
 		// on force l'envoi des messages
 		// exec("/var/www/domini/bin/emitter /dev/ttyUSB0",$result); // inutile, le logiciel pyReceiver.py gère l'envoi des messages spontanés
 		echo"<br/>Consignes envoyées aux volets<br>";
