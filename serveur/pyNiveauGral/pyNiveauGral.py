@@ -2,7 +2,7 @@
 import sys
 import syslog
 import time
-import MySQLdb as mdb
+import mariadb as mdb
 from pushbullet import Pushbullet
 
 # -- Global variables
@@ -23,14 +23,14 @@ def setup():
 
 # -- get all about time and date --
 def get_time():
-	print '\nget_time()'
+	print('\nget_time()')
 	# display date/time
 	logmessage = time.strftime(" Date et heure : %Y-%m-%d %H:%M:%S")
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 	# afficher le timestamp
 	logmessage = " Unixtime : " + str(time.time())
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 # -- end get_time --
 
@@ -41,36 +41,42 @@ def get_niveaugral():
 	# requete pour lire la table contenant les logs de niveau de granules
 	try:
 		# Open MySQL session
-		con = mdb.connect('localhost','root','mysql','domotique')
+		con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 		cur = con.cursor()
 		# prepare query
 		query = 'SELECT * FROM  `pellets_rsv` ORDER BY date_time DESC LIMIT 0 , 1'
 		# run MySQL Query
 		cur.execute(query)
 		req_niveaugral = cur.fetchone()
+		rc = cur.rowcount
 		# Close all cursors
 		cur.close()
 		# Close MySQL session
 		con.close()
-		
-		# create variable
-		date_niveaugral = req_niveaugral[1]
-		niveaugral = req_niveaugral[3]
+		# if no result, don't process result
+		if (rc != 0) :
+			# create variable
+			date_niveaugral = req_niveaugral[1]
+			niveaugral = req_niveaugral[3]
+		else:
+			date_niveaugral = str(time.time())
+			niveaugral = 0
+			
 		
 		# add some log
 		logmessage = " date_niveaugral  : " +  str(date_niveaugral) + "\n niveaugral(cm) : " + str(niveaugral)
-		print logmessage
+		print(logmessage)
 		syslog.syslog(logmessage)
 		
-	except mdb.Error, e:
+	except mdb.Error as e:
 		# create variable
 		date_niveaugral = 0
 		niveaugral = 0
 		# Display MySQL errors
 		try:
-			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+			print("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
 		except IndexError:
-			print "MySQL Error: %s" % str(e)
+			print("MySQL Error: %s" % str(e))
 		
 # -- end get_niveaugral() --
 
@@ -79,7 +85,7 @@ def check_niveaugral():
 	global date_niveaugral
 	global niveaugral
 	logmessage = " Niveau mini de granules : " + str(NIVEAU_MINI) + "cm \n"
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 	
 	# requete pour lire la table contenant les logs de niveau de granules
@@ -88,7 +94,7 @@ def check_niveaugral():
 	if (niveaugral >= NIVEAU_MINI):
 		# add some log
 		logmessage = ' NIVEAU DE GRANULES TROP BAS ! ({0} cm)'.format(niveaugral)
-		print logmessage
+		print(logmessage)
 		syslog.syslog(logmessage)
 		global ACCESS_TOKEN
 		pb = Pushbullet(ACCESS_TOKEN)
@@ -96,7 +102,7 @@ def check_niveaugral():
 		push = pb.push_note("Domini", msg_pb)		
 	else :
 		logmessage = " NIVEAU DE GRANULES OK."
-		print logmessage
+		print(logmessage)
 		syslog.syslog(logmessage)		
 		
 # -- end check_niveaugral() --
