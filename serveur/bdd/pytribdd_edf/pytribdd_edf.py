@@ -3,10 +3,10 @@ import sys
 import syslog
 import datetime as dt
 import time
-import MySQLdb as mdb
+import mariadb as mdb
 from time import sleep
 
-date_arg = dt.datetime(2017, 01, 01, 00, 00)
+date_arg = dt.datetime(2017, 0o1, 0o1, 00, 00)
 argexists = 0
 table = "teleinfo"
 NB_JOUR = 3
@@ -17,7 +17,7 @@ def setup():
 	syslog.openlog("pytribdd_edf")
 	syslog.syslog("Demarrage")
 	logmessage = " Demarrage pytribdd_edf.py, Programme qui allege la table teleingo en supprimant les donnees anciennes."
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 	
 	global date_arg
@@ -27,23 +27,23 @@ def setup():
 		date_arg = dt.datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
 	else:
 		# no args , so set default date to Day-NB_JOUR
-		print " Pas de date en argument"
+		print(" Pas de date en argument")
 		date_arg = dt.datetime.now() - dt.timedelta(days=NB_JOUR)
 
-	print " datetime date_arg:",date_arg	
+	print(" datetime date_arg:",date_arg)	
 	print ('End Setup')
 # -- fin setup --
 
 # -- get all about time and date --
 def get_time():
-	print '\nget_time()'
+	print('\nget_time()')
 	# display date/time
 	logmessage = time.strftime(" Date et heure : %Y-%m-%d %H:%M:%S")
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 	# afficher le timestamp
 	logmessage = " Unixtime : " + str(time.time())
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 # -- end get_time --
 
@@ -52,7 +52,7 @@ def tag_donnees(table, ordre):
 	global NB_JOUR
 	global date_arg
 	logmessage = "On lance les tags, ordre " + ordre
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 
 	# set variable date_tag with date to start tag operation
@@ -60,12 +60,12 @@ def tag_donnees(table, ordre):
 	
 	# while last date is not reached  (max date is now - NB_JOUR , in order to keep all data wihtin NB_JOUR)
 	while ( date_tag.strftime("%Y-%m-%d") <= (dt.datetime.now() - dt.timedelta(days=NB_JOUR)).strftime("%Y-%m-%d")):
-		print ' Jour :',date_tag.strftime("%Y-%m-%d")
+		print(' Jour :',date_tag.strftime("%Y-%m-%d"))
 		# set MySQL resquest
 		# only get info for the day = date_tag
 		try:
 			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
+			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'SELECT id FROM {0} WHERE (date_format( date_time, \'%Y-%d-%m\' ) = date_format( \'{1}\', \'%Y-%d-%m\' )) AND (`tag` = 0) ORDER BY `date_time` {2} LIMIT 0 , 1'.format(table, date_tag.strftime("%Y-%m-%d"),ordre)
@@ -79,14 +79,14 @@ def tag_donnees(table, ordre):
 			con.close()
 			# increment date_tag + 1 day
 			date_tag = date_tag + dt.timedelta(days=1)
-		except mdb.Error, e:
+		except mdb.Error as e:
 			# create variable
 			result = 0
 			# Display MySQL errors
 			try:
-				print " MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print(" MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print " MySQL Error: %s" % str(e)	
+				print(" MySQL Error: %s" % str(e))	
 		
 		try:
 			# test if query has return something, if = 0 there is no line to tag so do nothing
@@ -94,10 +94,10 @@ def tag_donnees(table, ordre):
 			#for the line return, get ID of the table
 				ID = int(result[0])
 				logmessage = "  ID obtenu : " + str(ID)
-				print logmessage
+				print(logmessage)
 				syslog.syslog(logmessage)
 				# Open MySQL session
-				con = mdb.connect('localhost','root','mysql','domotique')
+				con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 				cur = con.cursor()
 				# prepare query
 				query = 'UPDATE `domotique`.`{0}` SET `tag` = \'1\' WHERE `{1}`.`id` ={2};'.format(table, table,ID)
@@ -112,17 +112,17 @@ def tag_donnees(table, ordre):
 			else:
 				logmessage = "  Pas de donnees a tagger"
 
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
 			
-		except mdb.Error, e:
+		except mdb.Error as e:
 			# create variable
 			result = 0
 			# Display MySQL errors
 			try:
-				print " MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print(" MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print " MySQL Error: %s" % str(e)		
+				print(" MySQL Error: %s" % str(e))		
 	
 # -- end tag_donnees --
 
@@ -132,7 +132,7 @@ def supp_donnees_tag(table):
 	global date_arg
 		
 	logmessage = "On supprime toutes les lignes de la table "+ table +" qui ne sont pas taggees dans l'intervalle de temps NB_JOUR ou date passee en argument"
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 	
 	# set variable date_tag with date to start tag operation
@@ -140,10 +140,10 @@ def supp_donnees_tag(table):
 	
 	# while last date is not reached  (max date is now - NB_JOUR , in order to keep all data wihtin NB_JOUR)
 	while ( date_tag.strftime("%Y-%m-%d") <= (dt.datetime.now() - dt.timedelta(days=NB_JOUR)).strftime("%Y-%m-%d")):
-		print ' Jour :',date_tag.strftime("%Y-%m-%d")
+		print(' Jour :',date_tag.strftime("%Y-%m-%d"))
 		try:
 			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
+			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'DELETE FROM `domotique`.`{0}` WHERE date_format( date_time, \'%Y-%d-%m\' ) = date_format( \'{1}\', \'%Y-%d-%m\') AND `{2}`.`tag` =0;'.format(table, date_tag.strftime("%Y-%m-%d"), table)
@@ -153,7 +153,7 @@ def supp_donnees_tag(table):
 			nbrow = cur.rowcount
 			
 			logmessage = "   suppression de "+str(nbrow)+" ligne(s) non taggee(s) ok."
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
 			
 			# Close all cursors
@@ -164,26 +164,26 @@ def supp_donnees_tag(table):
 						
 			# increment date_tag + 1 day
 			date_tag = date_tag + dt.timedelta(days=1)
-		except mdb.Error, e:
+		except mdb.Error as e:
 			# create variable
 			result = 0
 			# Display MySQL errors
 			try:
-				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print "MySQL Error: %s" % str(e)
+				print("MySQL Error: %s" % str(e))
 			
 # -- end tag_donnees --
 
 # -- optimize --
 def optimize():
 	logmessage = 'Optimisation de la table {0} en cours ...'.format(table)
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 
 	try:
 		# Open MySQL session
-		con = mdb.connect('localhost','root','mysql','domotique')
+		con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 		cur = con.cursor()
 		# prepare query
 		query = 'OPTIMIZE TABLE `{0}`;'.format(table)
@@ -194,14 +194,14 @@ def optimize():
 		cur.close()
 		# Close MySQL session
 		con.close()
-	except mdb.Error, e:
+	except mdb.Error as e:
 		# create variable
 		result = 0
 		# Display MySQL errors
 		try:
-			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+			print("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
 		except IndexError:
-			print "MySQL Error: %s" % str(e)
+			print("MySQL Error: %s" % str(e))
 # -- end optimize --
 			
 # -- clean tables --
@@ -217,7 +217,7 @@ def clean_table():
 	supp_donnees_tag(table)
 					
 	logmessage = "Fin pytribdd_edf"
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 
 # -- end clean_table --
