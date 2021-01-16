@@ -18,7 +18,7 @@ def setup():
 	syslog.syslog("Demarrage")
 	
 	if len(sys.argv) != 2:
-		print "usage", sys.argv[0], " <dir>"
+		print("usage", sys.argv[0], " <dir>")
 		sys.exit(1)
 
 	workdir = sys.argv[1]
@@ -32,11 +32,11 @@ def get_time():
 	global now
 	global workdir
 	
-	print '\nget_time()'
+	print('\nget_time()')
 	# display date/time
 	now = time.time()
 	logmessage = time.strftime(" Date et heure : %Y-%m-%d %H:%M:%S")
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 # -- end get_time --
 
@@ -44,7 +44,7 @@ def get_time():
 def remove_old_files():
 	global now
 	nbfile = 0
-	print '\nremove_old_files()'
+	print('\nremove_old_files()')
 	# requete pour tester si la bdd tourne
 	try:
 		old = now - ( NB_JOUR * 24 * 60 * 60 )
@@ -54,7 +54,7 @@ def remove_old_files():
 			if os.path.isfile(path):
 				stat = os.stat(path)
 				if stat.st_ctime < old:
-					print "removing: ", path
+					print("removing: ", path)
 					nbfile = nbfile + 1
 					os.remove(path) # uncomment when you will sure :)
 		
@@ -63,7 +63,7 @@ def remove_old_files():
 	except :
 		logmessage = "Error while deleting files"
 
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 			
 # -- end remove_old_files() --
