@@ -3,7 +3,7 @@ import sys
 import syslog
 
 import time
-import MySQLdb as mdb
+import mariadb as mdb
 from time import sleep
 
 # -- Global variables
@@ -15,7 +15,7 @@ etat_vr_chjf = 0
 
 # --- function for enumerate
 def enum(*args):
-	enums = dict(zip(args, range(len(args))))
+	enums = dict(list(zip(args, list(range(len(args))))))
 	return type('Enum', (), enums)
 # -- end enum --
 
@@ -29,27 +29,27 @@ def setup():
 	syslog.syslog("***************************************************************")
 	syslog.syslog("Demarrage")
 	logmessage = " Infos utiles : 0 -> VOLET_FERME , 1 -> VOLET_OUVERT , 2 -> VOLET_MIOMBRE , 3 -> IMMOBILE"
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 	print ('End Setup')
 # -- fin setup --
 
 # -- get all about time and date --
 def get_time():
-	print 'get_time()'
+	print('get_time()')
 	# display date/time
 	logmessage = time.strftime(" Date et heure : %Y-%m-%d %H:%M:%S")
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 	# afficher le timestamp
 	logmessage = " Unixtime : " + str(time.time())
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 # -- end get_time --
 
 # -- recuperation de l'etat des volets roulants --
 def read_etat_vr():
-	print 'read_etat_vr()'
+	print('read_etat_vr()')
 	global vr_mode
 	global etat_vr_bureau
 	global etat_vr_salon
@@ -58,26 +58,26 @@ def read_etat_vr():
 
 	# Get shutters's status
 	try:
-		# Open MySQL session
-		con = mdb.connect('localhost','root','mysql','domotique')
+		# Open MariaDB session
+		con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 		cur = con.cursor()
 		# prepare query
 		query = 'SELECT * FROM `voletroulant_statut`'
-		# run MySQL Query
+		# run MariaDB Query
 		cur.execute(query)
 		status_shutters = cur.fetchone()
 		# Close all cursors
 		cur.close()
-		# Close MySQL session
+		# Close MariaDB session
 		con.close()
-	except mdb.Error, e:
+	except mdb.Error as e:
 		# create variable
 		status_shutters = 0
-		# Display MySQL errors
+		# Display MariaDB errors
 		try:
-			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+			print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 		except IndexError:
-			print "MySQL Error: %s" % str(e)
+			print("MariaDB Error: %s" % str(e))
 
 	try:
 		#get mode
@@ -89,12 +89,12 @@ def read_etat_vr():
 		etat_vr_chjf = status_shutters[6]
 		# add some log about shutters status
 		logmessage = " mode  : " +  str(vr_mode) + "\n etat_vr_bureau : " + str(etat_vr_bureau)+ "\n etat_vr_salon : " + str(etat_vr_salon)+ "\n etat_vr_chm : " + str(etat_vr_chm)+ "\n etat_vr_chjf : " + str(etat_vr_chjf)
-		print logmessage
+		print(logmessage)
 		syslog.syslog(logmessage)
 	except:
 		# if error, print error returned
-		logmessage = " ERROR while parsing mysql request (mode and vr status) : " + status_shutters
-		print logmessage
+		logmessage = " ERROR while parsing MariaDB request (mode and vr status) : " + status_shutters
+		print(logmessage)
 		syslog.syslog(logmessage)
 		
 # -- end read_etat_vr --
@@ -109,7 +109,7 @@ def manage_vr():
 	global etat_vr_chm
 	global etat_vr_chjf	
 
-	print '\nmanage_vr()'
+	print('\nmanage_vr()')
 	#print '\n MODE_VR.AUTOMATIQUE : ' + str(MODE_VR.AUTOMATIQUE)
 	#print '\n MODE_VR.MANUEL : ' + str(MODE_VR.MANUEL)
 	#print '\n vr_mode : ' + str(vr_mode)
@@ -117,42 +117,42 @@ def manage_vr():
 	if str(vr_mode) == str(MODE_VR.AUTOMATIQUE) :
 #	if str(vr_mode) == str(MODE_VR.MANUEL) :
 		# --- get ephemeris from db
-		print ' Get ephemeris data'
+		print(' Get ephemeris data')
 		try:
-			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
+			# Open MariaDB session
+			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'SELECT UNIX_TIMESTAMP(addtime(DATE_FORMAT(MAKEDATE(YEAR(NOW()),DAYOFYEAR(NOW())),\'%Y-%m-%d %H:%i:%s\') , `lever`)) AS hlever_unix, UNIX_TIMESTAMP(addtime(DATE_FORMAT(MAKEDATE(YEAR(NOW()),DAYOFYEAR(NOW())),\'%Y-%m-%d %H:%i:%s\') , `coucher`)) AS hcoucher_unix FROM `ephemerides` WHERE DATE_FORMAT( `mois-jour` , \'%m-%d\' ) = DATE_FORMAT( NOW( ) , \'%m-%d\' ) LIMIT 1'
-			# run MySQL Query
+			# run MariaDB Query
 			cur.execute(query)
 			result = cur.fetchone()
 			# Close all cursors
 			cur.close()
-			# Close MySQL session
+			# Close MariaDB session
 			con.close()
-		except mdb.Error, e:
-			# Display MySQL errors
+		except mdb.Error as e:
+			# Display MariaDB errors
 			try:
-				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print "MySQL Error: %s" % str(e)
+				print("MariaDB Error: %s" % str(e))
 		try:
 			h_lever = result[0]
 			h_coucher = result[1]
 
 			logmessage = "  h_lever  : " +  str(h_lever) + "\n  h_coucher : " + str(h_coucher)
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
 		except:
 			# if error, print error returned
-			logmessage = " ERROR while parsing mysql request (ephemeris) : " + result
-			print logmessage
+			logmessage = " ERROR while parsing MariaDB request (ephemeris) : " + result
+			print(logmessage)
 			syslog.syslog(logmessage)
 		
 		# --- Is it nigh or day ?
 		logmessage = " Determine if it is night(0) or day(1)"
-		print logmessage
+		print(logmessage)
 		syslog.syslog(logmessage)
 		
 		if time.time() >= h_lever and time.time() < h_coucher:
@@ -161,140 +161,151 @@ def manage_vr():
 			flag_jour = 0
 
 		logmessage = "  flag_jour  : " +  str(flag_jour)
-		print logmessage
+		print(logmessage)
 		syslog.syslog(logmessage)
 			
 		# --- get info about current day in db table
-		print ' Get info about current day'
+		print(' Get info about current day')
 		try:
-			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
+			# Open MariaDB session
+			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'SELECT * FROM `calendrier` WHERE `date` >= DATE_FORMAT( NOW( ) , \'%y-%m-%d\' ) LIMIT 0,1'
-			# run MySQL Query
+			# run MariaDB Query
 			cur.execute(query)
 			result = cur.fetchone()
 			# Close all cursors
 			cur.close()
-			# Close MySQL session
+			# Close MariaDB session
 			con.close()
-		except mdb.Error, e:
-			# Display MySQL errors
+		except mdb.Error as e:
+			# Display MariaDB errors
 			try:
-				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print "MySQL Error: %s" % str(e)
+				print("MariaDB Error: %s" % str(e))
 		try:
 			saison = result[2]
 			type_jour = result[3]
 			logmessage = "  saison  : " +  str(saison) + "\n  type_jour : " + str(type_jour)
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
 		except:
 			# if error, print error returned
-			logmessage = " ERROR while parsing mysql request (calendrier) : " + result
-			print logmessage
+			logmessage = " ERROR while parsing MariaDB request (calendrier) : " + result
+			print(logmessage)
 			syslog.syslog(logmessage)
 
 		# --- get info about solar flux
-		print ' Get solar flux'
+		print(' Get solar flux')
 		try:
-			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
+			# Open MariaDB session
+			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'SELECT AVG(ana1)*454 FROM `pyranometre` WHERE date_time >= SUBTIME( now( ) , \"00:30:00.0\" ) '
-			# run MySQL Query
+			# run MariaDB Query
 			cur.execute(query)
 			result = cur.fetchone()
+			rc = cur.rowcount
 			# Close all cursors
 			cur.close()
-			# Close MySQL session
+			# Close MariaDB session
 			con.close()
-		except mdb.Error, e:
+		except mdb.Error as e:
 			# set value to 0
 			fPyraMoy = 0.0
-			# Display MySQL errors
+			# Display MariaDB errors
 			try:
-				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print "MySQL Error: %s" % str(e)
+				print("MariaDB Error: %s" % str(e))
 		try:
-			fPyraMoy = result[0]
+			# if no result, don't process result
+			if (rc != 0) :
+				fPyraMoy = result[0]
+			else :
+				fPyraMoy = 0.0
 			logmessage = "  Solar flux mean value : " +  str(fPyraMoy)
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
 		except:
 			# if error, print error returned
-			logmessage = " ERROR while parsing mysql request (pyranometre) : " + result
-			print logmessage
+			logmessage = " ERROR while parsing MariaDB request (pyranometre) : " + result
+			print(logmessage)
 			syslog.syslog(logmessage)
 			fPyraMoy = 0.0
 
 		# --- get temperature to asserve and solar flux trig
-		print ' Get temperature to asserve and solar flux trig'
+		print(' Get temperature to asserve and solar flux trig')
 		try:
-			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
+			# Open MariaDB session
+			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'SELECT `consigne_temperature`, `flux solaire` FROM calendrier_saison WHERE type = "{0}"'.format(saison)
-			# run MySQL Query
+			# run MariaDB Query
 			cur.execute(query)
 			result = cur.fetchone()
 			# Close all cursors
 			cur.close()
-			# Close MySQL session
+			# Close MariaDB session
 			con.close()
-		except mdb.Error, e:
+		except mdb.Error as e:
 			# set value to 0
 			consigne_temperat = 0.0
-			# Display MySQL errors
+			# Display MariaDB errors
 			try:
-				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print "MySQL Error: %s" % str(e)
+				print("MariaDB Error: %s" % str(e))
 		try:
 			consigne_temperat = result[0]
 			flux_solaire_trig = result[1]
 			logmessage = "  consigne_temperat : " +  str(consigne_temperat) + "\n  flux_solaire_trig : " + str(flux_solaire_trig)
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
 		except:
 			# if error, print error returned
-			logmessage = " ERROR while parsing mysql request (calendrier_saison) : " + result
-			print logmessage
+			logmessage = " ERROR while parsing MariaDB request (calendrier_saison) : " + result
+			print(logmessage)
 			syslog.syslog(logmessage)
 			consigne_temperat = 0.0
 			
 		# --- get interior temperature
-		print ' Get interior temperature'
+		print(' Get interior temperature')
 		try:
-			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
+			# Open MariaDB session
+			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'SELECT ana1, date_time FROM analog2 WHERE date_time >= SUBTIME( NOW( ) , \'00:15:00\' ) ORDER BY date_time LIMIT 0 , 1'
-			# run MySQL Query
+			# run MariaDB Query
 			cur.execute(query)
 			result = cur.fetchone()
+			rc = cur.rowcount
 			# Close all cursors
 			cur.close()
-			# Close MySQL session
+			# Close MariaDB session
 			con.close()
-		except mdb.Error, e:
+		except mdb.Error as e:
 			# set value to 0
 			temp_int = 0.0
-			# Display MySQL errors
+			# Display MariaDB errors
 			try:
-				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print "MySQL Error: %s" % str(e)
+				print("MariaDB Error: %s" % str(e))
 		try:
-			temp_int = result[0]
+			# if no result, don't process result
+			if (rc != 0) :
+				temp_int = result[0]
+			else:
+				# if no data , use consign ( le moins faux?)
+				temp_int = consigne_temperat
 			logmessage = "  Temperature interieure : " +  str(temp_int)
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
 			#on regarde si la temperature de consigne est atteinte (depassee) ou non
 			if temp_int > consigne_temperat :
@@ -304,8 +315,8 @@ def manage_vr():
 				
 		except:
 			# if error, print error returned
-			logmessage = " ERROR while parsing mysql request (analog2) : " + result
-			print logmessage
+			logmessage = " ERROR while parsing MariaDB request (analog2) : " + str(result)
+			print(logmessage)
 			syslog.syslog(logmessage)
 			temp_int = 0.0
 			
@@ -332,36 +343,36 @@ def manage_vr():
 			# on force le flag a 0 pour la suite du programme
 			flag_flux = 0
 			logmessage = " Etat des VR force a immobile (3) car fPyraMoy = " + str(fPyraMoy)
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
 
 		# --- on passe les conditions dans la table de verite afin de recuperer l'etat des VR
-		print ' compute VR status'
+		print(' compute VR status')
 		try:
-			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
+			# Open MariaDB session
+			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'SELECT `VOLET BUREAU`,`VOLET SALON`,`VOLET CHM`,`VOLET CHJF` FROM `voletroulant_table_verite` WHERE `saison`= "{0}" AND `flux solaire` = {1} AND `jour/nuit`= {2} AND `Temperature consigne`={3}'.format(saison, flag_flux, flag_jour, flag_temperature)
-			# run MySQL Query
+			# run MariaDB Query
 			cur.execute(query)
 			vr_states = cur.fetchone()
 			#debug
 			logmessage = " Query = " + query
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
 			# Close all cursors
 			cur.close()
-			# Close MySQL session
+			# Close MariaDB session
 			con.close()
-		except mdb.Error, e:
+		except mdb.Error as e:
 			# set value to 0
 			temp_int = 0.0
-			# Display MySQL errors
+			# Display MariaDB errors
 			try:
-				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print "MySQL Error: %s" % str(e)
+				print("MariaDB Error: %s" % str(e))
 		try:
 			# for result, extract status of each vr
 			etat_vr_bureau = str(vr_states[0])
@@ -369,66 +380,66 @@ def manage_vr():
 			etat_vr_chm = str(vr_states[2])
 			etat_vr_chjf = str(vr_states[3])
 			logmessage = "  etat_vr_bureau : {0},  etat_vr_salon : {1}, etat_vr_chm : {2}, etat_vr_chjf : {3}".format(etat_vr_bureau, etat_vr_salon, etat_vr_chm, etat_vr_chjf)
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
 				
 		except:
 			# if error, print error returned
-			logmessage = " ERROR while parsing mysql request (voletroulant_table_verite) : " + vr_states
-			print logmessage
+			logmessage = " ERROR while parsing MariaDB request (voletroulant_table_verite) : " + vr_states
+			print(logmessage)
 			syslog.syslog(logmessage)
 
 		# --- on sauvegarde les etats dans la base de donnees
 		# --- Save vr status in data base
-		print ' compute VR status'
+		print(' compute VR status')
 		try:
-			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
+			# Open MariaDB session
+			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'UPDATE `domotique`.`voletroulant_statut` SET `bureau` = \'{0}\',`salon` = \'{1}\',`chambreM` = \'{2}\',`chambreJF` = \'{3}\' WHERE `voletroulant_statut`.`id` =1;'.format(etat_vr_bureau, etat_vr_salon, etat_vr_chm, etat_vr_chjf)
-			# run MySQL Query
+			# run MariaDB Query
 			cur.execute(query)
 			# Close all cursors
 			cur.close()
-			# Close MySQL session
+			# Close MariaDB session
 			con.close()
 			# log
 			logmessage = "  Donnees stockees dans la table : $VRL,{0},{1},{2},{3}".format(etat_vr_bureau, etat_vr_salon, etat_vr_chm, etat_vr_chjf)
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
-		except mdb.Error, e:
-			# Display MySQL errors
+		except mdb.Error as e:
+			# Display MariaDB errors
 			try:
-				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print "MySQL Error: %s" % str(e)
+				print("MariaDB Error: %s" % str(e))
 		
 		# add log message about VR
 		try:
-			# Open MySQL session
-			con = mdb.connect('localhost','root','mysql','domotique')
+			# Open MariaDB session
+			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'INSERT INTO `domotique`.`voletroulant_log` (`id`, `date_time`, `bureau`, `salon`, `chambreM`, `chambreJF`) VALUES (NULL, NOW(), \'{0}\', \'{1}\', \'{2}\', \'{3}\');'.format(etat_vr_bureau, etat_vr_salon, etat_vr_chm, etat_vr_chjf)
-			# run MySQL Query
+			# run MariaDB Query
 			cur.execute(query)
 			# Make sure data is committed to the database
 			con.commit()
 			# Close all cursors
 			cur.close()
-			# Close MySQL session
+			# Close MariaDB session
 			con.close()
 			# log
 			logmessage = "  Add log message in voletroulant_log"
-			print logmessage
+			print(logmessage)
 			syslog.syslog(logmessage)
-		except mdb.Error, e:
-			# Display MySQL errors
+		except mdb.Error as e:
+			# Display MariaDB errors
 			try:
-				print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+				print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 			except IndexError:
-				print "MySQL Error: %s" % str(e)
+				print("MariaDB Error: %s" % str(e))
 
 				
 # -- end manage_vr --
@@ -439,33 +450,33 @@ def send_etat_vr():
 	global etat_vr_salon
 	global etat_vr_chm
 	global etat_vr_chjf	
-	print '\nsend_etat_vr()'
+	print('\nsend_etat_vr()')
 	
 	# --- Add message into 'tx_msg_radio' table
 	try:
-		# Open MySQL session
-		con = mdb.connect('localhost','root','mysql','domotique')
+		# Open MariaDB session
+		con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 		cur = con.cursor()
 		# prepare query
 		query = 'INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), \'$VRL,{0},{1},{2},{3}\');'.format(etat_vr_bureau, etat_vr_salon, etat_vr_chm, etat_vr_chjf)
-		# run MySQL Query
+		# run MariaDB Query
 		cur.execute(query)
 		# Make sure data is committed to the database
 		con.commit()
 		# Close all cursors
 		cur.close()
-		# Close MySQL session
+		# Close MariaDB session
 		con.close()
 		# log
 		logmessage = "  Message envoye au volet : $VRL,{0},{1},{2},{3}".format(etat_vr_bureau, etat_vr_salon, etat_vr_chm, etat_vr_chjf)
-		print logmessage
+		print(logmessage)
 		syslog.syslog(logmessage)
-	except mdb.Error, e:
-		# Display MySQL errors
+	except mdb.Error as e:
+		# Display MariaDB errors
 		try:
-			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+			print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 		except IndexError:
-			print "MySQL Error: %s" % str(e)	
+			print("MariaDB Error: %s" % str(e))	
 # -- end send_etat_vr --
 
 #--- obligatoire pour lancement du code --
