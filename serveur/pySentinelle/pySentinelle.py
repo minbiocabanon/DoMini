@@ -2,10 +2,12 @@
 import sys
 import syslog
 import time
-import MySQLdb as mdb
+import mariadb as mdb
 from pushbullet import Pushbullet
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import os
+import subprocess
+
 
 ACCESS_TOKEN = 'o.lMLyP43FEWjOhJqVDN5NimjD0TyjC0UH'
 
@@ -19,47 +21,48 @@ def setup():
 
 # -- get all about time and date --
 def get_time():
-	print '\nget_time()'
+	print('\nget_time()')
 	# display date/time
 	logmessage = time.strftime(" Date et heure : %Y-%m-%d %H:%M:%S")
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 # -- end get_time --
 
 # -- test si le server web tourne --
 def check_db():
-	print '\ncheck_db()'
+	print('\ncheck_db()')
 	# requete pour tester si la bdd tourne
 	try:
-		# Open MySQL session
-		con = mdb.connect('localhost','root','mysql','domotique')
+		# Open mariadb session
+		con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 		# If connection fail, see except process hereafter
 		#else 
-		# Close MySQL session
+		# Close mariadb session
 		con.close()
 		# add some log
 		logmessage = " OK, Database is running"
 		
-	except mdb.Error, e:
-		# Display MySQL errors
+	except mdb.Error as e:
+		# Display mariadb errors
 		try:
-			print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+			print("mariadb Error [%d]: %s" % (e.args[0], e.args[1]))
 			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + " DoMini - Error : Database is NOT running"
 			global ACCESS_TOKEN
 			pb = Pushbullet(ACCESS_TOKEN)
 			push = pb.push_note("Domini", logmessage)	
 		except IndexError:
-			print "MySQL Error: %s" % str(e)
+			logmessage = ""
+			print("mariadb Error: %s" % str(e))
 
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)
 			
 # -- end check_db() --
 
 def check_webserver():
-	print '\ncheck_webserver()'
+	print('\ncheck_webserver()')
 	try:
-		code_ws = urllib.urlopen("http://localhost/index.php").getcode()
+		code_ws = urllib.request.urlopen("http://localhost/index.php").getcode()
 		
 		if( code_ws != '200') :
 			logmessage = " OK, server web is running"
@@ -72,13 +75,13 @@ def check_webserver():
 		logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Domini - Erreur : etat serveur web inconnu"
 		push = pb.push_note("Domini", logmessage)
 		
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)	
 					
 # -- end check_webserver() --
 
 def check_receiver():
-	print '\ncheck_receiver()'
+	print('\ncheck_receiver()')
 	processname = 'pyreceiver.py'
 	tmp = os.popen("ps -Af | grep '.py'").read()
 	proccount = tmp.count(processname)
@@ -91,13 +94,20 @@ def check_receiver():
 		logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Domini - Erreur : pyreceiver est arrete"
 		push = pb.push_note("Domini", logmessage)
 		
-	print logmessage
+		#running pyreceiver 
+		print('\nrunning pyreceiver manually')
+		args = ['python3','/home/jcaulier/src/domini/serveur/pyReceiver/pyreceiver.py']
+		subprocess.Popen(args,shell=False,stdout=subprocess.PIPE)
+		
+		#os.system("python3 /home/jcaulier/src/domini/serveur/pyReceiver/pyreceiver.py &")
+		
+	print(logmessage)
 	syslog.syslog(logmessage)	
 					
 # -- end check_receiver() --
 
 def check_ups():
-	print '\ncheck_ups()'
+	print('\ncheck_ups()')
 	processname = 'ups_daemonized.py'
 	tmp = os.popen("ps -Af | grep '.py'").read()
 	proccount = tmp.count(processname)
@@ -110,7 +120,7 @@ def check_ups():
 		logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + "\n Domini - Erreur : ups_daemonized est arrete"
 		push = pb.push_note("Domini", logmessage)
 		
-	print logmessage
+	print(logmessage)
 	syslog.syslog(logmessage)	
 					
 # -- end check_receiver() --
@@ -122,4 +132,4 @@ if __name__=="__main__": # set executable code
 	check_webserver()
 	check_db()
 	check_receiver()
-	check_ups()
+	#check_ups()
