@@ -123,7 +123,8 @@ int envoie_msg_poele(int consigne_p){
 	
 	// Preparation de la requete MySQL
 	// on utilise un '!' en entete de message pour demander un ack (géré par le Jeelink)
-	sprintf(query, "INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), '!POL,%s,%d');",poele_ON_OFF, consigne_p);
+	// sprintf(query, "INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), '!POL,%s,%d');",poele_ON_OFF, consigne_p);
+	sprintf(query, "INSERT INTO `domotique`.`tx_msg_radio` (`id` ,`date_time` ,`message` )VALUES (NULL , NOW(), '$POL,%s,%d');",poele_ON_OFF, consigne_p);
 
 	// envoi de la requete
 	if (mysql_query(conn, query)) {
@@ -133,8 +134,8 @@ int envoie_msg_poele(int consigne_p){
 		return(1);
 	}
 	
-	syslog(LOG_DEBUG, "  Message envoye au poele : !POL,%s,%d",poele_ON_OFF, consigne_p);
-	printf("  Message envoye au poele : !POL,%s,%d",poele_ON_OFF, consigne_p);
+	syslog(LOG_DEBUG, "  Message envoye au poele : $POL,%s,%d",poele_ON_OFF, consigne_p);
+	printf("  Message envoye au poele : $POL,%s,%d",poele_ON_OFF, consigne_p);
 	// printf("\nMessage ecrit dans la pile");
 	// s'il n'y a pas d'erreurs, tout est ok, on le dit
 	return(0);
