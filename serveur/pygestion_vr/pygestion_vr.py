@@ -204,7 +204,7 @@ def manage_vr():
 			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
-			query = 'SELECT AVG(ana1)*454 FROM `pyranometre` WHERE date_time >= SUBTIME( now( ) , \"05:30:00.0\" ) '
+			query = 'SELECT AVG(ana1)*454 FROM `pyranometre` WHERE date_time >= SUBTIME( now( ) , \"00:30:00.0\" ) '
 			# run MariaDB Query
 			cur.execute(query)
 			result = cur.fetchone()
