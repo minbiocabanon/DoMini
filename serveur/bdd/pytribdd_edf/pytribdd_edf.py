@@ -9,7 +9,7 @@ from time import sleep
 date_arg = dt.datetime(2017, 0o1, 0o1, 00, 00)
 argexists = 0
 table = "teleinfo"
-NB_JOUR = 3
+NB_JOUR = 2
 
 #--- setup ---
 def setup():
@@ -69,10 +69,11 @@ def tag_donnees(table, ordre):
 			cur = con.cursor()
 			# prepare query
 			query = 'SELECT id FROM {0} WHERE (date_format( date_time, \'%Y-%d-%m\' ) = date_format( \'{1}\', \'%Y-%d-%m\' )) AND (`tag` = 0) ORDER BY `date_time` {2} LIMIT 0 , 1'.format(table, date_tag.strftime("%Y-%m-%d"),ordre)
+			#debug
+			print('Requete :',query)
 			# run MySQL Query
 			cur.execute(query)
 			result = cur.fetchone()
-			nbrow = cur.rowcount
 			# Close all cursors
 			cur.close()
 			# Close MySQL session
@@ -90,7 +91,7 @@ def tag_donnees(table, ordre):
 		
 		try:
 			# test if query has return something, if = 0 there is no line to tag so do nothing
-			if(nbrow != 0):
+			if(result != None):
 			#for the line return, get ID of the table
 				ID = int(result[0])
 				logmessage = "  ID obtenu : " + str(ID)
@@ -101,9 +102,10 @@ def tag_donnees(table, ordre):
 				cur = con.cursor()
 				# prepare query
 				query = 'UPDATE `domotique`.`{0}` SET `tag` = \'1\' WHERE `{1}`.`id` ={2};'.format(table, table,ID)
+				#debug
+				print('Requete :',query)
 				# run MySQL Query
 				cur.execute(query)
-				result = cur.fetchone()
 				# Close all cursors
 				cur.close()
 				# Close MySQL session
@@ -116,8 +118,6 @@ def tag_donnees(table, ordre):
 			syslog.syslog(logmessage)
 			
 		except mdb.Error as e:
-			# create variable
-			result = 0
 			# Display MySQL errors
 			try:
 				print(" MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
@@ -214,7 +214,7 @@ def clean_table():
 	tag_donnees(table, "DESC")
 	
 	# delete all data not tagged during the selected day
-	supp_donnees_tag(table)
+	#supp_donnees_tag(table)
 					
 	logmessage = "Fin pytribdd_edf"
 	print(logmessage)
