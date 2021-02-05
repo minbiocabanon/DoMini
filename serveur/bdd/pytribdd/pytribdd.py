@@ -82,7 +82,6 @@ def tag_donnees(table, ordre):
 				# run MySQL Query
 				cur.execute(query)
 				result = cur.fetchone()
-				nbrow = cur.rowcount
 				# Close all cursors
 				cur.close()
 				# Close MySQL session
@@ -100,7 +99,7 @@ def tag_donnees(table, ordre):
 			
 			try:
 				# test if query has return something, if = 0 there is no line to tag so do nothing
-				if(nbrow != 0):
+				if(result != None):
 					#for the line return, get ID of the tabname
 					ID = int(result[0])
 					#logmessage = "  ID obtenu : " + str(ID)
@@ -163,7 +162,6 @@ def tag_donnees_heure(table):
 					# run MySQL Query
 					cur.execute(query)
 					result = cur.fetchone()
-					nbrow = cur.rowcount
 					# Close all cursors
 					cur.close()
 					# Close MySQL session
@@ -179,7 +177,7 @@ def tag_donnees_heure(table):
 				
 				try:
 					# test if query has return something, if = 0 there is no line to tag so do nothing
-					if(nbrow != 0):
+					if(result != None):
 						#for the line return, get ID of the tabname
 						ID = int(result[0])
 						# logmessage = "  ID obtenu : " + str(ID)
