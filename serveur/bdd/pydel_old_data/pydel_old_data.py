@@ -51,6 +51,9 @@ def clean_table():
 			cur.execute(query)
 			#result = cur.fetchone()
 			con.commit()
+			deletedrow = cur.rowcount
+			logmessage = "   suppression de "+str(deletedrow)+" ligne(s) ok."
+			print(logmessage)
 			
 		except mdb.Error as e:
 			# create variable
