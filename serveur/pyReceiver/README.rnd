@@ -1,4 +1,4 @@
 ##la commande suivante permet de donner accés en lecture/écriture à tous les groupes
 sudo chmod 666 /dev/ttyUSB0
 
-python3 pyReceiver.py
+python3 pyreceiver.py
