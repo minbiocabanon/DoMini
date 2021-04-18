@@ -42,9 +42,12 @@ def task_receiver():
 		 	keepThis = m[-1]			# fragment
 		
 	except :
-		logmessage = " ERROR while opening" + port
+		logmessage = " ERROR while parsing message on " + port
 		print(logmessage)
 		syslog.syslog(logmessage)
+		# set variable with nothing
+		processThis = ""
+		
 	# process the complete lines:
 	for line in processThis:
 		if line.startswith( '$EDF' ) :
