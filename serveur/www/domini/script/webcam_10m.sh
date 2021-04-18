@@ -16,8 +16,7 @@ ffmpeg -y -rtsp_transport tcp -i 'rtsp://192.168.0.120:554/live0.264' -f singlej
 
 # capture l'image de la webcam du garage sortie sous le nom garage.jpg
 # echo curl 192.168.0.121
-#curl --url "http://192.168.0.121:88/cgi-bin/CGIProxy.fcgi?usr=user&pwd=user&cmd=snapPicture2" --output ./garage_full.jpg
-curl --url "http://192.168.0.121:88/cgi-bin/CGIProxy.fcgi?usr=user&pwd=user&cmd=snapPicture2" --output ./garage.jpg
+curl --url "http://192.168.0.121:88/cgi-bin/CGIProxy.fcgi?usr=user&pwd=user&cmd=snapPicture2" --output ./garage_full.jpg
 
 # capture l'image du porche
 echo capture ffmpeg 192.168.0.129:554/live0.264
