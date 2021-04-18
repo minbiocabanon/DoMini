@@ -206,13 +206,13 @@ void loop () {
 	// *	Depouillement du message reçu 
 	//**************************************************
 	if(bMsg_teleinfo_recu == true){
-		// on récupère la position du premier espace
-		//int nIndiceDonnee = str_buffer_recept_teleinfo.indexOf(" ");
+		// init variable position curseur
 		i = 0;
 		
 		//on allume la led
 		digitalWrite(LED_PIN, 0);
 		
+		// on cherche le debut de la trame qui commence par 0x20 (espace)
 		// tant qu'on ne lit pas un caractère espace
 		while(str_buffer_recept_teleinfo.charAt(i) != 0x20){
 			str_EnteteMsg += str_buffer_recept_teleinfo.charAt(i);
@@ -222,8 +222,9 @@ void loop () {
 		// DEBUG
 		// Serial.println("\n\r entete :" + str_EnteteMsg + "-");
 						
-		//on saute le caractère espace
+		//on saute le caractère espace pour se positionner au debut du message
 		i++;
+		// on va chercher le CRC en fin de trame qui est apres le 2eme caractere espace (0x20)
 		// tant qu'on ne lit pas un caractère espace
 		while(str_buffer_recept_teleinfo.charAt(i) != 0x20){
 			str_DonneeMsg += str_buffer_recept_teleinfo.charAt(i);
@@ -232,7 +233,7 @@ void loop () {
 				
 		// DEBUG
 		// Serial.println("\n\r donnee :" + str_DonneeMsg + "-");
-         // on vérifie le CRC
+         // on vérifie le CRC, si il est mauvais on efface le contenu du message
 		if (validCRC(str_buffer_recept_teleinfo) == false ) {
 		  str_EnteteMsg = "";
 		}
