@@ -208,7 +208,8 @@ def manage_vr():
 			# run MariaDB Query
 			cur.execute(query)
 			result = cur.fetchone()
-			rc = cur.rowcount
+			#debug
+			#print("valeur de result[0]={}".format(str(result[0])))
 			# Close all cursors
 			cur.close()
 			# Close MariaDB session
@@ -223,7 +224,7 @@ def manage_vr():
 				print("MariaDB Error: %s" % str(e))
 		try:
 			# if no result, don't process result
-			if (rc != 0) :
+			if (result != None ) :
 				fPyraMoy = result[0]
 			else :
 				fPyraMoy = 0.0
@@ -284,7 +285,6 @@ def manage_vr():
 			# run MariaDB Query
 			cur.execute(query)
 			result = cur.fetchone()
-			rc = cur.rowcount
 			# Close all cursors
 			cur.close()
 			# Close MariaDB session
@@ -299,7 +299,7 @@ def manage_vr():
 				print("MariaDB Error: %s" % str(e))
 		try:
 			# if no result, don't process result
-			if (rc != 0) :
+			if (result != None) :
 				temp_int = result[0]
 			else:
 				# if no data , use consign ( le moins faux?)
@@ -374,18 +374,26 @@ def manage_vr():
 			except IndexError:
 				print("MariaDB Error: %s" % str(e))
 		try:
-			# for result, extract status of each vr
-			etat_vr_bureau = str(vr_states[0])
-			etat_vr_salon = str(vr_states[1])
-			etat_vr_chm = str(vr_states[2])
-			etat_vr_chjf = str(vr_states[3])
-			logmessage = "  etat_vr_bureau : {0},  etat_vr_salon : {1}, etat_vr_chm : {2}, etat_vr_chjf : {3}".format(etat_vr_bureau, etat_vr_salon, etat_vr_chm, etat_vr_chjf)
+			# if no result, don't process result
+			if (vr_states != None ) :
+				# for result, extract status of each vr
+				etat_vr_bureau = str(vr_states[0])
+				etat_vr_salon = str(vr_states[1])
+				etat_vr_chm = str(vr_states[2])
+				etat_vr_chjf = str(vr_states[3])
+				logmessage = "  etat_vr_bureau : {0},  etat_vr_salon : {1}, etat_vr_chm : {2}, etat_vr_chjf : {3}".format(etat_vr_bureau, etat_vr_salon, etat_vr_chm, etat_vr_chjf)
+			else :
+				# on force l'etat en 'immobile'
+				etat_vr_bureau = etat_vr_chjf = etat_vr_chm = etat_vr_salon = 3
+				
+				logmessage = "  Query returns no result !  Conditions does not exists in truth table !"
+			
 			print(logmessage)
 			syslog.syslog(logmessage)
-				
+			
 		except:
 			# if error, print error returned
-			logmessage = " ERROR while parsing MariaDB request (voletroulant_table_verite) : " + vr_states
+			logmessage = " ERROR while parsing MariaDB request (voletroulant_table_verite) : " + str(vr_states)
 			print(logmessage)
 			syslog.syslog(logmessage)
 
