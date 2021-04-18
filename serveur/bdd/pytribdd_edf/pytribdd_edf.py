@@ -214,7 +214,7 @@ def clean_table():
 	tag_donnees(table, "DESC")
 	
 	# delete all data not tagged during the selected day
-	#supp_donnees_tag(table)
+	supp_donnees_tag(table)
 					
 	logmessage = "Fin pytribdd_edf"
 	print(logmessage)
