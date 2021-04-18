@@ -344,7 +344,10 @@ paramétrage lighttpd
 	sudo apt install php-curl
 	
 ##la commande suivante permet de donner accés en lecture/écriture à tous les groupes
-	sudo chmod 666 /dev/ttyUSB0
+	sudo chmod 666 /dev/ttyUSB0  # attention, à faire manuellement à chaque fois.
+	
+	# pour avoir les droits permanents ajouter le user au groupe dial
+	sudo usermod -a -G dialout $user  # $user à remplacer par le user utilisant le port com en question
 
 ## INTERFACE WEB
 	#Faire un lien symbolique de ~/serveur/www/domini vers /var/www/domini
