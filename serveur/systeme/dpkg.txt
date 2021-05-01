@@ -382,6 +382,7 @@ libldap-common					install
 libldb2:amd64					install
 liblilv-0-0:amd64				install
 libllvm10:amd64					install
+libllvm11:amd64					install
 liblmdb0:amd64					install
 liblocale-gettext-perl				install
 liblsan0:amd64					install
