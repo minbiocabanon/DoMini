@@ -13,9 +13,12 @@ echo "Lancement de pyreceiver.py"
 sudo chmod 666 /dev/ttyUSB0
 /usr/bin/python3 ~/src/domini/serveur/pyReceiver/pyreceiver.py &
 
-#on relance le serveur web (plante!?)
-#sudo /etc/init.d/lighttpd restart
-#sudo /etc/init.d/mysql restart
+echo "Lancement ngrok"
+# on lance le service ngrok pour garder l'acces a distance au demarrage ou redemarrage
+~/src/domini/serveur/ngrok/ngrok http 80 &
+# on fait la mise à jour de l'ip ngrok sur ftp domini de free
+sleep 5
+~/src/domini/serveur/ngrok/ngrok_update_url.py
 
 #lancement service pour ddns
 #sudo /usr/local/bin/noip2
