@@ -51,6 +51,7 @@
 						<img src="webcam/porche.jpg?<?PHP echo time()?>" alt="porche" width="110"><br>
 						<img src="webcam/sejour.jpg?<?PHP echo time()?>" alt="sejour" width="110"><br>
 						<img src="webcam/garage.jpg?<?PHP echo time()?>" alt="garage" width="110"><br>
+						<img src="webcam/garage_full.jpg?<?PHP echo time()?>" alt="garage" width="110"><br>
 					</div>		<!-- /span6 > -->
 				</div>		<!-- /fluid > -->				
 			</div><!-- /container -->
