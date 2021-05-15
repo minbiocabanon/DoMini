@@ -176,9 +176,12 @@
 										if($data_tarif[0] == "HP..")
 											// on affiche HP en rouge
 											echo"<span class=\"label label-important\">HP</span>";
-										else
+										elseif($data_tarif[0] == "HC..")
 											// sinon on affiche HC en vert
 											echo"<span class=\"label label-success\">HC</span>";
+										elseif($data_tarif[0] == "TH..")
+											// sinon on affiche TH en bleu (tarif unique)
+											echo"<span class=\"label label-info\">TH</span>";
 										echo'<br><span rel="tooltip" title="'.$data_teleinfo_date[0].'">'.$data_consojour[0].' W  </span><br>';
 									?>
 								</td>
