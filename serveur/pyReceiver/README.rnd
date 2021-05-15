@@ -2,3 +2,6 @@
 sudo chmod 666 /dev/ttyUSB0
 
 python3 pyreceiver.py
+
+
+## Changement tarif HC/HP en Tarif unique -> 15/05/2021
