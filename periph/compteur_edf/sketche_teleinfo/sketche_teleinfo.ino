@@ -7,7 +7,7 @@
 #include <avr/wdt.h>
 //#include <PString.h>
 
-#define version "JeeNode TeleInfo"
+#define version "JeeNode TeleInfo TH"
 #define DEBUG 1
 #define LED_PIN 9
 
@@ -33,8 +33,9 @@ String str_DonneeMsg = "";
 String str_ADCO;
 String str_OPTARIF;
 String str_ISOUSC;
+String str_BASE;
 String str_HCHC;
-String str_HCHP;	
+String str_HCHP = "001964864";	
 String str_PTEC;			
 String str_IINST;
 String str_IMAX;
@@ -48,6 +49,7 @@ boolean bEnvoi_radio = false;
 boolean bFlag_ADCO_recu = false;
 boolean bFlag_OPTARIF_recu = false;
 boolean bFlag_ISOUSC_recu = false;
+boolean bFlag_BASE_recu = false;
 boolean bFlag_HCHC_recu = false;
 boolean bFlag_HCHP_recu = false;
 boolean bFlag_PTEC_recu = false;	
@@ -251,6 +253,11 @@ void loop () {
 			// Serial.println("\n\r ISOUSC " + str_EnteteMsg +" = " + str_DonneeMsg + "\n\r");
 			str_ISOUSC = str_DonneeMsg;
 			bFlag_ISOUSC_recu = true;
+		}else if(str_EnteteMsg == "BASE" && validNumber(str_DonneeMsg) && str_DonneeMsg.length() == 9){
+			//conso heure creuse 8chars
+			// Serial.println("\n\r BASE " + str_EnteteMsg +" = " + str_DonneeMsg + "\n\r");
+			str_BASE = str_DonneeMsg;
+			bFlag_BASE_recu = true;
 		}else if(str_EnteteMsg == "HCHC" && validNumber(str_DonneeMsg) && str_DonneeMsg.length() == 9){
 			//conso heure creuse 8chars
 			// Serial.println("\n\r HCHC " + str_EnteteMsg +" = " + str_DonneeMsg + "\n\r");
@@ -290,7 +297,8 @@ void loop () {
 				
 		// Tri des messages : si les messages intéressants sont reçu, on autorise l'envoi radio
 		// le flag bFlag_MOTDETAT_recu est utilisé pour déclencher l'envoi afin d'attendre la réception de la totalité du message téléinfo avant l'envoi sur la radio
-		bEnvoi_radio = bFlag_HCHC_recu & bFlag_HCHP_recu & bFlag_PTEC_recu & bFlag_IINST_recu & bFlag_IMAX_recu & bFlag_PAPP_recu & bFlag_MOTDETAT_recu;
+		//bEnvoi_radio = bFlag_HCHC_recu & bFlag_HCHP_recu & bFlag_PTEC_recu & bFlag_IINST_recu & bFlag_IMAX_recu & bFlag_PAPP_recu & bFlag_MOTDETAT_recu;
+		bEnvoi_radio = bFlag_BASE_recu & bFlag_PTEC_recu & bFlag_IINST_recu & bFlag_IMAX_recu & bFlag_PAPP_recu & bFlag_MOTDETAT_recu;
 		
 		// on incrémente le nombre de message complet recu
 		if(bEnvoi_radio == true)
@@ -299,7 +307,8 @@ void loop () {
 		//Pour limiter la quantité de message, on envoi un message tous les nNbmsg
 		if((bEnvoi_radio == true) && (nNbmsg <= NBMSG)){
 			bEnvoi_radio = false;
-			bFlag_HCHC_recu = bFlag_HCHP_recu = bFlag_PTEC_recu = bFlag_IINST_recu = bFlag_IMAX_recu = bFlag_PAPP_recu =false ;
+			//bFlag_HCHC_recu = bFlag_HCHP_recu = bFlag_PTEC_recu = bFlag_IINST_recu = bFlag_IMAX_recu = bFlag_PAPP_recu =false ;
+			bFlag_BASE_recu = bFlag_PTEC_recu = bFlag_IINST_recu = bFlag_IMAX_recu = bFlag_PAPP_recu =false ;
 		}
 		
 		// on reset le flag de traitement du message
@@ -323,14 +332,21 @@ void loop () {
 		//on allume la led
 		digitalWrite(LED_PIN, 0);
 
+		
+		// upgrade avec le linky, on bidouille un peu pour conserver un fonctionnement identique : on met de le tarif de base dans HC et on garde le compteur HP tel qu'il était avant la bascule
+		str_HCHC = str_BASE;
+		// str_HCHP on garde la valeur par defaut, voir initialisation de la variable
 		//Préparation du buffer à emettre par radio
 		String str_buffer_radio = "$EDF," + str_HCHC + "," + str_HCHP + "," + str_PTEC + "," + str_IINST + "," + str_IMAX + "," + str_PAPP + "\r\n";
+		
 		
 		// DEBUG
 		//Serial.println("\n\r buffer radio :" + str_buffer_radio + "-");
 
 		// conversion du string en buffer pour la radio
 		char payload[]="$EDF,000000000,000000000,XX..,000,000,00000**";
+		
+		
 		//DEBUG
 		Serial.println("\n\rBuffer radio a emettre: ");
 		for(byte i=0; i < sizeof payload; i++){
@@ -349,7 +365,7 @@ void loop () {
 		// Serial.print("\n\rMessage envoye OK\n\r");
 		
 		// raz des flags
-		bFlag_HCHC_recu = bFlag_HCHP_recu = bFlag_PTEC_recu = bFlag_IINST_recu = bFlag_IMAX_recu = bFlag_PAPP_recu =false ;
+		bFlag_BASE_recu = bFlag_HCHC_recu = bFlag_HCHP_recu = bFlag_PTEC_recu = bFlag_IINST_recu = bFlag_IMAX_recu = bFlag_PAPP_recu =false ;
 		bEnvoi_radio = false;
 		nNbmsg = 0;
 
