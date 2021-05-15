@@ -25,7 +25,7 @@
 	// fetch a row and write the column names out to the file
 	$row = mysqli_fetch_assoc($RESULT);
 	$fp = fopen($filename, "w");
-	$line = "DATE;Heure;puissance;HP;HC\n";
+	$line = "DATE;Heure;VA_HP;VA_HC\n";
 	fputs($fp, $line);
 	$n=0;
 	
