@@ -64,7 +64,7 @@
 			$data_date[$n] = $myrow["DATE"];
 			$data_HC_deb[0] = $myrow["HC"] / 1000; // on divise par mille pour avoir des kWh
 			$data_HP_deb[0] = $myrow["HP"] / 1000; // on divise par mille pour avoir des kWh
-			// echo "<br>data_date : $data_date[0]   <br> data_HC_deb : $data_HC_deb[0]     data_HP_deb : $data_HP_deb[0] <br>";
+			echo "<br>data_date : $data_date[0]   <br> data_HC_deb : $data_HC_deb[0]     data_HP_deb : $data_HP_deb[0] <br>";
 
 			// requete MySQL pour obtenir les HP et HC de la fin d'année
 			$SQL="SELECT YEAR(date_time) AS Annee,HC,HP
@@ -80,7 +80,7 @@
 			if($myrow=@mysqli_fetch_array($RESULT)){
 				$data_HC_fin[0] = $myrow["HC"] / 1000; // on divise par mille pour avoir des kWh
 				$data_HP_fin[0] = $myrow["HP"] / 1000; // on divise par mille pour avoir des kWh
-				// echo "<br>data_HC_fin : $data_HC_fin[0]     data_HP_fin : $data_HP_fin[0] <br>";
+				echo "<br>data_HC_fin : $data_HC_fin[0]     data_HP_fin : $data_HP_fin[0] <br>";
 
 				// On calcul la conso mensuelle
 				$data_consoanneeHC[$n] = $data_HC_fin[0] - $data_HC_deb[0] + $linky_offset_HC;

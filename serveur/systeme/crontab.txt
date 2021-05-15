@@ -33,3 +33,4 @@ MAILTO=""
 # @daily python3 ~/src/domini/serveur/bdd/pytribdd/pytribdddel.py 2020-01-01 #Tri dans les tables pour les alleger
 @daily ~/src/domini/serveur/bdd/mysql_backup.sh #backup de la base de donnees domotique
 * 2,5,8,11,14,17,20,23 * * * cd ~/src/domini/serveur/ngrok; python3 ./ngrok_update_url.py #mise à jour @ ip ngrok sur serveur web publique  (free)
+@reboot ~/src/domini/serveur/systeme/go.sh #lance pyReceiver au boot 
