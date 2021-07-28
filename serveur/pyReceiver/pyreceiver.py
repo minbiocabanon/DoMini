@@ -27,9 +27,10 @@ def setup():
 # -- fin setup --
 
 # -- manage serial reception --
-def task_receiver():
-	global keepThis
-	global ser
+def task_receiver(con):
+	#global keepThis
+	keepThis = ''
+	#global ser
 	try :
 		data=keepThis + str(ser.read(ser.in_waiting),encoding) # read no.of bytes in waiting
 		m = data.split('\n')	# get the individual lines from input
@@ -40,6 +41,8 @@ def task_receiver():
 		else:
 		 	processThis = m[0:-1]		# skip incomplete line
 		 	keepThis = m[-1]			# fragment
+		
+		ser.reset_input_buffer()
 		
 	except :
 		logmessage = " ERROR while parsing message on " + port
@@ -60,8 +63,7 @@ def task_receiver():
 				print(header, HC, HP, tarif, current, maxcurrent, VA)
 				# Send data in MariaDB
 				try:
-					# Open MariaDB session
-					con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
+					# Create MariaDB cursor
 					cur = con.cursor()
 					# prepare query
 					query = "INSERT INTO domotique.teleinfo VALUES(NULL, NOW(), '"+ header +"', "+ HC + ", "+ HP +", '"+ tarif +"', "+ current +", "+ maxcurrent +", "+ VA +",0)"
@@ -72,8 +74,6 @@ def task_receiver():
 					con.commit()
 					# Close all cursors
 					cur.close()
-					# Close MariaDB session
-					con.close()
 					# Print some debug
 					print("  Traitement msg teleinfo  -> enreg. dans base de donnees")
 				except mdb.Error as e:
@@ -101,8 +101,7 @@ def task_receiver():
 				print(header, an1, an2, an3, an4)
 				# Send data in MariaDB
 				try:
-					# Open MariaDB session
-					con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
+					# Create MariaDB cursor
 					cur = con.cursor()
 					# prepare query
 					query = 'INSERT INTO domotique.{0} VALUES(NULL, NOW(), \'{1}\', {2:.2f}, {3:.2f}, {4:.2f}, {5:.2f}, 0)'.format(table, header, float(an1)/100, float(an2)/100, float(an3)/100, float(an4)/100)
@@ -113,8 +112,6 @@ def task_receiver():
 					con.commit()
 					# Close all cursors
 					cur.close()
-					# Close MariaDB session
-					con.close()
 					# Print some debug
 					print("  Traitement msg "+ table +"  -> enreg. dans base de donnees")
 				except mdb.Error as e:
@@ -140,8 +137,7 @@ def task_receiver():
 				print(header, an1, an2, an3, an4)
 				# Send data in MariaDB
 				try:
-					# Open MariaDB session
-					con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
+					# Create MariaDB cursor
 					cur = con.cursor()
 					# prepare query
 					query = 'INSERT INTO domotique.{0} VALUES(NULL, NOW(), \'{1}\', {2:.2f}, {3:.2f}, {4:.2f}, {5:.2f}, 0)'.format(table, header, float(an1)/100, float(an2)/100, float(an3)/100, float(an4)/100)
@@ -152,8 +148,6 @@ def task_receiver():
 					con.commit()
 					# Close all cursors
 					cur.close()
-					# Close MariaDB session
-					con.close()
 					# Print some debug
 					print("  Traitement msg "+ table +"  -> enreg. dans base de donnees")
 				except mdb.Error as e:
@@ -179,8 +173,7 @@ def task_receiver():
 				print(header, an1)
 				# Send data in MariaDB
 				try:
-					# Open MariaDB session
-					con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
+					# Create MariaDB cursor
 					cur = con.cursor()
 					# prepare query
 					query = 'INSERT INTO domotique.{0} VALUES(NULL, NOW(), \'{1}\', {2:.2f}, 0)'.format( table, header, float(an1)/100 )
@@ -191,8 +184,6 @@ def task_receiver():
 					con.commit()
 					# Close all cursors
 					cur.close()
-					# Close MariaDB session
-					con.close()
 					# Print some debug
 					print("  Traitement msg "+ table +"  -> enreg. dans base de donnees")
 				except mdb.Error as e:
@@ -218,8 +209,7 @@ def task_receiver():
 				print(header, etat)
 				# Send data in MariaDB
 				try:
-					# Open MariaDB session
-					con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
+					# Create MariaDB cursor
 					cur = con.cursor()
 					# prepare query
 					query = 'INSERT INTO domotique.{0} VALUES(NULL, NOW(), \'{1}\', {2}, 0)'.format( table, header, int(etat) )
@@ -230,8 +220,6 @@ def task_receiver():
 					con.commit()
 					# Close all cursors
 					cur.close()
-					# Close MariaDB session
-					con.close()
 					# Print some debug
 					print("  Traitement msg "+ table +"  -> enreg. dans base de donnees")
 				except mdb.Error as e:
@@ -262,8 +250,7 @@ def task_receiver():
 				if ( typmsg == "SAC" ) :
 					# Send data in MariaDB
 					try:
-						# Open MariaDB session
-						con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
+						# Create MariaDB cursor
 						cur = con.cursor()
 						# prepare query to recover number of pellet bag in stock
 						query = 'SELECT capital FROM pellets ORDER BY id DESC LIMIT 0 , 1'
@@ -285,8 +272,6 @@ def task_receiver():
 						con.commit()
 						# Close all cursors
 						cur.close()
-						# Close MariaDB session
-						con.close()
 						# Print some debug
 						print("  Traitement msg $POL,SAC  -> enreg. dans base de donnees")
 					except mdb.Error as e:
@@ -299,7 +284,6 @@ def task_receiver():
 					# Send data in MariaDB
 					try:
 						# Open MariaDB session
-						# con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 						# cur = con.cursor()
 						# # prepare query to recover number of pellet bag in stock
 						# query = 'SELECT capital FROM pellets ORDER BY id DESC LIMIT 0 , 1'
@@ -319,8 +303,6 @@ def task_receiver():
 						# # cur.execute(query)
 						# # Close all cursors
 						# cur.close()
-						# # Close MariaDB session
-						# con.close()
 						# Print some debug
 						print("  Traitement msg $POL,MOD  -> pas d'action pour le moment")
 					except mdb.Error as e:
@@ -332,8 +314,7 @@ def task_receiver():
 				elif ( typmsg == "NVG" ) :
 					# Send data in MariaDB
 					try:
-						# Open MariaDB session
-						con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
+						# Create MariaDB cursor
 						cur = con.cursor()
 						logmessage = ' Niveau de granules dans le reservoir: {0:3d}'.format(int(var1))
 						print(logmessage)
@@ -347,8 +328,6 @@ def task_receiver():
 						con.commit()
 						# Close all cursors
 						cur.close()
-						# Close MariaDB session
-						con.close()
 						# Print some debug
 						print("  Traitement msg $POL,NVG  -> enreg. dans base de donnees")
 					except mdb.Error as e:
@@ -398,15 +377,15 @@ def task_receiver():
 					logmessage = " ERROR while parsing unknown message "
 					print(logmessage)
 					syslog.syslog(logmessage)
+
 # -- end task_receiver --
 
-# -- manage serial emission --
-def task_emitter():
+#-- manage serial emission --
+def task_emitter(con):
 	
 	# Check messages in the MariaDB stack
 	try:
-		# Open MariaDB session
-		con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
+		#Create MariaDB cursor
 		cur = con.cursor()
 		# prepare query
 		query = 'SELECT id, date_time, UNIX_TIMESTAMP(date_time) AS date_unix, message FROM `domotique`.`tx_msg_radio` ORDER BY date_time ASC'
@@ -415,8 +394,7 @@ def task_emitter():
 		messages = cur.fetchall()
 		# Close all cursors
 		cur.close()
-		# Close MariaDB session
-		con.close()
+
 	except mdb.Error as e:
 		# create variable for next loop (for message in messages)
 		messages = 0
@@ -454,8 +432,7 @@ def task_emitter():
 
 			# delete this message
 			try:
-				# Open MariaDB session
-				con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
+				# Create MariaDB cursor
 				cur = con.cursor()
 				# prepare query
 				query = 'DELETE FROM `domotique`.`tx_msg_radio` WHERE `tx_msg_radio`.`id` = {0};'.format(message[0])
@@ -464,8 +441,6 @@ def task_emitter():
 				con.commit()
 				# Close all cursors
 				cur.close()
-				# Close MariaDB session
-				con.close()
 				# Add some log messages
 				logmessage = " Emitter_task : message has been deleted : " + str(message[3]) + " id :" + str(message[0])
 				print(logmessage)
@@ -476,6 +451,9 @@ def task_emitter():
 					print("MariaDB Error [%d]: %s" % (e.args[0], e.args[1]))
 				except IndexError:
 					print("MariaDB Error: %s" % str(e))
+		
+		ser.reset_output_buffer()
+		
 	except :
 		# Add some log messages
 		logmessage = " Emitter_task : error with MariaDB or messages variable content"
@@ -484,14 +462,19 @@ def task_emitter():
 # -- end task_emitter --
 
 
+
 #--- obligatoire pour lancement du code --
 if __name__=="__main__": # set executable code
 	setup() 	# setup() function call
+	# Open MariaDB session
+	conMariaDB = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 	while(1): 	# infinite loop
-		task_receiver()
-		task_emitter()
-
-		sleep(1)
+		task_receiver(conMariaDB)
+		sleep(0.5)
+		task_emitter(conMariaDB)
+		sleep(0.5)
 		print(('.'), end=' ')
 		sys.stdout.flush()
 	ser.close()
+	# Close MariaDB session
+	con.close()
