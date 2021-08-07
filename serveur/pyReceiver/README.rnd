@@ -5,3 +5,24 @@ python3 pyreceiver.py
 
 
 ## Changement tarif HC/HP en Tarif unique -> 15/05/2021
+
+
+
+########### BUG A CORRIGER
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+2021-07-14 16:30:58
+$EDF 002508201 001964864 TH.. 001 090 00350
+ INSERT INTO domotique.teleinfo VALUES(NULL, NOW(), '$EDF', 002508201, 001964864, 'TH..', 001, 090, 00350,0)
+  Traitement msg teleinfo  -> enreg. dans base de donnees
+. . . . . . . Killed
+
+->>>>>>> c'est quoi ce 'Killed' ??????????????????
+
+->>>>>>> Réponse : OOM (Out Of Memory)
+[7527589.758531] oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-2.scope,task=python3,pid=1813537,uid=1000
+[7527589.758554] Out of memory: Killed process 1813537 (python3) total-vm:2606184kB, anon-rss:1107904kB, file-rss:1756kB, shmem-rss:0kB, UID:1000 pgtables:5132kB oom_score_adj:0
+[7527590.024092] oom_reaper: reaped process 1813537 (python3), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+
+->>>>>>> Fuite mémoire, le script grossissai de 70Mo/j , bug corrigé le 30/07/2021 , ouverture de session MariaDB fait une seule fois en début de programme et non à chaque requête .
+
