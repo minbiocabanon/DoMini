@@ -50,7 +50,7 @@ def get_time():
 # -- end get_time --
 
 # -- tag_donnees --
-def tag_donnees(table, ordre):
+def tag_donnees(con, table, ordre):
 	global NB_JOUR
 	global date_arg
 
@@ -75,7 +75,6 @@ def tag_donnees(table, ordre):
 			# only get info for the day = date_tag
 			try:
 				# Open MySQL session
-				con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 				cur = con.cursor()
 				# prepare query
 				query = 'SELECT id, date_time, ana1 FROM `{0}` WHERE date_format( date_time, \'%Y-%d-%m\' ) = date_format( \'{1}\', \'%Y-%d-%m\' ) ORDER BY ana1 {2} LIMIT 0 , 1'.format(tabname, date_tag, ordre)
@@ -84,13 +83,11 @@ def tag_donnees(table, ordre):
 				result = cur.fetchone()
 				# Close all cursors
 				cur.close()
-				# Close MySQL session
-				con.close()
 				# increment date_tag + 1 day
 				date_tag = date_tag + dt.timedelta(days=1)
 			except mdb.Error as e:
 				# create variable
-				result = 0
+				result = None
 				# Display MySQL errors
 				try:
 					print(" MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
@@ -105,17 +102,15 @@ def tag_donnees(table, ordre):
 					#logmessage = "  ID obtenu : " + str(ID)
 					#print logmessage
 					# Open MySQL session
-					con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 					cur = con.cursor()
 					# prepare query
 					query = 'UPDATE `domotique`.`{0}` SET `tag` = \'1\' WHERE `{1}`.`id` ={2};'.format(tabname, tabname,ID)
 					# run MySQL Query
 					cur.execute(query)
-					result = cur.fetchone()
+					# Make sure data is committed to the database
+					con.commit()
 					# Close all cursors
 					cur.close()
-					# Close MySQL session
-					con.close()
 					logmessage = "  Ligne "+ str(ID) +" taggee"
 				else:
 					logmessage = "  Pas de donnees a tagger"	
@@ -136,7 +131,7 @@ def tag_donnees(table, ordre):
 # -- end tag_donnees --
 
 # -- tag_donnees --
-def tag_donnees_heure(table):
+def tag_donnees_heure(con, table):
 	global NB_JOUR
 	global date_arg
 
@@ -155,7 +150,6 @@ def tag_donnees_heure(table):
 				# only get info for the day = date_tag
 				try:
 					# Open MySQL session
-					con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 					cur = con.cursor()
 					# prepare query
 					query = 'SELECT id, date_time, ana1 FROM `{0}` WHERE HOUR(date_time) = {1} AND date_format( date_time, \'%Y-%d-%m\' ) = date_format( \'{2}\', \'%Y-%d-%m\' ) ORDER BY date_time ASC LIMIT 0 , 1'.format(tabname, h, date_tag)
@@ -164,8 +158,6 @@ def tag_donnees_heure(table):
 					result = cur.fetchone()
 					# Close all cursors
 					cur.close()
-					# Close MySQL session
-					con.close()
 				except mdb.Error as e:
 					# create variable
 					result[0] = 0
@@ -183,18 +175,15 @@ def tag_donnees_heure(table):
 						# logmessage = "  ID obtenu : " + str(ID)
 						#print logmessage
 						# Open MySQL session
-						con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 						cur = con.cursor()
 						# prepare query
 						query = 'UPDATE `domotique`.`{0}` SET `tag` = \'1\' WHERE `{1}`.`id` ={2};'.format(tabname, tabname,ID)
 						# run MySQL Query
 						cur.execute(query)
-						result = cur.fetchone()
+						# Make sure data is committed to the database
+						con.commit()
 						# Close all cursors
 						cur.close()
-						# Close MySQL session
-						con.close()
-						
 						logmessage = "  Ligne "+ str(ID) +" taggee"
 					else:
 						logmessage = "  Pas de donnees a tagger"
@@ -216,7 +205,7 @@ def tag_donnees_heure(table):
 # -- end tag_donnees_heure --
 
 # -- supp_donnees_tag --
-def supp_donnees_tag(table):
+def supp_donnees_tag(con, table):
 	global NB_JOUR
 	global date_arg
 		
@@ -231,7 +220,6 @@ def supp_donnees_tag(table):
 		print(' Table :',tabname)
 		try:
 			# Open MySQL session
-			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			# select * from table between `lowerdate` and `upperdate`
@@ -258,12 +246,11 @@ def supp_donnees_tag(table):
 			# closing database connection.
 			# Close all cursors
 			cur.close()
-			# Close MySQL session
-			con.close()				
+			
 # -- end tag_donnees --
 
 # -- optimize --
-def optimize():
+def optimize(con):
 	logmessage = 'Optimisation de la table {0} en cours ...'.format(table)
 	print(logmessage)
 	syslog.syslog(logmessage)
@@ -272,7 +259,6 @@ def optimize():
 		print(' Table :',tabname)
 		try:
 			# Open MySQL session
-			con = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 			cur = con.cursor()
 			# prepare query
 			query = 'OPTIMIZE TABLE `{0}`;'.format(tabname)
@@ -281,8 +267,7 @@ def optimize():
 			#result = cur.fetchone()
 			# Close all cursors
 			cur.close()
-			# Close MySQL session
-			con.close()
+
 		except mdb.Error as e:
 			# create variable
 			#result = 0
@@ -294,19 +279,19 @@ def optimize():
 # -- end optimize --
 			
 # -- clean tables --
-def clean_table():
+def clean_table(conMariaDB):
 
 	# tag MIN value of the day
-	#tag_donnees(table, "MIN")
+	tag_donnees(conMariaDB, table, "MIN")
 
 	# tag MAX value of the day
-	#tag_donnees(table, "MAX")
+	tag_donnees(conMariaDB, table, "MAX")
 	
 	# tag last HP/HC of the day
-	#tag_donnees_heure(table)
+	tag_donnees_heure(conMariaDB, table)
 	
 	# delete all data not tagged during the selected day
-	supp_donnees_tag(table)
+	supp_donnees_tag(conMariaDB, table)
 
 # -- end clean_table --
 
@@ -314,10 +299,16 @@ def clean_table():
 #--- obligatoire pour lancement du code --
 if __name__=="__main__": # set executable code
 	setup()
+	# Open MariaDB session
+	conMariaDB = mdb.connect(user="root",password="mysql",host="localhost",database="domotique")
 	get_time()
-	clean_table()
-	optimize()
+	clean_table(conMariaDB)
+	optimize(conMariaDB)
+	
+	# Close MariaDB session
+	conMariaDB.close()
 	
 	logmessage = "Fin pytribdddel"
 	print(logmessage)
 	syslog.syslog(logmessage)
+	
