@@ -13,7 +13,7 @@
 	// echo 'galtoerase='.$galtoerase;
 	
 	if($galtoerase == "garage" || $galtoerase == "jardin" || $galtoerase == "porche" || $galtoerase == "kiwi" || $galtoerase == "sejour"){
-		$command = "rm /var/www/domini/webcam/".$galtoerase."/*.jpg";
+		$command = "rm -f /var/www/domini/webcam/".$galtoerase."/*.jpg";
 		exec($command);
 	}
 ?>
