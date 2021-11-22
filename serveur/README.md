@@ -79,3 +79,4 @@ En cas de coupure de courant ou de rétablissement du courant, une notification 
 ##www
 Ce répertoire contient toute l'interface graphique (web) de la domotique.
 Un lien symbolique sera fait sur ce répertoire depuis /var/www/ .
+
