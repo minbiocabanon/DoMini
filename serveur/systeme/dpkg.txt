@@ -643,10 +643,10 @@ linux-firmware					install
 linux-generic					install
 linux-headers-5.4.0-88				install
 linux-headers-5.4.0-88-generic			install
-linux-headers-5.4.0-89				install
-linux-headers-5.4.0-89-generic			install
 linux-headers-5.4.0-90				install
 linux-headers-5.4.0-90-generic			install
+linux-headers-5.4.0-91				install
+linux-headers-5.4.0-91-generic			install
 linux-headers-generic				install
 linux-image-5.4.0-42-generic			deinstall
 linux-image-5.4.0-53-generic			deinstall
@@ -670,8 +670,9 @@ linux-image-5.4.0-81-generic			deinstall
 linux-image-5.4.0-84-generic			deinstall
 linux-image-5.4.0-86-generic			deinstall
 linux-image-5.4.0-88-generic			install
-linux-image-5.4.0-89-generic			install
+linux-image-5.4.0-89-generic			deinstall
 linux-image-5.4.0-90-generic			install
+linux-image-5.4.0-91-generic			install
 linux-image-generic				install
 linux-libc-dev:amd64				install
 linux-modules-5.4.0-42-generic			deinstall
@@ -696,8 +697,9 @@ linux-modules-5.4.0-81-generic			deinstall
 linux-modules-5.4.0-84-generic			deinstall
 linux-modules-5.4.0-86-generic			deinstall
 linux-modules-5.4.0-88-generic			install
-linux-modules-5.4.0-89-generic			install
+linux-modules-5.4.0-89-generic			deinstall
 linux-modules-5.4.0-90-generic			install
+linux-modules-5.4.0-91-generic			install
 linux-modules-extra-5.4.0-42-generic		deinstall
 linux-modules-extra-5.4.0-53-generic		deinstall
 linux-modules-extra-5.4.0-54-generic		deinstall
@@ -720,8 +722,9 @@ linux-modules-extra-5.4.0-81-generic		deinstall
 linux-modules-extra-5.4.0-84-generic		deinstall
 linux-modules-extra-5.4.0-86-generic		deinstall
 linux-modules-extra-5.4.0-88-generic		install
-linux-modules-extra-5.4.0-89-generic		install
+linux-modules-extra-5.4.0-89-generic		deinstall
 linux-modules-extra-5.4.0-90-generic		install
+linux-modules-extra-5.4.0-91-generic		install
 locales						install
 login						install
 logrotate					install
