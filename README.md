@@ -707,3 +707,5 @@ pour faire un ddns avec no-ip
 			host  kitemeteo.ddns.net
 			host  mydomini.ddns.net
 	Updating every 30 minutes via /dev/wlan0 with NAT enabled.
+	
+	test gitkraken
