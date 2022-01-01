@@ -287,7 +287,7 @@ def clean_table(conMariaDB):
 	# tag MAX value of the day
 	tag_donnees(conMariaDB, table, "MAX")
 	
-	# tag last HP/HC of the day
+	# tag value each hour of the day
 	tag_donnees_heure(conMariaDB, table)
 	
 	# delete all data not tagged during the selected day
