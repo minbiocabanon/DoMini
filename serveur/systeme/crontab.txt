@@ -30,7 +30,7 @@ MAILTO=""
 0,15,30,45 * * * * python3 ~/src/domini/serveur/pySentinelle/pySentinelle.py #Surveille le serveur web, la bdd et pyreceiver
 14,29,44,59 * * * * python3 ~/src/domini/serveur/pygestion_vr/pygestion_vr.py #Gestion des volants roulants
 0,15,30,45 * * * * python3 ~/src/domini/serveur/pyBypassPC/pyBypassPC.py #Etabli la consigne pour le bypass et ecrit dans la BDD
-# @daily python3 ~/src/domini/serveur/bdd/pytribdd/pytribdddel.py 2020-01-01 #Tri dans les tables pour les alleger
+@daily python3 ~/src/domini/serveur/bdd/pytribdd/pytribdddel.py 2021-11-01 #Tri dans les tables pour les alleger
 @daily ~/src/domini/serveur/bdd/mysql_backup.sh #backup de la base de donnees domotique
 * 2,5,8,11,14,17,20,23 * * * cd ~/src/domini/serveur/ngrok; python3 ./ngrok_update_url.py #mise à jour @ ip ngrok sur serveur web publique  (free)
 @reboot ~/src/domini/serveur/systeme/go.sh #lance pyReceiver au boot 
