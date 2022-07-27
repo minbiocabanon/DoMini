@@ -46,12 +46,12 @@
 							<td><a href="http://domini.dlinkddns.com:50180">http://domini.dlinkddns.com:50180</a></td>
 						  </tr>
 						  <tr>
-							<td>Revotech (jardin)</td>
+							<td>HIKVision 4MP (jardin)</td>
 							<td><a href="http://192.168.0.120:80">192.168.0.120:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50112">http://domini.dlinkddns.com:50112</a></td>
 						  </tr>
 						  <tr>
-							<td>Revotech (garage)</td>
+							<td>HIKVision 2MP (garage)</td>
 							<td><a href="http://192.168.0.119:80">192.168.0.119:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50114">http://domini.dlinkddns.com:50112</a></td>
 						  </tr>
@@ -67,8 +67,8 @@
 						  </tr>	
 						  <tr>
 						  <tr>
-							<td>Camera Foscam C2 (sejour)</td>
-							<td><a href="http://192.168.0.130:88">http://192.168.0.130:88</a></td>
+							<td>HIKVision 6MP (sejour)</td>
+							<td><a href="http://192.168.0.130:80">http://192.168.0.130:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50130">http://domini.dlinkddns.com:50130</a></td>
 						  </tr>	
 						  <tr>
@@ -83,7 +83,7 @@
 							<td><a href="http://domini.dlinkddns.com:50110">http://domini.dlinkddns.com:50110</a></td>
 						  </tr>
 						  <tr>
-							<td>ub1610 SSH </td>
+							<td>ub2004 SSH </td>
 							<td><a href="192.168.0.127:22">192.168.0.127:22</a></td>
 							<td><a href="domini.dlinkddns.com:50117">domini.dlinkddns.com:50117</a></td>
 						  </tr>						  

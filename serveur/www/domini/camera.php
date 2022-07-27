@@ -102,7 +102,7 @@
 									  </p>
 									</div>
 								</div>
-								<div class="item">
+						<!--	<div class="item">
 									<img src="./webcam/garage_kiwi.jpg?<?PHP echo time()?>" alt="">
 									<div class="carousel-caption">
 									  <h4>Garage2</h4>
@@ -114,9 +114,9 @@
 										}
 									  ?>
 									  </p>
-									</div>								
+									</div>
 																	
-								</div>								
+								</div> -->
 							  </div>
 							  
 							  <!-- Carousel nav -->
