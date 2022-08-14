@@ -42,67 +42,83 @@
 						<tbody>
 						  <tr>
 							<td>Accueil DoMini</td>
-							<td><a href="http://192.168.0.102:80">http://192.168.0.102:80</a></td>
+							<td><a href="http://192.168.0.127:80">http://192.168.0.102:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50180">http://domini.dlinkddns.com:50180</a></td>
 						  </tr>
+						  
 						  <tr>
 							<td>HIKVision 4MP (jardin)</td>
 							<td><a href="http://192.168.0.120:80">192.168.0.120:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50112">http://domini.dlinkddns.com:50112</a></td>
 						  </tr>
+						  
 						  <tr>
 							<td>HIKVision 2MP (garage)</td>
 							<td><a href="http://192.168.0.119:80">192.168.0.119:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50114">http://domini.dlinkddns.com:50112</a></td>
 						  </tr>
+						  
 						  <tr>
 							<td>Revotech (porche)</td>
 							<td><a href="http://192.168.0.129:80">http://192.168.0.129:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50113">http://domini.dlinkddns.com:50113</a></td>
 						  </tr>
+						  
 						  <tr>
 							<td>Thomson DSC-323W (kiwi)</td>
 							<td><a href="http://192.168.0.121:88">http://192.168.0.121:88</a></td>
 							<td><a href="http://domini.dlinkddns.com:50121">http://domini.dlinkddns.com:50121</a></td>
 						  </tr>	
-						  <tr>
+						  
 						  <tr>
 							<td>HIKVision 6MP (sejour)</td>
 							<td><a href="http://192.168.0.130:80">http://192.168.0.130:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50130">http://domini.dlinkddns.com:50130</a></td>
 						  </tr>	
+
 						  <tr>
+							<td>FOSCAM C2 1MP (sejour)</td>
+							<td><a href="http://192.168.0.131:80">http://192.168.0.131:80</a></td>
+							<td><a href="http://domini.dlinkddns.com:50131">http://domini.dlinkddns.com:50130</a></td>
+						  </tr>	
 						  
-							<td>Router WiFi</td>
+						  <tr>
+						  	<td>Router WiFi</td>
 							<td><a href="http://192.168.0.1:80">http://192.168.0.1:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50100">http://domini.dlinkddns.com:50100</a></td>
 						  </tr>							  
+						  
 						  <tr>
 							<td>NAS</td>
 							<td><a href="http://192.168.0.100:80">http://192.168.0.100:80</a></td>
 							<td><a href="http://domini.dlinkddns.com:50110">http://domini.dlinkddns.com:50110</a></td>
 						  </tr>
+						  
 						  <tr>
 							<td>ub2004 SSH </td>
 							<td><a href="192.168.0.127:22">192.168.0.127:22</a></td>
 							<td><a href="domini.dlinkddns.com:50117">domini.dlinkddns.com:50117</a></td>
 						  </tr>						  
+						  
 						  <tr>
 							<td>OTA LinkitOne</td>
 							<td><a href="http://192.168.0.102:83">http://192.168.0.102:83</a></td>
 							<td><a href="http://domini.dlinkddns.com:50150">http://domini.dlinkddns.com:50150</a></td>
 						  </tr>	
+						  
 						  <tr>
 							<td>Sigfox</td>
 							<td><a href="192.168.0.102:82">192.168.0.102:82</a></td>
 							<td><a href="domini.dlinkddns.com:50122">domini.dlinkddns.com:50122</a></td>
 						  </tr>	
+						  
 						  <tr>
 							<td>Rpi WiFi Web</td>
 							<td><a href="192.168.0.122:80">192.168.0.122:22</a></td>
 							<td><a href="domini.dlinkddns.com:50123">domini.dlinkddns.com:50123</a></td>
 						  </tr>
-						  <tr>
+						 
+						 <tr>
 							<td>my IP</td>
 							<?PHP
 								$myip = file_get_contents('http://ipinfo.io/ip/');
