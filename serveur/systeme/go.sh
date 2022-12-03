@@ -4,6 +4,9 @@
 stty -F /dev/ttyUSB0 57600
 
 #on lance les logiciels
+# chargement driver ups
+echo "chargement driver ups"
+sudo upsdrvctl start	
 # lancement du daemon qui gère l'onduleur (obligatoire pour remplir la bdd et avoir les notifications pushbullet)
 echo "Lancement de ups_daemonized.py"
 /usr/bin/python3 ~/src/domini/serveur/ups/ups_daemonized.py &
