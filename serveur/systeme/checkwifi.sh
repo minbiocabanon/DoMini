@@ -6,10 +6,12 @@ ping -c4 192.168.0.1 > /dev/null
 if [ $? != 0 ] 
 then
 	echo "No network connection, stopping wlan0"
-	sudo ip link set wlan0 down
+	#sudo ip link set wlan0 down
+	sudo nmcli device disconnect wlan0
 	sleep 5
-	echo "starting waln0"	
-	sudo ip link set wlan0 up
+	echo "starting wlan0"	
+	#sudo ip link set wlan0 up
+	sudo nmcli device connect wlan0
 	echo "udhcp request"	
 	dhclient wlan0
 else
