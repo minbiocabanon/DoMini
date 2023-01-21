@@ -45,14 +45,19 @@ def check_db():
 	except mdb.Error as e:
 		# Display mariadb errors
 		try:
-			print("mariadb Error [%d]: %s" % (e.args[0], e.args[1]))
+			#print("mariadb Error [%d]: %s" % (e.args[0], e.args[1]))
 			logmessage = time.strftime("%Y-%m-%d %H:%M:%S") + " DoMini - Error : Database is NOT running"
-			global ACCESS_TOKEN
+			#global ACCESS_TOKEN
 			pb = Pushbullet(ACCESS_TOKEN)
-			push = pb.push_note("Domini", logmessage)	
+			push = pb.push_note("Domini", logmessage)
+			
+			#restart mariadb
+			print('\nrestart mariadb manually')
+			os.system("sudo systemctl restart mariadb")
+						
 		except IndexError:
 			logmessage = ""
-			print("mariadb Error: %s" % str(e))
+			print("mariadb Error + pushbullet Error : %s" % str(e))
 
 	print(logmessage)
 	syslog.syslog(logmessage)
