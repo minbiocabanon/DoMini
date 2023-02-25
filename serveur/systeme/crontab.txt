@@ -24,13 +24,13 @@ MAILTO=""
 @weekly ~/src/domini/serveur/systeme/dpkg_export.sh #Tache a executer de facon hebdomadaire
 0,5,10,15,20,25,30,35,40,45,50,55 * * 1-5,9-12 * ~/bin/regul_temp #logiciel qui calcule la consigne pour le poele
 @daily python3 ~/src/domini/serveur/bdd/pytribdd_edf/pytribdd_edf.py #Tri dans la table teleinfo : ne garde que HC/HP du debut/fin de jour
-@daily python3 ~/src/domini/serveur/bdd/pydel_old_data/pydel_old_data.py #Suppression des vieilles donnees des tables
+@daily python3 ~/src/domini/serveur/bdd/pydel_old_data/pydel_old_data.py #Suppression des vieilles donnees des tables : log, onduleur, internet etc...
 @daily python3 ~/src/domini/serveur/bdd/pytribdd/pytribdd.py #Allege la bdd en supprimant les anciennes donnees et ne conservant que certaines donnees utiles.
 # 0 7,22 * * * python3 ~/src/domini/serveur/pyNiveauGral/pyNiveauGral.py #Vérifie le niveau de granulés dans le reservoir
 0,15,30,45 * * * * python3 ~/src/domini/serveur/pySentinelle/pySentinelle.py #Surveille le serveur web, la bdd et pyreceiver
 14,29,44,59 * * * * python3 ~/src/domini/serveur/pygestion_vr/pygestion_vr.py #Gestion des volants roulants
 0,15,30,45 * * * * python3 ~/src/domini/serveur/pyBypassPC/pyBypassPC.py #Etabli la consigne pour le bypass et ecrit dans la BDD
-@daily python3 ~/src/domini/serveur/bdd/pytribdd/pytribdddel.py 2021-11-01 #Tri dans les tables pour les alleger
+@daily python3 ~/src/domini/serveur/bdd/pytribdd/pytribdddel.py #Tri dans les tables pour les alleger
 @daily ~/src/domini/serveur/bdd/mysql_backup.sh #backup de la base de donnees domotique
 * 2,5,8,11,14,17,20,23 * * * cd ~/src/domini/serveur/ngrok; python3 ./ngrok_update_url.py #mise à jour @ ip ngrok sur serveur web publique  (free)
 @reboot ~/src/domini/serveur/systeme/go.sh #lance pyReceiver au boot 

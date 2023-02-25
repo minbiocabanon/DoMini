@@ -191,6 +191,7 @@ libasound2-data					install
 libass9:amd64					install
 libassuan0:amd64				install
 libasyncns0:amd64				install
+libatasmart4:amd64				install
 libatm1:amd64					install
 libatomic1:amd64				install
 libattr1:amd64					install
@@ -210,6 +211,14 @@ libavutil56:amd64				install
 libbdplus0:amd64				install
 libbinutils:amd64				install
 libblkid1:amd64					install
+libblockdev-crypto2:amd64			install
+libblockdev-fs2:amd64				install
+libblockdev-loop2:amd64				install
+libblockdev-part-err2:amd64			install
+libblockdev-part2:amd64				install
+libblockdev-swap2:amd64				install
+libblockdev-utils2:amd64			install
+libblockdev2:amd64				install
 libbluetooth3:amd64				install
 libbluray2:amd64				install
 libboost-iostreams1.71.0:amd64			install
@@ -299,6 +308,7 @@ libfribidi0:amd64				install
 libfuse2:amd64					install
 libfwupd2:amd64					install
 libfwupdplugin1:amd64				install
+libfwupdplugin5:amd64				install
 libgamin0					install
 libgcab-1.0-0:amd64				install
 libgcc-9-dev:amd64				install
@@ -363,6 +373,7 @@ libitm1:amd64					install
 libjack-jackd2-0:amd64				install
 libjansson4:amd64				install
 libjbig0:amd64					install
+libjcat1:amd64					install
 libjpeg-turbo8:amd64				install
 libjpeg8:amd64					install
 libjs-jquery					install
@@ -457,6 +468,7 @@ libpam0g:amd64					install
 libpango-1.0-0:amd64				install
 libpangocairo-1.0-0:amd64			install
 libpangoft2-1.0-0:amd64				install
+libparted-fs-resize0:amd64			install
 libparted2:amd64				install
 libpcap0.8:amd64				install
 libpci3:amd64					install
@@ -560,6 +572,7 @@ libtwolame0:amd64				install
 libubsan1:amd64					install
 libuchardet0:amd64				install
 libudev1:amd64					install
+libudisks2-0:amd64				install
 libunistring2:amd64				install
 libunwind8:amd64				install
 libupower-glib3:amd64				install
@@ -577,6 +590,7 @@ libva-x11-2:amd64				install
 libva2:amd64					install
 libvdpau1:amd64					install
 libvidstab1.1:amd64				install
+libvolume-key1					install
 libvorbis0a:amd64				install
 libvorbisenc2:amd64				install
 libvorbisfile3:amd64				install
@@ -617,6 +631,7 @@ libxinerama1:amd64				install
 libxkbcommon0:amd64				install
 libxml2:amd64					install
 libxmlb1:amd64					install
+libxmlb2:amd64					install
 libxmlsec1:amd64				install
 libxmlsec1-openssl:amd64			install
 libxmuu1:amd64					install
@@ -640,12 +655,10 @@ lighttpd					install
 linux-base					install
 linux-firmware					install
 linux-generic					install
-linux-headers-5.4.0-135				install
-linux-headers-5.4.0-135-generic			install
-linux-headers-5.4.0-136				install
-linux-headers-5.4.0-136-generic			install
 linux-headers-5.4.0-137				install
 linux-headers-5.4.0-137-generic			install
+linux-headers-5.4.0-139				install
+linux-headers-5.4.0-139-generic			install
 linux-headers-generic				install
 linux-image-5.4.0-100-generic			deinstall
 linux-image-5.4.0-104-generic			deinstall
@@ -664,9 +677,10 @@ linux-image-5.4.0-126-generic			deinstall
 linux-image-5.4.0-128-generic			deinstall
 linux-image-5.4.0-131-generic			deinstall
 linux-image-5.4.0-132-generic			deinstall
-linux-image-5.4.0-135-generic			install
-linux-image-5.4.0-136-generic			install
+linux-image-5.4.0-135-generic			deinstall
+linux-image-5.4.0-136-generic			deinstall
 linux-image-5.4.0-137-generic			install
+linux-image-5.4.0-139-generic			install
 linux-image-5.4.0-42-generic			deinstall
 linux-image-5.4.0-53-generic			deinstall
 linux-image-5.4.0-54-generic			deinstall
@@ -716,9 +730,10 @@ linux-modules-5.4.0-126-generic			deinstall
 linux-modules-5.4.0-128-generic			deinstall
 linux-modules-5.4.0-131-generic			deinstall
 linux-modules-5.4.0-132-generic			deinstall
-linux-modules-5.4.0-135-generic			install
-linux-modules-5.4.0-136-generic			install
+linux-modules-5.4.0-135-generic			deinstall
+linux-modules-5.4.0-136-generic			deinstall
 linux-modules-5.4.0-137-generic			install
+linux-modules-5.4.0-139-generic			install
 linux-modules-5.4.0-42-generic			deinstall
 linux-modules-5.4.0-53-generic			deinstall
 linux-modules-5.4.0-54-generic			deinstall
@@ -766,9 +781,10 @@ linux-modules-extra-5.4.0-126-generic		deinstall
 linux-modules-extra-5.4.0-128-generic		deinstall
 linux-modules-extra-5.4.0-131-generic		deinstall
 linux-modules-extra-5.4.0-132-generic		deinstall
-linux-modules-extra-5.4.0-135-generic		install
-linux-modules-extra-5.4.0-136-generic		install
+linux-modules-extra-5.4.0-135-generic		deinstall
+linux-modules-extra-5.4.0-136-generic		deinstall
 linux-modules-extra-5.4.0-137-generic		install
+linux-modules-extra-5.4.0-139-generic		install
 linux-modules-extra-5.4.0-42-generic		deinstall
 linux-modules-extra-5.4.0-53-generic		deinstall
 linux-modules-extra-5.4.0-54-generic		deinstall
@@ -1072,6 +1088,7 @@ ubuntu-server					install
 ubuntu-standard					install
 ucf						install
 udev						install
+udisks2						install
 ufw						install
 unattended-upgrades				install
 unzip						install
