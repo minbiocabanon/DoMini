@@ -24,7 +24,9 @@
 		if($etat_chauffage_status == 2 && $puissance != ""){
 			echo "Chauffage ET puissance : $puissance<br>";
 			//on met à jour la base avec le mode et la puissance
-			$SQL="UPDATE `domotique`.`chauffage_statut` SET `etat` = '$etat_chauffage_status', `consigne_utilisateur` = '$puissance' WHERE `chauffage_statut`.`id` =1;"; 
+			$SQL="UPDATE `domotique`.`chauffage_statut` SET `etat` = '$etat_chauffage_status', `consigne_utilisateur` = '$puissance' WHERE `chauffage_statut`.`id` =1;
+				  UPDATE `domotique`.`chauffage_PID` SET `Consigne_prec` = '$puissance' WHERE `chauffage_PID`.`id` = 1;				
+				 "; 
 		}
 
 		else{
