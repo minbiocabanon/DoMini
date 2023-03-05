@@ -24,19 +24,26 @@
 		if($etat_chauffage_status == 2 && $puissance != ""){
 			echo "Chauffage ET puissance : $puissance<br>";
 			//on met à jour la base avec le mode et la puissance
-			$SQL="UPDATE `domotique`.`chauffage_statut` SET `etat` = '$etat_chauffage_status', `consigne_utilisateur` = '$puissance' WHERE `chauffage_statut`.`id` =1;
-				  UPDATE `domotique`.`chauffage_PID` SET `Consigne_prec` = '$puissance' WHERE `chauffage_PID`.`id` = 1;				
-				 "; 
+			$SQL="UPDATE `domotique`.`chauffage_statut` SET `etat` = '$etat_chauffage_status', `consigne_utilisateur` = '$puissance' WHERE `chauffage_statut`.`id` =1;"; 
+			//Execution de la requete
+			mysqli_query($link,$SQL);
+			
+			// on prepare la requete qui force le parametre P du PID à la valeur de la consigne manuelle pour que le PID reparte à cette valeur en cas de passage en mode AUTO
+			$SQL="UPDATE `domotique`.`chauffage_PID` SET `Consigne_prec` = '$puissance' WHERE `chauffage_PID`.`id` = 1;"; 
+			//Execution de la requete
+			mysqli_query($link,$SQL);			
 		}
 
 		else{
 			// echo "chauffage seul<br>";
 			//on met à jour la base avec le mode 
-			$SQL="UPDATE `domotique`.`chauffage_statut` SET `etat` = '$etat_chauffage_status' WHERE `chauffage_statut`.`id` =1;"; 
+			$SQL="UPDATE `domotique`.`chauffage_statut` SET `etat` = '$etat_chauffage_status' WHERE `chauffage_statut`.`id` =1;";
+			//Execution de la requete
+			mysqli_query($link,$SQL);
+			
 		}
 		
-		//Execution de la requete
-		mysqli_query($link,$SQL);
+		// fermeture connexion mysql
 		mysqli_close($link);
 		
 		exec("/var/www/domini/bin/regul_temp",$result);
