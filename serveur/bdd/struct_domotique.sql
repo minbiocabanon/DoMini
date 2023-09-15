@@ -32,7 +32,7 @@ CREATE TABLE `VMC` (
   `ana4` float(5,2) NOT NULL,
   `tag` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=823333 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Temperature VMCDF';
+) ENGINE=MyISAM AUTO_INCREMENT=877228 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Temperature VMCDF';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -84,7 +84,7 @@ CREATE TABLE `analog1` (
   `tag` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `date_time` (`date_time`)
-) ENGINE=MyISAM AUTO_INCREMENT=1019265 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données T° + H° + Pt rosée Extérieures';
+) ENGINE=MyISAM AUTO_INCREMENT=1065518 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données T° + H° + Pt rosée Extérieures';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,7 +105,7 @@ CREATE TABLE `analog2` (
   `tag` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `date_time` (`date_time`)
-) ENGINE=MyISAM AUTO_INCREMENT=1109610 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données T° + H° + Pt rosée Intérieures';
+) ENGINE=MyISAM AUTO_INCREMENT=1161060 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données T° + H° + Pt rosée Intérieures';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,7 +126,7 @@ CREATE TABLE `analog3` (
   `tag` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `date_time` (`date_time`)
-) ENGINE=MyISAM AUTO_INCREMENT=1070626 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données T° + H° + Pt rosée Puits Canadien';
+) ENGINE=MyISAM AUTO_INCREMENT=1120239 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données T° + H° + Pt rosée Puits Canadien';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -146,7 +146,7 @@ CREATE TABLE `analog4` (
   `ana4` float(5,2) NOT NULL,
   `tag` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=338578 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Sonde sortie bouche insufflation';
+) ENGINE=MyISAM AUTO_INCREMENT=356069 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Sonde sortie bouche insufflation';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -166,7 +166,7 @@ CREATE TABLE `analog5` (
   `ana4` float(5,2) NOT NULL,
   `tag` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=158686 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Sonde dans les combles';
+) ENGINE=MyISAM AUTO_INCREMENT=159773 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Sonde dans les combles';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -186,7 +186,7 @@ CREATE TABLE `analog6` (
   `ana4` float(5,2) NOT NULL,
   `tag` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=326789 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Sondes autour de la VMCDF';
+) ENGINE=MyISAM AUTO_INCREMENT=343774 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Sondes autour de la VMCDF';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -201,7 +201,7 @@ CREATE TABLE `bypass_pc_log` (
   `date_time` datetime NOT NULL,
   `consigne` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=252665 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='log des consignes envoyées au bypass du puitscanadien';
+) ENGINE=MyISAM AUTO_INCREMENT=271111 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='log des consignes envoyées au bypass du puitscanadien';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -330,7 +330,7 @@ CREATE TABLE `chauffage_log` (
   `delta_time` int(11) NOT NULL,
   `puissance` int(3) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=450639 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Table pour le log des consignes chauffage calculées par le r';
+) ENGINE=MyISAM AUTO_INCREMENT=482669 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Table pour le log des consignes chauffage calculées par le r';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -487,7 +487,7 @@ CREATE TABLE `pellets` (
   `debit` int(11) NOT NULL COMMENT 'sac',
   `capital` int(11) NOT NULL COMMENT 'sac',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1346 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données stock et consommation de sacs de granulés';
+) ENGINE=MyISAM AUTO_INCREMENT=1363 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données stock et consommation de sacs de granulés';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -541,7 +541,7 @@ CREATE TABLE `pyranometre` (
   `tag` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `date_time` (`date_time`)
-) ENGINE=MyISAM AUTO_INCREMENT=880313 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données du pyranometre';
+) ENGINE=MyISAM AUTO_INCREMENT=928062 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données du pyranometre';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -564,7 +564,7 @@ CREATE TABLE `teleinfo` (
   `tag` int(1) NOT NULL,
   KEY `id` (`id`),
   KEY `date_time` (`date_time`)
-) ENGINE=MyISAM AUTO_INCREMENT=20786258 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données du compteur EDF';
+) ENGINE=MyISAM AUTO_INCREMENT=21952789 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Données du compteur EDF';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -601,7 +601,7 @@ CREATE TABLE `tx_msg_radio` (
   `date_time` datetime NOT NULL,
   `message` varchar(66) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1072936 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Table servant de pile des messages à émettre vers la radio (';
+) ENGINE=MyISAM AUTO_INCREMENT=1141120 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='Table servant de pile des messages à émettre vers la radio (';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -620,7 +620,7 @@ CREATE TABLE `ups` (
   `output_voltage` float NOT NULL,
   `tag` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=187762 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=216319 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -638,7 +638,7 @@ CREATE TABLE `voletroulant_log` (
   `chambreM` int(11) NOT NULL,
   `chambreJF` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=137372 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='log pour voir l''évolution des volets';
+) ENGINE=MyISAM AUTO_INCREMENT=141377 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='log pour voir l''évolution des volets';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -689,4 +689,4 @@ CREATE TABLE `voletroulant_table_verite` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-19  0:00:03
+-- Dump completed on 2023-09-10  0:00:09
