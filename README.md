@@ -383,9 +383,9 @@ paramétrage lighttpd
 	
 ### Webmin
 Download deb package:
-	wget sourceforge.net/projects/webadmin/files/webmin/1.820/webmin_1.820_all.deb
+	wget sourceforge.net/projects/webadmin/files/webmin/2.013/webmin_2.013_all.deb
 Install deb package on ubuntu system :
-	sudo dpkg -i --force-depends webmin_1.820_all.deb
+	sudo dpkg -i --force-depends webmin_2.013_all.deb
 Install complete depedencies on ubuntu system :
 	sudo apt-get install -f
 
@@ -442,30 +442,6 @@ L'importation de gros fichiers n'est pas possible via phpmyadmin, il faut utilis
 Pour avoir la console en couleur
 	export TERM=xterm-color
 	
-
-### rc.local
-Afin de garantir le fonctionnement de la domotique en cas de redémarrage intempestif du serveur (si pas d'onduleur ou à la reprise du courant lorsque l'onduleur est sec), il convient d'appeler un script 'go.sh' qui contiendra les actions à lancer au démarrage.
-Pour cela, il faut modifier le fichier rc.local en ajoutant ces quelques lignes à la fin du fichier (avant exit 0) :
-
-	éditer le fichier (avec nano ou vi):
-	nano /etc/rc.local
-	echo "running go.sh"
-	/home/julien/src/domini/serveur/go.sh
-
-
-Ubuntu utilise maintenant systemd et rc.local est maintenant considéré comme un service, qui est arrêté par défaut.
-
-Il est possible de l’activer avec la commande 
-	sudo systemctl enable rc-local.service
-Il est nécessaire ensuite de redémarrer.
-
-Pour le désactiver : 
-	sudo systemctl disable rc-local.service
-
-Pour voir si il est activé :
-	systemctl list-unit-files | grep rc
-	
-	
 ### Accès au portCOM/USB
 Le port ttyUSBx doit être utilisable par l'utilisateur www-data pour l'envoi de message directement depuis l'interface web.
 
@@ -474,6 +450,10 @@ Le port ttyUSBx doit être utilisable par l'utilisateur www-data pour l'envoi de
 	adduser www-data dialout
 
 Si vous lancez pyReceiver depuis votre compte user, ajoutez votre compte également de la même façon pour avoir le droit d'utiliser le port serie.
+
+### rc.local
+Afin de garantir le fonctionnement de la domotique en cas de redémarrage intempestif du serveur (si pas d'onduleur ou à la reprise du courant lorsque l'onduleur est sec), il convient d'appeler un script 'go.sh' qui contiendra les actions à lancer au démarrage.
+En remplacement du rc.local qui pose des problèmes de droits et lors du portage/réinstallation, le go.sh est lancé par CRON qui se charge de le lancer au boot du système.
 
 ### Crontab:
 Importer les taches CRON listées dans ce fichier :
@@ -707,3 +687,14 @@ pour faire un ddns avec no-ip
 			host  kitemeteo.ddns.net
 			host  mydomini.ddns.net
 	Updating every 30 minutes via /dev/wlan0 with NAT enabled.
+	
+##videosurveillance
+	#Memo
+		Courte : 2.8 mm
+			La caméra aura un angle de vue large mais avec une longueur de focale courte. La caméra prendra un grand angle de la zone par exemple à 180°, mais elle ne sera pas longue en profondeur. 
+
+		Moyenne : 6 mm
+			La caméra aura un angle de vue plus restreint que la focale courte et plus grande que la focale longue.
+
+		Longue : 12 mm
+			Ici l’angle de vue est très étroit mais la focal est très longue. Elle permet de surveiller une zone très lointaine mais très restreinte.
