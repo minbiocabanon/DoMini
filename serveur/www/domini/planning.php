@@ -5,10 +5,12 @@
 	
 	// on récupère les variables du formulaire
 	$num_semaine = isset($_GET['num_semaine']) ? $_GET['num_semaine'] : '';
-	if($num_semaine == "")
+	if($num_semaine == ""){
 		$num_semaine = date('W');
+		//echo"Num semaine = $num_semaine";	
+	}
 		
-	
+	//echo date('l jS \of F Y h:i:s A');
 	// requete MySQL pour obtenir les données de la BDD
 	//echo" $host, $login, $passe, $bdd \n";
 		$link = mysqli_connect($host,$login,$passe,$bdd);
@@ -124,7 +126,7 @@
 			});
 			
 			function ChangeTypeJour(typejour, idjour, id_debut, id_fin){
-				// alert('type jour: ' + typejour +',  id_debut : '+ id_debut + ', id_fin :' + id_fin +', idjour :' + idjour);
+				//alert('type jour: ' + typejour +',  id_debut : '+ id_debut + ', id_fin :' + id_fin +', idjour :' + idjour);
 			   var xmlhttp=null;
 			   if (window.XMLHttpRequest) {
 				  xmlhttp = new XMLHttpRequest();
