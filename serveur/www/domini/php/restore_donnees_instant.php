@@ -27,7 +27,7 @@
 	mysqli_query($link,$SQL);
 	
 	//requete pour récupérer la dernière consommation instantanée
-	$SQL="SELECT *, DATE_FORMAT(date_time, '%W %e %M %X - %T') as DATE FROM `donnees_instant`"; 
+	$SQL="SELECT *, DATE_FORMAT(date_time, '%W %e %M %Y - %T') as DATE FROM `donnees_instant`"; 
 	//debug
 	// echo 'requete sql : '.$SQL.'\r\n';
 	//Envoie de la requete
