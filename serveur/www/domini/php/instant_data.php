@@ -2,18 +2,18 @@
 
 	//--------------------------------------------------
 	//! \file    instant_data.php
-	//! \brief	cette page PHP est appelée régulièrement par un CRON afin de récupérer quelques infos essentielles affichée sur la page principale de la domotique
-	//! \brief 	Cela permet de réduire le temps d'affichage de la page principale  (une seule requete dans une petite table plutot que plusieurs requetes dans des tables parfois volumineuses)
+	//! \brief	cette page PHP est appelï¿½e rï¿½guliï¿½rement par un CRON afin de rï¿½cupï¿½rer quelques infos essentielles affichï¿½e sur la page principale de la domotique
+	//! \brief 	Cela permet de rï¿½duire le temps d'affichage de la page principale  (une seule requete dans une petite table plutot que plusieurs requetes dans des tables parfois volumineuses)
 	//! \date     2012-03
 	//! \author   minbiocabanon
 	//--------------------------------------------------
 
 
 	include("../infos/config.inc.php"); // on inclu le fichier de config 
-	include("../infos/pyrano.inc.php"); // on inclu le fichier pour avoir les variables/constantes du pyranomètre
+	include("../infos/pyrano.inc.php"); // on inclu le fichier pour avoir les variables/constantes du pyranomï¿½tre
 
-	// ------------------- Données TELEINFO -------------------------------------
-	// requete MySQL pour obtenir les données de la BDD
+	// ------------------- Donnï¿½es TELEINFO -------------------------------------
+	// requete MySQL pour obtenir les donnï¿½es de la BDD
 	echo " $host, $login, $passe, $bdd \n";
 	$link = mysqli_connect($host,$login,$passe,$bdd);
 	if (!$link) {
@@ -21,7 +21,7 @@
 				. mysqli_connect_error());
 	}
 	
-	//requete pour récupérer la dernière consommation instantanée
+	//requete pour rï¿½cupï¿½rer la derniï¿½re consommation instantanï¿½e
 	$SQL="SELECT date_time AS Heure, puissance, tarif 
 	FROM teleinfo 
 	ORDER BY date_time DESC
@@ -30,20 +30,20 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// //lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère l'heure
+	//on rï¿½cupï¿½re l'heure
 	$data_teleinfo_date[] = $myrow["Heure"];
-	echo"<br/>Heure téléinfo = 	$data_teleinfo_date[0] <br>";
-	//on récupère la puissance consommé
+	echo"<br/>Heure tï¿½lï¿½info = 	$data_teleinfo_date[0] <br>";
+	//on rï¿½cupï¿½re la puissance consommï¿½
 	$data_consojour[] = $myrow["puissance"];
 	$data_tarif[] = $myrow["tarif"];
 	
-	//requete pour récupérer déterminer si les données sont récentes
+	//requete pour rï¿½cupï¿½rer dï¿½terminer si les donnï¿½es sont rï¿½centes
 	$SQL="SELECT date_time 
 	FROM teleinfo 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
 	$RESULT = @mysqli_query($link,$SQL);
-	// on récupère le nombre de résultat
+	// on rï¿½cupï¿½re le nombre de rï¿½sultat
 	$numrows = mysqli_num_rows($RESULT);
 	echo"nb de ligne teleinfo = $numrows <br>";
 	//si le nombre de mesures est >= 10 
@@ -60,9 +60,9 @@
 	}
 
 
-	// ------------------- Données Température intérieure  -------------------------------------
+	// ------------------- Donnï¿½es Tempï¿½rature intï¿½rieure  -------------------------------------
 
-	//requete pour récupérer la dernière consommation instantanée
+	//requete pour rï¿½cupï¿½rer la derniï¿½re consommation instantanï¿½e
 	$SQL="SELECT date_time, ana1, ana2 
 	FROM analog2 
 	ORDER BY date_time DESC
@@ -71,18 +71,18 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
 	$data_dateint[0] = $myrow["date_time"];
 	$data_tempint[0] = round($myrow["ana1"],2);
 	$data_humint[0] = round($myrow["ana2"],2);
 	
-	//requete pour récupérer déterminer si les données sont récentes
+	//requete pour rï¿½cupï¿½rer dï¿½terminer si les donnï¿½es sont rï¿½centes
 	$SQL="SELECT date_time 
 	FROM analog2 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
 	$RESULT = @mysqli_query($link,$SQL);
-	// on récupère le nombre de résultat
+	// on rï¿½cupï¿½re le nombre de rï¿½sultat
 	$numrows = mysqli_num_rows($RESULT);
 	echo"nb de ligne Ti = $numrows <br>";
 	//si le nombre de mesures est >= 10 
@@ -98,7 +98,7 @@
 		$str_ledTi="label-important";
 	}
 
-	//Requete pour déterminer si la température monte ou descend
+	//Requete pour dï¿½terminer si la tempï¿½rature monte ou descend
 	$SQL="SELECT  ana1  AS TempMoy, AVG( ana2 ) AS HumMoy
 	FROM  `analog2` 
 	WHERE date_time <= NOW( ) 
@@ -108,32 +108,32 @@
 		
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT);
-	//on récupère la température précédente
+	//on rï¿½cupï¿½re la tempï¿½rature prï¿½cï¿½dente
 	$data_tempmoy[0] = $myrow["TempMoy"];
 	$data_hummoy[0] = $myrow["HumMoy"];
-	//on calcul la différence pour savoir si la T° monte ou descend
+	//on calcul la diffï¿½rence pour savoir si la Tï¿½ monte ou descend
 	$data_deltatemp = $data_tempint[0] - $data_tempmoy[0];
 	$data_deltahum = $data_humint[0] - $data_hummoy[0];
 
 	//si le delta T est positif
 	if($data_deltatemp > 0){
-		//la température monte
+		//la tempï¿½rature monte
 		$str_iconTi="flecheup.png";
 	}else{
-		//la température descend 
+		//la tempï¿½rature descend 
 		$str_iconTi="flechedown.png";
 	}
 
 	//si le delta H est positif
 	if($data_deltahum > 0){
-		//la température monte
+		//la tempï¿½rature monte
 		$str_iconHi="flecheup.png";
 	}else{
-		//la température descend 
+		//la tempï¿½rature descend 
 		$str_iconHi="flechedown.png";
 	}
 
-	//Requete pour déterminer la pente sur la dernière heure
+	//Requete pour dï¿½terminer la pente sur la derniï¿½re heure
 	$SQL="SELECT ana1 
 	FROM analog2
 	WHERE date_time >= SUBTIME( NOW( ) ,  '01:00:00' )						
@@ -143,15 +143,15 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la température relevée il y a 1h
+	//on rï¿½cupï¿½re la tempï¿½rature relevï¿½e il y a 1h
 	$data_temp1h = $myrow["ana1"];
-	//on calcul la pente sur la dernière heure
+	//on calcul la pente sur la derniï¿½re heure
 	$data_pentetemp = round($data_tempint[0] - $data_temp1h , 2);
 	echo "data_temp1h : $data_temp1h  - data_tempint[0] : $data_tempint[0] -  pente : $data_pentetemp";
 
-	// ------------------- Données Température extérieure  -------------------------------------
+	// ------------------- Donnï¿½es Tempï¿½rature extï¿½rieure  -------------------------------------
 
-	//requete pour récupérer la dernière consommation instantanée
+	//requete pour rï¿½cupï¿½rer la derniï¿½re consommation instantanï¿½e
 	$SQL="SELECT date_time, ana1, ana2 
 	FROM analog1 
 	ORDER BY date_time DESC
@@ -160,18 +160,18 @@
 	$RESULT = mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
 	$data_dateext[0] = $myrow["date_time"];
 	$data_tempext[0] = round($myrow["ana1"],1);
 	$data_humext[0] = round($myrow["ana2"],1);
 
-	//requete pour récupérer déterminer si les données sont récentes
+	//requete pour rï¿½cupï¿½rer dï¿½terminer si les donnï¿½es sont rï¿½centes
 	$SQL="SELECT date_time 
 	FROM analog1 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )";
 	//Envoie de la requete
 	$RESULT = mysqli_query($link,$SQL);	
-	// on récupère le nombre de résultat
+	// on rï¿½cupï¿½re le nombre de rï¿½sultat
 	$numrows = mysqli_num_rows($RESULT);
 	echo"<br/>nb de ligne Te = $numrows <br>";
 	//si le nombre de mesures est >= 10 
@@ -189,7 +189,7 @@
 	
 	
 
-	//Requete pour déterminer si la température monte ou descend
+	//Requete pour dï¿½terminer si la tempï¿½rature monte ou descend
 	$SQL="SELECT  ana1 AS TempMoy, AVG( ana2 ) AS HumMoy
 	FROM  `analog1` 
 	WHERE date_time <= NOW( ) 
@@ -199,32 +199,32 @@
 	
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT);
-	//on récupère la température précédente
+	//on rï¿½cupï¿½re la tempï¿½rature prï¿½cï¿½dente
 	$data_tempmoy[0] = $myrow["TempMoy"];
 	$data_hummoy[0] = $myrow["HumMoy"];
-	//on calcul la différence pour savoir si la T° monte ou descend
+	//on calcul la diffï¿½rence pour savoir si la Tï¿½ monte ou descend
 	$data_deltatemp = $data_tempext[0] - $data_tempmoy[0];
 	$data_deltahum = $data_humext[0] - $data_hummoy[0];
 
 	//si le delta T est positif
 	if($data_deltatemp > 0){
-		//la température monte
+		//la tempï¿½rature monte
 		$str_iconTe="flecheup.png";
 	}else{
-		//la température descend 
+		//la tempï¿½rature descend 
 		$str_iconTe="flechedown.png";
 	}
 
 	//si le delta H est positif
 	if($data_deltahum > 0){
-		//la température monte
+		//la tempï¿½rature monte
 		$str_iconHe="flecheup.png";
 	}else{
-		//la température descend 
+		//la tempï¿½rature descend 
 		$str_iconHe="flechedown.png";
 	}
 
-	//Requete pour déterminer la pente sur la dernière heure
+	//Requete pour dï¿½terminer la pente sur la derniï¿½re heure
 	$SQL="SELECT ana1 
 	FROM analog1
 	WHERE date_time >= SUBTIME( NOW( ) ,  '01:00:00' )						
@@ -234,18 +234,18 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la température relevée il y a 1h
+	//on rï¿½cupï¿½re la tempï¿½rature relevï¿½e il y a 1h
 	$data_tempext1h = $myrow["ana1"];
-	//on calcul la pente sur la dernière heure
+	//on calcul la pente sur la derniï¿½re heure
 	$data_pentetempext = round($data_tempext[0] - $data_tempext1h , 2);
 	echo "data_tempext1h : $data_tempext1h  - data_tempext[0] : $data_tempext[0] -  pente : $data_pentetempext";
 
 
-	// ------------------- Données Température du Puits Canadien  -------------------------------------
-	// requete MySQL pour obtenir les données de la BDD
+	// ------------------- Donnï¿½es Tempï¿½rature du Puits Canadien  -------------------------------------
+	// requete MySQL pour obtenir les donnï¿½es de la BDD
 	//echo" $host, $login, $passe, $bdd \n";
 	@mysqli_connect($host,$login,$passe,$bdd);
-	//requete pour récupérer la dernière consommation instantanée
+	//requete pour rï¿½cupï¿½rer la derniï¿½re consommation instantanï¿½e
 	$SQL="SELECT date_time, ana1, ana2 
 	FROM analog3 
 	WHERE date_time
@@ -255,20 +255,20 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
 	$data_datePC[0] = $myrow["date_time"];
 	$data_tempPC[0] = round($myrow["ana1"],1);
 	$data_humPC[0] = round($myrow["ana2"],1);
 	
 	
-	//requete pour récupérer déterminer si les données sont récentes
+	//requete pour rï¿½cupï¿½rer dï¿½terminer si les donnï¿½es sont rï¿½centes
 	$SQL="SELECT date_time 
 	FROM analog3 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
 	$RESULT = @mysqli_query($link,$SQL);
-	//on récupère le nombre de résultat
-	//on récupère le nombre de résultat
+	//on rï¿½cupï¿½re le nombre de rï¿½sultat
+	//on rï¿½cupï¿½re le nombre de rï¿½sultat
 	$numrows = mysqli_num_rows($RESULT);
 	echo"<br/>nb de ligne PC = $numrows <br>";
 	//si le nombre de mesures est >= 10 
@@ -284,8 +284,8 @@
 		$str_ledPC="label-important";
 	}
 
-	// ------------------- Récupère puissance pc actuelle -------------------------------------
-	//Requete pour récupérer la valeur 15 minutes auparavent
+	// ------------------- Rï¿½cupï¿½re puissance pc actuelle -------------------------------------
+	//Requete pour rï¿½cupï¿½rer la valeur 15 minutes auparavent
 	$SQL="SELECT date_time, puissance
 	FROM puissance_pc
 	WHERE date_time >= SUBTIME( NOW( ) ,  '00:15:00' ) 
@@ -295,15 +295,15 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
 	if($myrow["puissance"] != '')
 		$puissance_pc = $myrow["puissance"];
 	else
 		$puissance_pc = 0.0 ;
 	
 	
-	// ------------------- Récupère puissance pc actuelle -------------------------------------
-	//Requete pour déterminer la valeur moyenne sur les dernières 20 minutes
+	// ------------------- Rï¿½cupï¿½re puissance pc actuelle -------------------------------------
+	//Requete pour dï¿½terminer la valeur moyenne sur les derniï¿½res 20 minutes
 	$SQL="SELECT puissance
 	FROM chauffage_log
 	ORDER BY date_time DESC 
@@ -313,14 +313,14 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
 	if($myrow["puissance"] != '')
 		$puissance_poele = $myrow["puissance"];
 	else
 		$puissance_poele = 0 ;
 	
-	// ------------------- Récupère les infos des températures de la VMCDF -------------------------------------
-	//Requete pour récuère les dernières valeurs
+	// ------------------- Rï¿½cupï¿½re les infos des tempï¿½ratures de la VMCDF -------------------------------------
+	//Requete pour rï¿½cuï¿½re les derniï¿½res valeurs
 	$SQL="SELECT ana1 AS temp_air_neuf, ana2 AS temp_air_extrait, ana3 AS temp_air_repris, ana4 AS temp_air_ext
 	FROM analog6
 	ORDER BY date_time DESC 
@@ -330,7 +330,7 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
 	$vmc_temp_air_neuf = $myrow["temp_air_neuf"];	
 	$vmc_temp_air_ext = $myrow["temp_air_ext"];
 	$vmc_temp_air_repris = $myrow["temp_air_repris"];
@@ -338,8 +338,8 @@
 	
 	//echo "<br> vmc_temp_air_neuf = $vmc_temp_air_neuf ; vmc_temp_air_ext=$vmc_temp_air_ext ; vmc_temp_air_repris=$vmc_temp_air_repris ; vmc_temp_air_extrait=$vmc_temp_air_extrait.<br>";
 	
-	// ------------------- Récupère la température de sortie de bouche ventilation-------------------------------------
-	//Requete pour récuère les dernières valeurs
+	// ------------------- Rï¿½cupï¿½re la tempï¿½rature de sortie de bouche ventilation-------------------------------------
+	//Requete pour rï¿½cuï¿½re les derniï¿½res valeurs
 	$SQL="SELECT ana1 AS temp_air_bouche
 	FROM analog4
 	ORDER BY date_time DESC 
@@ -349,17 +349,17 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
 	$vmc_temp_air_bouche = $myrow["temp_air_bouche"];
 
-	//requete pour récupérer déterminer si les données sont récentes
+	//requete pour rï¿½cupï¿½rer dï¿½terminer si les donnï¿½es sont rï¿½centes
 	$SQL="SELECT date_time 
 	FROM analog4 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
 	$RESULT = @mysqli_query($link,$SQL);
-	//on récupère le nombre de résultat
-	//on récupère le nombre de résultat
+	//on rï¿½cupï¿½re le nombre de rï¿½sultat
+	//on rï¿½cupï¿½re le nombre de rï¿½sultat
 	$numrows = mysqli_num_rows($RESULT);
 	echo"<br/>nb de ligne analog4 (air bouche insuflation) = $numrows <br>";
 	//si le nombre de mesures est >= 10 
@@ -375,46 +375,9 @@
 		$str_ledAirneuf="label-important";
 	}	
 
-	// ------------------- Récupère la température de sortie du garage (capteur dans bypass PC) -------------------------------------
-	//Requete pour récuère les dernières valeurs
+	// ------------------- Rï¿½cupï¿½re la tempï¿½rature de sortie du garage (capteur dans bypass PC) -------------------------------------
+	//Requete pour rï¿½cuï¿½re les derniï¿½res valeurs
 	$SQL="SELECT ana1 AS temp_garage
-	FROM VMC
-	ORDER BY date_time DESC 
-	LIMIT 0,1						
-	"; 
-	// //Envoie de la requete
-	$RESULT = @mysqli_query($link,$SQL);
-	// lecture du resultat de la requete
-	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
-	$temp_garage = $myrow["temp_garage"];
-	
-	//requete pour récupérer déterminer si les données sont récentes
-	$SQL="SELECT date_time 
-	FROM VMC 
-	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
-	//Envoie de la requete
-	$RESULT = @mysqli_query($link,$SQL);
-	//on récupère le nombre de résultat
-	//on récupère le nombre de résultat
-	$numrows = mysqli_num_rows($RESULT);
-	echo"<br/>nb de ligne VMC = $numrows <br>";
-	//si le nombre de mesures est >= 10 
-	if($numrows >= 10){
-		//on affiche une led verte
-		$str_ledVMC="label-success";
-	//si le nombre de mesures est compris entre 5 et 10
-	}elseif($numrows >= 1){
-		//on affiche une led orange
-		$str_ledVMC="label-warning";
-	}else{
-		//on affiche une led rouge
-		$str_ledVMC="label-important";
-	}	
-	
-	// ------------------- Récupère la température des combles-------------------------------------
-	//Requete pour récuère les dernières valeurs
-	$SQL="SELECT ana1 AS temp_comble
 	FROM analog5
 	ORDER BY date_time DESC 
 	LIMIT 0,1						
@@ -423,34 +386,76 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
-	$temp_comble = $myrow["temp_comble"];
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
+	$temp_garage = $myrow["temp_garage"];
 	
-	//requete pour récupérer déterminer si les données sont récentes
+	//requete pour rï¿½cupï¿½rer dï¿½terminer si les donnï¿½es sont rï¿½centes
 	$SQL="SELECT date_time 
 	FROM analog5 
 	WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
 	//Envoie de la requete
 	$RESULT = @mysqli_query($link,$SQL);
-	//on récupère le nombre de résultat
-	//on récupère le nombre de résultat
+	//on rï¿½cupï¿½re le nombre de rï¿½sultat
 	$numrows = mysqli_num_rows($RESULT);
 	echo"<br/>nb de ligne analog5 = $numrows <br>";
 	//si le nombre de mesures est >= 10 
-	if($numrows >= 2){
+	if($numrows >= 10){
 		//on affiche une led verte
-		$str_ledCombles="label-success";
+		$str_ledGarage="label-success";
 	//si le nombre de mesures est compris entre 5 et 10
 	}elseif($numrows >= 1){
 		//on affiche une led orange
-		$str_ledCombles="label-warning";
+		$str_ledGarage="label-warning";
 	}else{
 		//on affiche une led rouge
-		$str_ledCombles="label-important";
-	}		
+		$str_ledGarage="label-important";
+	}	
 	
-	// ------------------- Récupère le flux solaire-------------------------------------
-	//Requete pour récuère les dernières valeurs
+	// ------------------- Rï¿½cupï¿½re la tempï¿½rature des combles-------------------------------------
+	//Requete pour rï¿½cuï¿½re les derniï¿½res valeurs
+
+	// anti bug 
+	$temp_comble = 0.0;
+
+	// $SQL="SELECT ana1 AS temp_comble
+	// FROM analog5
+	// ORDER BY date_time DESC 
+	// LIMIT 0,1						
+	// "; 
+	// // //Envoie de la requete
+	// $RESULT = @mysqli_query($link,$SQL);
+	// // lecture du resultat de la requete
+	// $myrow=@mysqli_fetch_array($RESULT); 
+	// //on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
+	// $temp_comble = $myrow["temp_comble"];
+	
+	// //requete pour rï¿½cupï¿½rer dï¿½terminer si les donnï¿½es sont rï¿½centes
+	// $SQL="SELECT date_time 
+	// FROM analog5 
+	// WHERE date_time >= SUBTIME( NOW( ) ,  '1:00:00' )"; 
+	// //Envoie de la requete
+	// $RESULT = @mysqli_query($link,$SQL);
+	// //on rï¿½cupï¿½re le nombre de rï¿½sultat
+	// //on rï¿½cupï¿½re le nombre de rï¿½sultat
+	// $numrows = mysqli_num_rows($RESULT);
+	// echo"<br/>nb de ligne analog5 = $numrows <br>";
+	// //si le nombre de mesures est >= 10 
+	// if($numrows >= 2){
+	// 	//on affiche une led verte
+	// 	$str_ledCombles="label-success";
+	// //si le nombre de mesures est compris entre 5 et 10
+	// }elseif($numrows >= 1){
+	// 	//on affiche une led orange
+	// 	$str_ledCombles="label-warning";
+	// }else{
+	// 	//on affiche une led rouge
+	// 	$str_ledCombles="label-important";
+	// }
+	
+	
+	
+	// ------------------- Rï¿½cupï¿½re le flux solaire-------------------------------------
+	//Requete pour rï¿½cuï¿½re les derniï¿½res valeurs
 	$SQL="SELECT ana1 as flux_solaire
 	FROM pyranometre
 	ORDER BY date_time DESC 
@@ -460,12 +465,12 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du reisultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
 	$flux_solaire = $myrow["flux_solaire"] * $Coef_V_to_W;
-	echo"<br/>flux solaire = $flux_solaire W/m², coef=$Coef_V_to_W";
+	echo"<br/>flux solaire = $flux_solaire W/mï¿½, coef=$Coef_V_to_W";
 	
-	// ------------------- Récupère l'état du bypass puits canadien -------------------------------------
-	//Requete pour récupérer la valeur 15 minutes auparavent
+	// ------------------- Rï¿½cupï¿½re l'ï¿½tat du bypass puits canadien -------------------------------------
+	//Requete pour rï¿½cupï¿½rer la valeur 15 minutes auparavent
 	$SQL="SELECT date_time, consigne
 	FROM bypass_pc_log
 	WHERE date_time >= SUBTIME( NOW( ) ,  '00:15:00' ) 
@@ -475,14 +480,14 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
 	if( $myrow["consigne"] != '' )
 		$consigne_pc = $myrow["consigne"];
 	else
 		$consigne_pc = 0.0;
 
-	// ------------------- Récupère l'état de l'oduleur (ups) -------------------------------------
-	//Requete pour récupérer la dernière valeur
+	// ------------------- Rï¿½cupï¿½re l'ï¿½tat de l'oduleur (ups) -------------------------------------
+	//Requete pour rï¿½cupï¿½rer la derniï¿½re valeur
 	$SQL="SELECT `date_time`,`ups_status`,`battery_charge`,`battery_runtime` 
 	FROM `ups` 
 	ORDER BY `date_time` DESC 
@@ -492,7 +497,7 @@
 	$RESULT = @mysqli_query($link,$SQL);
 	// lecture du resultat de la requete
 	$myrow=@mysqli_fetch_array($RESULT); 
-	//on récupère la dernière température relevée
+	//on rï¿½cupï¿½re la derniï¿½re tempï¿½rature relevï¿½e
 	$ups_datetime = $myrow["date_time"];
 	$ups_battery_charge = $myrow["battery_charge"];
 	$ups_battery_runtime = $myrow["battery_runtime"];
@@ -506,8 +511,8 @@
 		$ups_status = "???";
 	
 
-	// ------------------- On écrit toutes les données dans une seule table -------------------------------------
-	//on met à  la table donnees_instant
+	// ------------------- On ï¿½crit toutes les donnï¿½es dans une seule table -------------------------------------
+	//on met ï¿½  la table donnees_instant
 	$SQL="UPDATE `domotique`.`donnees_instant` SET 
 		`date_time` = NOW(),
 		`date_int` = '$data_dateint[0]',
@@ -544,7 +549,7 @@
 		`icon_led_Ti` = '$str_ledTi',
 		`icon_led_Te` = '$str_ledTe',
 		`icon_led_pc` = '$str_ledPC',
-		`icon_led_vmc` = '$str_ledVMC',
+		`icon_led_garage` = '$str_ledGarage',
 		`icon_led_combles` = '$str_ledCombles',
 		`icon_led_airneuf` = '$str_ledAirneuf',
 		`ups_datetime` = '$ups_datetime',
@@ -557,7 +562,7 @@
     if (!mysqli_query($link,$SQL)) {
         printf("</br>Erreur : %s\n", mysqli_error($link));
     }else{
-		echo"</br>Données sauvées dans la BDD";
+		echo"</br>Donnï¿½es sauvï¿½es dans la BDD";
 	}
 	//on quitte la BDD
 	mysqli_free_result($RESULT);

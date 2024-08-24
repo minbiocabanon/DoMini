@@ -18,7 +18,7 @@ curl 0.0.0.0:80/php/highstock/csv_temp_pc.php
 # Génére le CSV avec les info sonde sur une bouche d'insuflation air neuf
 curl 0.0.0.0:80/php/highstock/csv_temp_air_neuf.php
 # Génére le CSV avec les info sonde placée dans les combles
-curl 0.0.0.0:80/php/highstock/csv_temp_comble.php
+curl 0.0.0.0:80/php/highstock/csv_temp_garage.php
 # Génére le CSV avec les info sonde de la VMC : air extérieur
 curl 0.0.0.0:80/php/highstock/csv_temp_vmc_ext.php
 # Génére le CSV avec les info de conso électrique instantannée

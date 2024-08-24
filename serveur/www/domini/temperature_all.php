@@ -88,9 +88,9 @@
 										axe = 0;
 										seriename = 'Air neuf';
 										break;
-									case 'comble':
+									case 'garage':
 										axe = 0;
-										seriename = 'Comble';										
+										seriename = 'Garage';										
 										break;	
 									case 'vmc_ext':
 										axe = 0;
