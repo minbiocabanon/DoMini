@@ -3,6 +3,7 @@
 
 ##### En service
 
-ngrok service install -config ~/src/domini/serveur/ngrok/config.yml
-ngrok service start
+#ngrok service install -config ~/src/domini/serveur/ngrok/config.yml
+sudo ngrok service install --config ./config.yml
+sudo ngrok service start
 

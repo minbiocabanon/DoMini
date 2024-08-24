@@ -1,5 +1,5 @@
 authtoken: 1kWdCGeHtGJyAkaqPfdP6VoIepG_55yanKaiX9YXJfDgFLKT1
 tunnels:
     default:
-        proto: https
+        proto: http
         addr: 80
