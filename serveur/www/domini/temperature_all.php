@@ -32,7 +32,7 @@
 		    {
 					var seriesOptions = [],
 					seriesCounter = 0,
-					names = ['ext', 'int', 'pc','air_neuf','comble','vmc_ext'];
+					names = ['ext', 'int', 'pc','air_neuf','garage','vmc_ext'];
 
 		        $.each(names, function (i, name)
 		        {
