@@ -11,7 +11,7 @@ from time import sleep
 #remote debug
 #pydevd.settrace('192.168.0.105', port=5678)
 
-port = '/dev/ttyUSB1'
+port = '/dev/ttyUSB0'
 ser = serial.Serial(port, 57600, timeout=1)
 encoding = 'utf-8'
 keepThis = ''
