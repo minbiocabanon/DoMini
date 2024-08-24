@@ -119,8 +119,28 @@
 								?>		
 								</td>
 								<td>
-								<?PHP
+									<?PHP
 										echo''.$flux_solaire.' W/m²';
+									?>	
+								</td>
+							  </tr>
+							  <tr>
+								<td class="tdhead">
+								  Plenum
+								</td>
+								<td class="tdhead">
+								 Garage
+								</td>
+							  </tr>
+							  <tr>
+								<td>
+									<?PHP 
+										echo''.$vmc_temp_air_bouche.' °C';
+									?>		
+								</td>
+								<td>
+									<?PHP
+										echo''.$temp_garage.' °C';
 									?>	
 								</td>
 							  </tr>
@@ -207,7 +227,7 @@
 									<span class="label <?PHP echo"$str_ledPC"; ?>">PC</span>
 									<span class="label <?PHP echo"$str_icon_lededf"; ?>">Téléinfo</span>
 									<br>
-									<span class="label <?PHP echo"$str_ledVMC"; ?>">Garage</span> <!-- capteur T° garage est dans le bypass PC-->
+									<span class="label <?PHP echo"$str_ledGarage"; ?>">Garage</span>
 									<span class="label <?PHP echo"$str_ledCombles"; ?>">Combles</span>
 									<span class="label <?PHP echo"$str_ledVMC"; ?>">BPC</span> 
 									<span class="label <?PHP echo"$str_ledAirneuf"; ?>">AirNeuf</span>
