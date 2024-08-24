@@ -164,8 +164,10 @@ def tag_donnees_heure(con, table):
 					# Display MySQL errors
 					try:
 						print(" MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
+						print(" MySQL Error, query was %s: " % (query))
 					except IndexError:
 						print(" MySQL Error: %s" % str(e))	
+						print(" MySQL Error2 , query was %s: " % (query))
 				
 				try:
 					# test if query has return something, if = 0 there is no line to tag so do nothing
