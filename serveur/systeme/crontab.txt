@@ -2,15 +2,15 @@
 @weekly /home/jcaulier/src/domini/serveur/systeme/crontab_export.sh #export de la crontab
 # 0 7 * * * /etc/init.d/networking restart #reboot network interfaces (Wifi disconnection sometimes)
 5,10,15,20,25,30,35,40,45,50,55,59 * * * * /home/jcaulier/src/domini/serveur/systeme/checkwifi.sh #Vérification de la connextion wifi (intervalle de 5 minutes)
-@daily python3 /home/jcaulier/src/domini/serveur/pyCamClean/pyCamClean.py /var/www/domini/webcam/garage #Suppression des captures webcam anciennes (garage)
-@daily python3 /home/jcaulier/src/domini/serveur/pyCamClean/pyCamClean.py /var/www/domini/webcam/sejour #suppression des captures webcan anciennes (sejour)
-@daily python3 /home/jcaulier/src/domini/serveur/pyCamClean/pyCamClean.py /var/www/domini/webcam/sejour #suppression des captures webcan anciennes (sejour)
-@daily python3 /home/jcaulier/src/domini/serveur/pyCamClean/pyCamClean.py /var/www/domini/webcam/ext #suppression captures webcam anciennes (ext)
-@daily python3 /home/jcaulier/src/domini/serveur/pyCamClean/pyCamClean.py /var/www/domini/webcam/sejour/C2_00626E624D38/snap #suppression captures webcam anciennes (sejour)
+# @daily python3 /home/jcaulier/src/domini/serveur/pyCamClean/pyCamClean.py /var/www/domini/webcam/garage #Suppression des captures webcam anciennes (garage)
+# @daily python3 /home/jcaulier/src/domini/serveur/pyCamClean/pyCamClean.py /var/www/domini/webcam/sejour #suppression des captures webcan anciennes (sejour)
+# @daily python3 /home/jcaulier/src/domini/serveur/pyCamClean/pyCamClean.py /var/www/domini/webcam/sejour #suppression des captures webcan anciennes (sejour)
+# @daily python3 /home/jcaulier/src/domini/serveur/pyCamClean/pyCamClean.py /var/www/domini/webcam/ext #suppression captures webcam anciennes (ext)
+# @daily python3 /home/jcaulier/src/domini/serveur/pyCamClean/pyCamClean.py /var/www/domini/webcam/sejour/C2_00626E624D38/snap #suppression captures webcam anciennes (sejour)
 0,15,30,45 * * * * /var/www/domini/script/graph_15m.sh #Mise a jour des graphs rafraichis toutes les 15 minutes
 # 5 6,9,12,15,18,21 * * * /var/www/domini/script/timelapse.sh #Timelapse jardin
 @hourly /var/www/domini/script/graph_1h.sh #Execution des pages php pour g�n�rer graphes toutes les 1h
-0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58 * * * * /var/www/domini/script/graph_2m.sh #Charge les donn�es actuelles dans une table tampon pour acc�lerer l'affichage
+0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58 * * * * /var/www/domini/script/graph_2m.sh #Charge les donnees actuelles dans une table tampon pour accelerer l'affichage
 15 1 1 * * /var/www/domini/script/graph_1mo.sh #creation des graphes tous les mois
 * 1 * * 0 /var/www/domini/script/graph_1w.sh #Execution des pages php pour g�n�rer graphes toutes les semaines
 @daily /var/www/domini/script/graph_1j.sh #Tache a lancer une fois par jour -> mise � jour graph et fichier CSV
